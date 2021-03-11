@@ -67,15 +67,27 @@
                         android:textSize="@dimen/_13sdp"
                         android:visibility="gone" />
 
-                    <ImageView
-                        android:id="@+id/iv_menu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        android:src="@drawable/ic_side_bar_artist"
-                        app:tint="@color/colorPrimary" />
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/menu_circular_background">
+
+                        <ImageView
+                            android:id="@+id/iv_menu"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_side_bar_artist"
+                            app:tint="@color/white" />
+                    </RelativeLayout>
 
                 </RelativeLayout>
 

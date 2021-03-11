@@ -5,7 +5,7 @@ package com.wokconns.customer.interfacess;
  */
 
 public interface Consts {
-    String APP_NAME = "WOKCONNS Customer";
+    String APP_NAME = "Customer";
 
     String BASE_URL = "https://wms.wokconns.com/Webservice/";
 

@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">WOKCONNS Customer</string>
-    <string name="company" translatable="false">WORKCONNS</string>
+    <string name="app_name" translatable="false">Customer</string>
+    <string name="company" translatable="false">Customer</string>
     <string name="permission_pick_rationale">READ_EXTERNAL_STORAGE permission is needed to pick image.</string>
     <string name="permission_crop_rationale">WRITE_EXTERNAL_STORAGE permission is needed to save cropped image.</string>
     <string name="button_allow">Allow</string>
@@ -27,7 +27,7 @@
     <string name="book_msg">Are you sure to book</string>
     <string name="chats">Chats</string>
     <string name="val_comment">Please enter comment</string>
-    <string name="take_image">WOKCONNS Customer : Take Image From</string>
+    <string name="take_image">Customer : Take Image From</string>
     <string name="select_picture">Select Picture</string>
     <string name="val_des">Please enter description.</string>
     <string name="val_address">Please select address.</string>
@@ -35,7 +35,7 @@
     <string name="val_description">Please enter description</string>
     <string name="select_category">Select Category</string>
     <string name="val_email">Please enter email address.</string>
-    <string name="location_enabled">Couldn\'t get the location. Make sure location is enabled on the device</string>
+    <string name="location_enabled">Couldn\'t get your location. Make sure location is enabled on the device</string>
     <string name="artist_here">Artist here</string>
     <string name="my_bookings">My Bookings</string>
     <string name="cash_payment">Cash Payment</string>
