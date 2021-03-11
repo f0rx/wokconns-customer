@@ -14,3 +14,7 @@
 /build
 /captures
 .externalNativeBuild
+/app/release
+/app/release/
+/app/build
+/app/build/
