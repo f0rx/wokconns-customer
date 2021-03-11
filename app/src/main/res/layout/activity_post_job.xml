@@ -1,0 +1,419 @@
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/headergradient">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:padding="10dp"
+                android:src="@drawable/back" />
+
+            <com.wokconns.customer.utils.CustomTextViewBold
+                android:id="@+id/tvNameHedar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/post_job"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/header">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:elevation="5dp"
+                    android:orientation="vertical">
+
+
+                    <com.wokconns.customer.utils.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/category"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/please_select_job"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:id="@+id/tvCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/edittext_bg_profile"
+                        android:drawableEnd="@drawable/ic_drop_down"
+                        android:gravity="center_vertical"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="@dimen/_5sdp"
+                        android:text="@string/select_job_category" />
+                </LinearLayout>
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardviewTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardCategory"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:elevation="5dp"
+                    android:orientation="vertical">
+
+                    <com.wokconns.customer.utils.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/job_title"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/please_enter_job"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/edittext_bg_profile"
+                        android:gravity="center_vertical"
+                        android:hint="@string/enter_title"
+                        android:paddingStart="15dp"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardviewTitle"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:elevation="5dp"
+                    android:orientation="vertical">
+
+                    <com.wokconns.customer.utils.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/job_description"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/please_write_job"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etCommet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/edittext_bg_profile"
+                        android:gravity="top"
+                        android:hint="@string/enter_description"
+                        android:maxLines="3"
+                        android:minLines="3"
+                        android:paddingStart="15dp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:text=""
+                        android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardviewPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardview"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:elevation="5dp"
+                    android:orientation="vertical">
+
+                    <com.wokconns.customer.utils.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rate"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/please_rate"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <com.wokconns.customer.utils.CustomAutoCompleteTextView
+                            android:id="@+id/et_currency"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:background="@drawable/edittext_bg_profile"
+                            android:drawableEnd="@drawable/ic_drop_down"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:hint="@string/currency_msg"
+                            android:inputType="number"
+                            android:padding="@dimen/_7sdp"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textSize="@dimen/_12sdp" />
+
+                        <com.wokconns.customer.utils.CustomEditText
+                            android:id="@+id/etPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_bg_profile"
+                            android:gravity="center_vertical"
+                            android:hint="@string/enter_rate"
+                            android:inputType="numberDecimal"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:padding="@dimen/_7sdp"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textSize="@dimen/_12sdp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardviewDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardviewPrice"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:elevation="5dp"
+                    android:orientation="vertical">
+
+                    <com.wokconns.customer.utils.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/job_date_time"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/please_select_job_date"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/edittext_bg_profile"
+                        android:editable="false"
+                        android:gravity="center_vertical"
+                        android:hint="@string/select_job_date"
+                        android:paddingStart="15dp"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardviewAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardviewDate"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:elevation="5dp"
+                    android:orientation="vertical">
+
+                    <com.wokconns.customer.utils.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/address"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tap_to_select_address"
+                        android:textColor="@color/black_off"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/edittext_bg_profile"
+                        android:editable="false"
+                        android:gravity="center_vertical"
+                        android:hint="@string/select_address"
+                        android:paddingStart="15dp"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardview1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/cardB"
+                    android:layout_below="@+id/cardview"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:elevation="5dp"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/ivImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/dummy_img"
+                            android:visibility="gone" />
+
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/cardB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cardviewAdd"
+                    android:layout_alignParentBottom="true"
+                    android:elevation="5dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="5dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/llPicture"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
+                            android:padding="8dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_cemra" />
+
+                            <com.wokconns.customer.utils.CustomTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:text="@string/add_picture"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/llPost"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center">
+
+
+                            <com.wokconns.customer.utils.CustomTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/button_selector2"
+                                android:gravity="center"
+                                android:paddingStart="8dp"
+                                android:paddingTop="2dp"
+                                android:paddingEnd="8dp"
+                                android:paddingBottom="3dp"
+                                android:text="@string/post"
+                                android:textColor="@color/white"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+</layout>

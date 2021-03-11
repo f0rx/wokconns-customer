@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.wokconns.customer.utils.CustomTextViewBold
+                    android:id="@+id/ctvbTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/set_address"
+                    android:textColor="@color/black_off"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_close"
+                    app:tint="@color/red" />
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+
+                <com.wokconns.customer.utils.InputOpenFieldView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etAddressD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:hint="@string/set_address"
+                        android:paddingStart="5dp"
+                        android:singleLine="true"
+                        android:text=""/>
+
+                </com.wokconns.customer.utils.InputOpenFieldView>
+
+                <com.wokconns.customer.utils.InputOpenFieldView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etCityD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/city"
+                        android:paddingStart="5dp"
+                        android:singleLine="true"
+                        android:text="" />
+
+                </com.wokconns.customer.utils.InputOpenFieldView>
+
+                <com.wokconns.customer.utils.InputOpenFieldView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etCountryD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/country"
+                        android:paddingStart="5dp"
+                        android:singleLine="true"
+                        android:text="" />
+
+                </com.wokconns.customer.utils.InputOpenFieldView>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="35dp"
+                android:background="@color/gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.wokconns.customer.utils.CustomTextViewBold
+                    android:id="@+id/tvYesAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/save"
+                    android:textColor="@color/black_off"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</layout>

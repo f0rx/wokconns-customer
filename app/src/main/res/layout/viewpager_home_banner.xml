@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_180sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:scaleType="fitXY"
+                android:src="@null" />
+
+            <com.wokconns.customer.utils.CustomTextViewBold
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/tv_description"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:paddingStart="@dimen/_5sdp"
+                android:background="#50000000"
+                android:maxLength="30"
+                android:text="Categories"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11sdp" />
+
+            <com.wokconns.customer.utils.CustomTextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingTop="@dimen/_3sdp"
+                android:paddingStart="@dimen/_5sdp"
+                android:background="#50000000"
+                android:maxLength="120"
+                android:text="A new way to take services at home using Rojgar"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11sdp" />
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>
