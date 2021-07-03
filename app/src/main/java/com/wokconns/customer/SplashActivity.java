@@ -24,7 +24,6 @@ import com.wokconns.customer.utils.ProjectUtils;
 
 //import io.fabric.sdk.android.Fabric;
 
-
 public class SplashActivity extends AppCompatActivity {
 
     private SharedPrefrence prefference;
