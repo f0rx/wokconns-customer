@@ -13,5 +13,5 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_fab" />
+        android:src="@drawable/logo" />
 </RelativeLayout>

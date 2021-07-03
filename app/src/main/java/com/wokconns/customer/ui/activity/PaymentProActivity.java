@@ -293,32 +293,21 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
         dialog.show();
         dialog.setCancelable(false);
-        llCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
+        llCancel.setOnClickListener(v -> dialog.dismiss());
+        llPaypall.setOnClickListener(v -> {
+            coupon_code = ProjectUtils.getEditTextValue(etCode);
+            String url = Consts.INVOICE__PAYMENT_paypal + "&id=" + historyDTO.getInvoice_id() + "&coupon_code=" + coupon_code;
+            Intent in2 = new Intent(mContext, PaymetWeb.class);
+            in2.putExtra(Consts.PAYMENT_URL, url);
+            startActivity(in2);
+            dialog.dismiss();
         });
-        llPaypall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                coupon_code = ProjectUtils.getEditTextValue(etCode);
-                String url = Consts.INVOICE__PAYMENT_paypal + "&id=" + historyDTO.getInvoice_id() + "&coupon_code=" + coupon_code;
-                Intent in2 = new Intent(mContext, PaymetWeb.class);
-                in2.putExtra(Consts.PAYMENT_URL, url);
-                startActivity(in2);
-                dialog.dismiss();
-            }
-        });
-        llStripe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = Consts.INVOICE_PAYMENT_Stripe + userDTO.getUser_id() + "/" + final_amount;
-                Intent in2 = new Intent(mContext, PaymetWeb.class);
-                in2.putExtra(Consts.PAYMENT_URL, url);
-                startActivity(in2);
-                dialog.dismiss();
-            }
+        llStripe.setOnClickListener(v -> {
+            String url = Consts.INVOICE_PAYMENT_Stripe + userDTO.getUser_id() + "/" + final_amount;
+            Intent in2 = new Intent(mContext, PaymetWeb.class);
+            in2.putExtra(Consts.PAYMENT_URL, url);
+            startActivity(in2);
+            dialog.dismiss();
         });
 
     }
