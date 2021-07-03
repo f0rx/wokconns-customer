@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "183785658389-4qlu2i9hhmm5sg9fqkq9ggm8gjc564rm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wokconns.customer",
+            "certificate_hash": "db59c3f921b5a5715b3fe798242503c6bb7e9193"
+          }
+        },
+        {
           "client_id": "183785658389-uh3aeeb1hfg8rge44i0al731jll6gtnp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -56,6 +64,14 @@
           "android_info": {
             "package_name": "com.wokconns.wokconns",
             "certificate_hash": "f9fe42754dbf015278d0be78b8be685107e3d781"
+          }
+        },
+        {
+          "client_id": "183785658389-piq7ela42jr3da6o1gkulmga5tvnj1nh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wokconns.wokconns",
+            "certificate_hash": "c543d4b91c3f4bffcd7832d63723d1ca5025927f"
           }
         },
         {
