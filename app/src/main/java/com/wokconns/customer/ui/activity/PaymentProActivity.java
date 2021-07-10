@@ -57,7 +57,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     private Dialog dialog;
     //Paypal intent request code to track onActivityResult method
     public static final int PAYPAL_REQUEST_CODE = 123;
-    private LinearLayout llPaypall, llStripe, llCancel;
+    private LinearLayout paystackPay, flutterwavepay, llCancel;
     private String amt1 = "";
     private String discount_amount = "0";
     private String currency = "";
@@ -287,27 +287,30 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
 
         ///dialog.getWindow().setBackgroundDrawableResource(R.color.black);
-        llPaypall = (LinearLayout) dialog.findViewById(R.id.llPaypall);
-        llStripe = (LinearLayout) dialog.findViewById(R.id.llStripe);
+        paystackPay = (LinearLayout) dialog.findViewById(R.id.paystackButton);
+        flutterwavepay = (LinearLayout) dialog.findViewById(R.id.flutterwaveButton);
         llCancel = (LinearLayout) dialog.findViewById(R.id.llCancel);
 
         dialog.show();
         dialog.setCancelable(false);
         llCancel.setOnClickListener(v -> dialog.dismiss());
-        llPaypall.setOnClickListener(v -> {
+        paystackPay.setOnClickListener(v -> {
             coupon_code = ProjectUtils.getEditTextValue(etCode);
-            String url = Consts.INVOICE__PAYMENT_paypal + "&id=" + historyDTO.getInvoice_id() + "&coupon_code=" + coupon_code;
-            Intent in2 = new Intent(mContext, PaymetWeb.class);
-            in2.putExtra(Consts.PAYMENT_URL, url);
+            Intent in2 = new Intent(mContext, PaymentWeb.class);
+            in2.putExtra(Consts.HISTORY_DTO, historyDTO);
+            in2.putExtra(Consts.COUPON_CODE, coupon_code);
             startActivity(in2);
             dialog.dismiss();
+            finish();
         });
-        llStripe.setOnClickListener(v -> {
-            String url = Consts.INVOICE_PAYMENT_Stripe + userDTO.getUser_id() + "/" + final_amount;
-            Intent in2 = new Intent(mContext, PaymetWeb.class);
-            in2.putExtra(Consts.PAYMENT_URL, url);
-            startActivity(in2);
+        flutterwavepay.setOnClickListener(v -> {
+            coupon_code = ProjectUtils.getEditTextValue(etCode);
+            Intent in3 = new Intent(mContext, PaymentWeb.class);
+            in3.putExtra(Consts.HISTORY_DTO, historyDTO);
+            in3.putExtra(Consts.COUPON_CODE, coupon_code);
+            startActivity(in3);
             dialog.dismiss();
+            finish();
         });
 
     }

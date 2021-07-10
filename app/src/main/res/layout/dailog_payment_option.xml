@@ -32,7 +32,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llPaypall"
+            android:id="@+id/paystackButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -44,13 +44,13 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:src="@drawable/paypal_logo" />
+                android:src="@drawable/ic_paystack" />
 
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llStripe"
+            android:id="@+id/flutterwaveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -62,7 +62,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:src="@drawable/stripe_logo" />
+                android:src="@drawable/ic_flutterwave" />
 
 
         </LinearLayout>
@@ -78,7 +78,6 @@
             android:id="@+id/llCancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:gravity="center"
             android:orientation="horizontal">
 

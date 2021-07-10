@@ -224,6 +224,12 @@
     <string name="no_history_found">No History Found</string>
     <string name="no_ticket_found">No Ticket Found</string>
     <string name="job_done_for">Job Done For</string>
+    <string name="payment_prompt">Card details</string>
+    <string name="card_number">16 digits Card Number</string>
+    <string name="card_number_hint">0000 1111 2222 3333 4444 555</string>
+    <string name="card_expiry">Card Expiry</string>
+    <string name="card_expiry_hint">MM/YY</string>
+    <string name="card_cvv">CVV</string>
 
     <string name="wallet_balance">Wallet Balance</string>
     <string name="all">All</string>

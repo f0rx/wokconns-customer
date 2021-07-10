@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FabCustomer</string>
     <string name="permission_pick_rationale">مطلوب إذن READ_EXTERNAL_STORAGE لاختيار الصورة.</string>
     <string name="permission_crop_rationale">مطلوب إذن WRITE_EXTERNAL_STORAGE لحفظ الصورة التي تم اقتصاصها.</string>
     <string name="button_allow">السماح</string>
@@ -15,7 +14,7 @@
     <string name="intro_3">وظف أفضل مصور</string>
     <string name="internet_concation">الرجاء تمكين اتصال الإنترنت الخاص بك.</string>
     <string name="server_error">غير قادر على الاتصال الخادم.</string>
-    <string name="closeMsg">هل أنت متأكد أنك تريد إغلاق FabArtist؟</string>
+    <string name="closeMsg">هل أنت متأكد أنك تريد إغلاق Wokconns؟</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
     <string name="jobs_completed">الوظائف المنجزة</string>
@@ -27,7 +26,7 @@
     <string name="book_msg">هل أنت متأكد من الحجز</string>
     <string name="chats">القطط</string>
     <string name="val_comment">الرجاء إدخال تعليق</string>
-    <string name="take_image">FabCustomer: التقط صورة من</string>
+    <string name="take_image">Wokconns: التقط صورة من</string>
     <string name="select_picture">حدد صورة</string>
     <string name="val_des">الرجاء إدخال الوصف.</string>
     <string name="val_address">الرجاء تحديد العنوان.</string>
@@ -91,7 +90,6 @@
     <string name="opps_share">عفوا !! يبدو أنك لم تقم بتثبيت أي تطبيق مشاركة.</string>
     <string name="invoice">فاتورة</string>
     <string name="ic_wallet">محفظة نقود</string>
-    <string name="fabartist">FabArtist</string>
     <string name="jobs">نشر الوظائف</string>
     <string name="setting">إعدادات</string>
     <string name="notification">إشعارات</string>
@@ -102,6 +100,12 @@
     <string name="support">الدعم</string>
     <string name="home">الصفحة الرئيسية</string>
     <string name="discover_job">اكتشف /بالقرب من</string>
+    <string name="payment_prompt">معلومات البطاقة</string>
+    <string name="card_number">رقم البطاقة المكون من 16 رقمًا</string>
+    <string name="card_number_hint">0000 1111 2222 3333 4444 555</string>
+    <string name="card_expiry">تاريخ انتهاء صلاحية البطاقة</string>
+    <string name="card_expiry_hint">MM/YY</string>
+    <string name="card_cvv">CVV</string>
     <string name="camera">الة تصوير</string>
     <string name="gallery">صالة عرض</string>
     <string name="sign_up">سجل</string>

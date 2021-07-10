@@ -216,15 +216,12 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
 
 
     public void addMoney() {
-        new HttpsRequest(Consts.ADD_MONEY_API, parmas, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showLong(mContext, msg);
-                    finish();
-                } else {
-                    ProjectUtils.showLong(mContext, msg);
-                }
+        new HttpsRequest(Consts.ADD_MONEY_API, parmas, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showLong(mContext, msg);
+                finish();
+            } else {
+                ProjectUtils.showLong(mContext, msg);
             }
         });
     }
@@ -241,33 +238,22 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
 
         dialog.show();
         dialog.setCancelable(false);
-        binding1.llCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        binding1.llPaypall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = Consts.MAKE_PAYMENT_paypal + "user_id=" + userDTO.getUser_id() + "&amount=" + ProjectUtils.getEditTextValue(binding.etAddMoney) + "&currency_code="+currencyCode;
-                Intent in2 = new Intent(mContext, PaymetWeb.class);
-                in2.putExtra(Consts.PAYMENT_URL, url);
-                startActivity(in2);
-                dialog.dismiss();
+        binding1.llCancel.setOnClickListener(v -> dialog.dismiss());
+        binding1.paystackButton.setOnClickListener(v -> {
+            String url = Consts.MAKE_PAYMENT_paypal + "user_id=" + userDTO.getUser_id() + "&amount=" + ProjectUtils.getEditTextValue(binding.etAddMoney) + "&currency_code="+currencyCode;
+            Intent in2 = new Intent(mContext, PaymentWeb.class);
+            in2.putExtra(Consts.PAYMENT_URL, url);
+            startActivity(in2);
+            dialog.dismiss();
 
-            }
         });
-        binding1.llStripe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = Consts.MAKE_PAYMENT + userDTO.getUser_id() + "/" + ProjectUtils.getEditTextValue(binding.etAddMoney);
-                Intent in2 = new Intent(mContext, PaymetWeb.class);
-                in2.putExtra(Consts.PAYMENT_URL, url);
-                startActivity(in2);
-                dialog.dismiss();
+        binding1.flutterwaveButton.setOnClickListener(v -> {
+            String url = Consts.MAKE_PAYMENT + userDTO.getUser_id() + "/" + ProjectUtils.getEditTextValue(binding.etAddMoney);
+            Intent in2 = new Intent(mContext, PaymentWeb.class);
+            in2.putExtra(Consts.PAYMENT_URL, url);
+            startActivity(in2);
+            dialog.dismiss();
 
-            }
         });
 
     }

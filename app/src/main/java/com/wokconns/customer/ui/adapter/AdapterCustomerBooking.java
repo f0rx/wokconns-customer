@@ -8,6 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -15,29 +19,21 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterCustomerBookingBinding;
 import com.wokconns.customer.databinding.ItemSectionBinding;
 import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.ui.activity.MapActivity;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
 import com.wokconns.customer.ui.activity.ViewInvoice;
 import com.wokconns.customer.ui.fragment.MyBooking;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -254,47 +250,39 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             holder.adapterCustomerBookingBinding.tvName.setText(mContext.getResources().getString(R.string.booking_with) + " " + objects.get(position).getArtistName());
 
 
-            holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    completeDialog(mContext.getResources().getString(R.string.cancel), mContext.getResources().getString(R.string.booking_cancel_msg) + " " + objects.get(position).getArtistName() + "?", position);
-                }
-            });
-            holder.adapterCustomerBookingBinding.ivMap.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent in = new Intent(mContext, MapActivity.class);
-                    in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
-                    mContext.startActivity(in);
-                }
-            });
-            holder.adapterCustomerBookingBinding.llFinish.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (NetworkManager.isConnectToInternet(mContext)) {
-                        booking("3", position);
-                    } else {
-                        ProjectUtils.showToast(mContext, mContext.getResources().getString(R.string.internet_concation));
-                    }
-                }
-            });
-            holder.adapterCustomerBookingBinding.llPay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent in = new Intent(mContext, PaymentProActivity.class);
-                    in.putExtra(Consts.HISTORY_DTO, objects.get(position).getInvoice());
-                    mContext.startActivity(in);
+            holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(v ->
+                    completeDialog(mContext.getResources().getString(R.string.cancel),
+                            mContext.getResources().getString(R.string.booking_cancel_msg) + " " +
+                                    objects.get(position).getArtistName() + "?",
+                            position
+                    )
+            );
 
+            holder.adapterCustomerBookingBinding.ivMap.setOnClickListener(v -> {
+                Intent in = new Intent(mContext, MapActivity.class);
+                in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
+                mContext.startActivity(in);
+            });
+
+            holder.adapterCustomerBookingBinding.llFinish.setOnClickListener(v -> {
+                if (NetworkManager.isConnectToInternet(mContext)) {
+                    booking("3", position);
+                } else {
+                    ProjectUtils.showToast(mContext, mContext.getResources().getString(R.string.internet_concation));
                 }
             });
-            holder.adapterCustomerBookingBinding.llViewInvoice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent in = new Intent(mContext, ViewInvoice.class);
-                    in.putExtra(Consts.HISTORY_DTO, objects.get(position).getInvoice());
-                    mContext.startActivity(in);
+            holder.adapterCustomerBookingBinding.llPay.setOnClickListener(v -> {
+                Intent in = new Intent(mContext, PaymentProActivity.class);
+                in.putExtra(Consts.HISTORY_DTO, objects.get(position).getInvoice());
+                mContext.startActivity(in);
+//                myBooking.requireActivity().getSupportFragmentManager()
+//                        .beginTransaction().remove(myBooking).commit();
+            });
+            holder.adapterCustomerBookingBinding.llViewInvoice.setOnClickListener(v -> {
+                Intent in = new Intent(mContext, ViewInvoice.class);
+                in.putExtra(Consts.HISTORY_DTO, objects.get(position).getInvoice());
+                mContext.startActivity(in);
 
-                }
             });
 
             if (type.equalsIgnoreCase("home")) {
@@ -349,26 +337,23 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         paramsDecline.put(Consts.DECLINE_BY, "2");
         paramsDecline.put(Consts.DECLINE_REASON, "Busy");
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.DECLINE_BOOKING_API, paramsDecline, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                dialog_book.dismiss();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
+        new HttpsRequest(Consts.DECLINE_BOOKING_API, paramsDecline, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            dialog_book.dismiss();
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
 
-                    try {
-                        ((MyBooking) myBooking).getBooking();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                try {
+                    ((MyBooking) myBooking).getBooking();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
+
+
         });
     }
 
@@ -378,24 +363,21 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         paramsBookingOp.put(Consts.REQUEST, req);
         paramsBookingOp.put(Consts.USER_ID, objects.get(pos).getUser_id());
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.BOOKING_OPERATION_API, paramsBookingOp, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
+        new HttpsRequest(Consts.BOOKING_OPERATION_API, paramsBookingOp, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
 
-                    try {
-                        ((MyBooking) myBooking).getBooking();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                try {
+                    ((MyBooking) myBooking).getBooking();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
+
+
         });
     }
 
@@ -404,21 +386,12 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             new AlertDialog.Builder(mContext)
                     .setMessage(msg)
                     .setCancelable(false)
-                    .setPositiveButton(mContext.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog_book = dialog;
-                            decline(pos);
+                    .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog_book = dialog;
+                        decline(pos);
 
-                        }
                     })
-                    .setNegativeButton(mContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
+                    .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {
