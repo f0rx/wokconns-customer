@@ -1,6 +1,8 @@
 package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,18 +16,24 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.gson.Gson;
 import com.wokconns.customer.BuildConfig;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityPaymetWebBinding;
+import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
+import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CardValidatorInterface;
 import com.wokconns.customer.utils.NumberMaskInputFormatter;
+import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONException;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import co.paystack.android.Paystack;
@@ -35,33 +43,46 @@ import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 
 public class PaymentWeb extends AppCompatActivity implements CardValidatorInterface {
+    private static final String successPaypalUrl = Consts.PAYMENT_SUCCESS_paypal;
+    private static final String failurePaypalUrl = Consts.PAYMENT_FAIL_Paypal;
+//    private static String surl_stripe_book = Consts.INVOICE_PAYMENT_SUCCESS_Stripe;
+//    private static String furl_stripe_book = Consts.INVOICE_PAYMENT_FAIL_Stripe;
+    private static final String kTAG = PaymentWeb.class.getName();
+    private static String coupon;
+    private String url;
+    private SharedPrefrence preference;
     private UserDTO userDTO;
     private HistoryDTO historyDTO;
-    private Context mContext;
-    private static String coupon;
-    private static final String kTAG = "MainActivity@Tag";
+    private ArtistDetailsDTO artistDetailsDTO;
     ActivityPaymetWebBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_paymet_web);
-        mContext = PaymentWeb.this;
-        SharedPrefrence preference = SharedPrefrence.getInstance(mContext);
+        preference = SharedPrefrence.getInstance(this);
         userDTO = preference.getParentUser(Consts.USER_DTO);
         if (getIntent().hasExtra(Consts.HISTORY_DTO)) {
             historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Consts.HISTORY_DTO);
             coupon = getIntent().getStringExtra(Consts.COUPON_CODE);
+            url = getIntent().getStringExtra(Consts.PAYMENT_URL);
         }
 
         initializePaystack();
 
-        initializeListeners();
+        setupListeners();
 
         binding.IVback.setOnClickListener(view -> {
-            view.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.click_event));
+            view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.click_event));
             finish();
         });
+
+        if (NetworkManager.isConnectToInternet(this)) {
+            // Get information about Artist to be paid
+            getArtist();
+        } else {
+            ProjectUtils.showToast(this, getResources().getString(R.string.internet_concation));
+        }
     }
 
     private void initializePaystack() {
@@ -69,7 +90,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
         PaystackSdk.setPublicKey(BuildConfig.PSTK_PUBLIC_KEY);
     }
 
-    private void initializeListeners() {
+    private void setupListeners() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.cardNumber.setAutofillHints(View.AUTOFILL_HINT_CREDIT_CARD_NUMBER);
             binding.cardExpiry.setAutofillHints(View.AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DATE);
@@ -132,7 +153,14 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
         }
 
         try {
-            performCharge(card);
+            if (NetworkManager.isConnectToInternet(this)) {
+                if (artistDetailsDTO != null) // Perform card charge
+                    performCharge(card);
+                else // Get information about Artist to be paid
+                    getArtist();
+            } else {
+                ProjectUtils.showToast(this, getResources().getString(R.string.internet_concation));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -149,22 +177,29 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
         charge.setEmail(userDTO.getEmail_id());
         charge.setCard(card);
         charge.putCustomField("Customer Name", userDTO.getName());
-        charge.putCustomField("Artisan Name", historyDTO.getArtistName());
+        charge.putCustomField("Artisan Name", artistDetailsDTO.getName());
+        charge.putCustomField("Artisan Email", artistDetailsDTO.getEmail_id());
+        charge.putCustomField("Artisan Account Name", artistDetailsDTO.getAccount_holder_name());
+        charge.putCustomField("Artisan Account Number", artistDetailsDTO.getAccount_no());
+        charge.putCustomField("Artisan Bank Name", artistDetailsDTO.getBank_name());
+        charge.putCustomField("Currency Name", artistDetailsDTO.getCurrency_name());
+        charge.putCustomField("Currency Code", artistDetailsDTO.getCurrency_code());
+        charge.putCustomField("Category Name", artistDetailsDTO.getCategory_name());
         charge.putCustomField("Artisan Location", historyDTO.getAddress());
-        charge.putCustomField("Coupon Code", historyDTO.getCoupon_code());
-        charge.putCustomField("Category Name", historyDTO.getCategoryName());
+        charge.putCustomField("Coupon Code", coupon);
         charge.putCustomField("Total Time in minutes", historyDTO.getWorking_min());
-        charge.putCustomField("Booking Date", historyDTO.getBooking_date());
-        charge.putCustomField("Booking Time", historyDTO.getBooking_time());
-        charge.putCustomField("Discount Amount", historyDTO.getDiscount_amount());
         charge.putCustomField("Final Amount", historyDTO.getFinal_amount());
         charge.putCustomField("Total Amount", historyDTO.getTotal_amount());
+        charge.putCustomField("Discount Amount", historyDTO.getDiscount_amount());
+        charge.putCustomField("Booking Date", historyDTO.getBooking_date());
+        charge.putCustomField("Booking Time", historyDTO.getBooking_time());
 
         PaystackSdk.chargeCard(this, charge, new Paystack.TransactionCallback() {
             @Override
             public void onSuccess(Transaction transaction) {
                 toggleLoading(false);
                 parseResponse(transaction.getReference());
+                preference.setValue(Consts.SURL, successPaypalUrl);
                 finish();
             }
 
@@ -178,8 +213,10 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
                 Log.d(kTAG, "onError: " + error.getMessage());
                 Log.d(kTAG, "onError: " + error);
                 Log.d(kTAG, "onErrorTransaction: " + transaction.getReference());
+
                 toggleLoading(false);
-                Toast.makeText(PaymentWeb.this, error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                ProjectUtils.showToast(PaymentWeb.this, error.getLocalizedMessage());
+                preference.setValue(Consts.FURL, failurePaypalUrl);
             }
         });
     }
@@ -191,6 +228,24 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
 
     private void parseResponse(String reference) {
         String message = "Payment was successful!\n Transaction Reference => " + reference;
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        ProjectUtils.showToast(this, message);
+    }
+
+    public void getArtist() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Consts.ARTIST_ID, historyDTO.getArtist_id());
+        params.put(Consts.USER_ID, userDTO.getUser_id());
+
+        ProjectUtils.showProgressDialog(this, true, getResources().getString(R.string.please_wait));
+        new HttpsRequest(Consts.GET_ARTIST_BY_ID_API, params, this).stringPost(kTAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
+                    artistDetailsDTO = new Gson().fromJson(response.getJSONObject("data").toString(), ArtistDetailsDTO.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

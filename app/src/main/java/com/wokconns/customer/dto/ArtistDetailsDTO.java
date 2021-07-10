@@ -29,6 +29,16 @@ public class ArtistDetailsDTO implements Serializable {
     String category_name = "";
     String category_price = "";
     String ava_rating = "";
+    //
+    String email_id = "";
+    String currency_name = "";
+    String currency_code = "";
+    String account_no = "";
+    String account_holder_name = "";
+    String bank_name = "";
+    String bank_address = "";
+    String ifsc_code = "";
+    String mobile = "";
     ArrayList<ProductDTO> products = new ArrayList<>();
     ArrayList<ReviewsDTO> reviews = new ArrayList<>();
     ArrayList<GalleryDTO> gallery = new ArrayList<>();
@@ -357,5 +367,77 @@ public class ArtistDetailsDTO implements Serializable {
 
     public void setCurrency_type(String currency_type) {
         this.currency_type = currency_type;
+    }
+
+    public String getEmail_id() {
+        return email_id;
+    }
+
+    public void setEmail_id(String email_id) {
+        this.email_id = email_id;
+    }
+
+    public String getCurrency_name() {
+        return currency_name;
+    }
+
+    public void setCurrency_name(String currency_name) {
+        this.currency_name = currency_name;
+    }
+
+    public String getCurrency_code() {
+        return currency_code;
+    }
+
+    public void setCurrency_code(String currency_code) {
+        this.currency_code = currency_code;
+    }
+
+    public String getAccount_no() {
+        return account_no;
+    }
+
+    public void setAccount_no(String account_no) {
+        this.account_no = account_no;
+    }
+
+    public String getAccount_holder_name() {
+        return account_holder_name;
+    }
+
+    public void setAccount_holder_name(String account_holder_name) {
+        this.account_holder_name = account_holder_name;
+    }
+
+    public String getBank_name() {
+        return bank_name;
+    }
+
+    public void setBank_name(String bank_name) {
+        this.bank_name = bank_name;
+    }
+
+    public String getBank_address() {
+        return bank_address;
+    }
+
+    public void setBank_address(String bank_address) {
+        this.bank_address = bank_address;
+    }
+
+    public String getIfsc_code() {
+        return ifsc_code;
+    }
+
+    public void setIfsc_code(String ifsc_code) {
+        this.ifsc_code = ifsc_code;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

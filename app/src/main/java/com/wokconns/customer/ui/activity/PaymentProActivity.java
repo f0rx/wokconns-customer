@@ -2,26 +2,24 @@ package com.wokconns.customer.ui.activity;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -29,6 +27,7 @@ import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.IPostPayment;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONException;
@@ -39,8 +38,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PaymentProActivity extends AppCompatActivity implements View.OnClickListener {
-    private String TAG = PaymentProActivity.class.getSimpleName();
+public class PaymentProActivity extends AppCompatActivity implements View.OnClickListener, IPostPayment {
+    private final String TAG = PaymentProActivity.class.getSimpleName();
     private Context mContext;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
@@ -52,7 +51,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     private LinearLayout llPayment, llCash, llWallet;
     private CustomEditText etCode;
     private String merchantKey, salt, userCredentials, invoice_id, user_id, coupon_code = "", final_amount, email;
-    private HashMap<String, String> params = new HashMap<>();
+    private final HashMap<String, String> params = new HashMap<>();
     private ImageView IVback;
     private Dialog dialog;
     //Paypal intent request code to track onActivityResult method
@@ -61,7 +60,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     private String amt1 = "";
     private String discount_amount = "0";
     private String currency = "";
-    private HashMap<String, String> parmsGetWallet = new HashMap<>();
+    private final HashMap<String, String> parmsGetWallet = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void setUiAction() {
-        IVback = (ImageView) findViewById(R.id.IVback);
+        IVback = findViewById(R.id.IVback);
         IVback.setOnClickListener(this);
         ivArtist = findViewById(R.id.ivArtist);
         tvCategory = findViewById(R.id.tvCategory);
@@ -125,7 +124,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.llWallet:
 //                if (Float.parseFloat(amt1) >= Float.parseFloat(final_amount)) {
-                    cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");
+                cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");
 //                } else {
 //                    ProjectUtils.showToast(mContext, "Insufficient balance, please add money to wallet first.");
 //                }
@@ -165,8 +164,8 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                 if (flag) {
                     try {
                         ProjectUtils.showToast(mContext, msg);
-                        String amt = response.getString("final_amount").toString();
-                        discount_amount = response.getString("discount_amount").toString();
+                        String amt = response.getString("final_amount");
+                        discount_amount = response.getString("discount_amount");
                         final_amount = amt;
                         tvAmount.setText(historyDTO.getCurrency_type() + amt);
                         tvApplyCode.setVisibility(View.GONE);
@@ -190,27 +189,6 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    public void sendPayment(String type) {
-        ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.MAKE_PAYMENT_API, getParms(type), mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    Intent in = new Intent(mContext, WriteReview.class);
-                    in.putExtra(Consts.HISTORY_DTO, historyDTO);
-                    startActivity(in);
-                    finish();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-
-                }
-            }
-        });
-    }
-
-
     public Map<String, String> getParms(String type) {
         HashMap<String, String> params = new HashMap<>();
         params.put(Consts.INVOICE_ID, historyDTO.getInvoice_id());
@@ -233,22 +211,11 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                     .setTitle(title)
                     .setMessage(msg)
                     .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sendPayment(type);
-                            dialog.dismiss();
-
-
-                        }
+                    .setPositiveButton(getResources().getString(R.string.yes), (dialog, which) -> {
+                        sendPayment(this, getParms(type), historyDTO);
+                        dialog.dismiss();
                     })
-                    .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
+                    .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {
@@ -259,24 +226,14 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onResume() {
         super.onResume();
+
         try {
             getWallet();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (prefrence.getValue(Consts.SURL).equalsIgnoreCase(Consts.INVOICE_PAYMENT_SUCCESS_Stripe)) {
-            prefrence.clearPreferences(Consts.SURL);
-            sendPayment("0");
-        } else if (prefrence.getValue(Consts.FURL).equalsIgnoreCase(Consts.INVOICE_PAYMENT_FAIL_Stripe)) {
-            prefrence.clearPreferences(Consts.FURL);
-            finish();
-        } else if (prefrence.getValue(Consts.SURL).equalsIgnoreCase(Consts.PAYMENT_SUCCESS_paypal)) {
-            prefrence.clearPreferences(Consts.SURL);
-            sendPayment("0");
-        } else if (prefrence.getValue(Consts.FURL).equalsIgnoreCase(Consts.PAYMENT_FAIL_Paypal)) {
-            prefrence.clearPreferences(Consts.FURL);
-            finish();
-        }
+
+        updatePaymentStatus(this, prefrence, getParms("0"), historyDTO);
     }
 
     public void dialogPayment() {
@@ -287,30 +244,32 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
 
         ///dialog.getWindow().setBackgroundDrawableResource(R.color.black);
-        paystackPay = (LinearLayout) dialog.findViewById(R.id.paystackButton);
-        flutterwavepay = (LinearLayout) dialog.findViewById(R.id.flutterwaveButton);
-        llCancel = (LinearLayout) dialog.findViewById(R.id.llCancel);
+        paystackPay = dialog.findViewById(R.id.paystackButton);
+        flutterwavepay = dialog.findViewById(R.id.flutterwaveButton);
+        llCancel = dialog.findViewById(R.id.llCancel);
 
         dialog.show();
         dialog.setCancelable(false);
         llCancel.setOnClickListener(v -> dialog.dismiss());
+
+        coupon_code = ProjectUtils.getEditTextValue(etCode);
+        String url = Consts.INVOICE__PAYMENT_paypal + "&id=" + historyDTO.getInvoice_id() + "&coupon_code=" + coupon_code;
+
         paystackPay.setOnClickListener(v -> {
-            coupon_code = ProjectUtils.getEditTextValue(etCode);
             Intent in2 = new Intent(mContext, PaymentWeb.class);
             in2.putExtra(Consts.HISTORY_DTO, historyDTO);
             in2.putExtra(Consts.COUPON_CODE, coupon_code);
+            in2.putExtra(Consts.PAYMENT_URL, url);
             startActivity(in2);
             dialog.dismiss();
-            finish();
         });
         flutterwavepay.setOnClickListener(v -> {
-            coupon_code = ProjectUtils.getEditTextValue(etCode);
             Intent in3 = new Intent(mContext, PaymentWeb.class);
             in3.putExtra(Consts.HISTORY_DTO, historyDTO);
             in3.putExtra(Consts.COUPON_CODE, coupon_code);
+            in3.putExtra(Consts.PAYMENT_URL, url);
             startActivity(in3);
             dialog.dismiss();
-            finish();
         });
 
     }

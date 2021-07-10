@@ -182,7 +182,7 @@
     <string name="services_type">Services type:</string>
     <string name="accept">Accept</string>
     <string name="reject1">Reject</string>
-    <string name="artist_will_soon">Artist will soon</string>
+    <string name="artist_will_soon">Waiting for response..</string>
     <string name="complete1">Complete</string>
     <string name="edit">Edit</string>
     <string name="decline1">Decline</string>
