@@ -207,20 +207,17 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
 
     public void getArtist() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_ARTIST_BY_ID_API, parms, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        artistDetailsDTO = new Gson().fromJson(response.getJSONObject("data").toString(), ArtistDetailsDTO.class);
-                        showData();
+        new HttpsRequest(Consts.GET_ARTIST_BY_ID_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
+                    artistDetailsDTO = new Gson().fromJson(response.getJSONObject("data").toString(), ArtistDetailsDTO.class);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
             }
         });
     }

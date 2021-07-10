@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-    private String TAG = AppliedJob.class.getSimpleName();
+    private final String TAG = AppliedJob.class.getSimpleName();
     private Context mContext;
     private AppliedJobAdapter appliedJobAdapter;
     private ArrayList<AppliedJobDTO> appliedJobDTOSList;
@@ -56,12 +56,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
     public void setUiAction() {
         mLayoutManager = new LinearLayoutManager(mContext.getApplicationContext());
         binding.RVhistorylist.setLayoutManager(mLayoutManager);
-        binding.ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.ivBack.setOnClickListener(v -> finish());
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -73,7 +68,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.length() > 0) {
-                    appliedJobAdapter.filter(newText.toString());
+                    appliedJobAdapter.filter(newText);
 
 
                 } else {
@@ -84,53 +79,46 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
             }
         });
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-        binding.swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
+        binding.swipeRefreshLayout.post(() -> {
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(mContext)) {
+                binding.swipeRefreshLayout.setRefreshing(true);
+                getjobs();
 
-                                        Log.e("Runnable", "FIRST");
-                                        if (NetworkManager.isConnectToInternet(mContext)) {
-                                            binding.swipeRefreshLayout.setRefreshing(true);
-                                            getjobs();
-
-                                        } else {
-                                            ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
-                                        }
-                                    }
-                                }
+            } else {
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+            }
+        }
         );
     }
 
 
     public void getjobs() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_APPLIED_JOB_BY_ID_API, getparm(), mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                binding.swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    binding.tvNo.setVisibility(View.GONE);
-                    binding.RVhistorylist.setVisibility(View.VISIBLE);
-                    binding.rlSearch.setVisibility(View.VISIBLE);
-                    try {
-                        appliedJobDTOSList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<AppliedJobDTO>>() {
-                        }.getType();
-                        appliedJobDTOSList = (ArrayList<AppliedJobDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                        showData();
+        new HttpsRequest(Consts.GET_APPLIED_JOB_BY_ID_API, getparm(), mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            binding.swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                binding.tvNo.setVisibility(View.GONE);
+                binding.RVhistorylist.setVisibility(View.VISIBLE);
+                binding.rlSearch.setVisibility(View.VISIBLE);
+                try {
+                    appliedJobDTOSList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<AppliedJobDTO>>() {
+                    }.getType();
+                    appliedJobDTOSList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                    binding.tvNo.setVisibility(View.VISIBLE);
-                    binding.RVhistorylist.setVisibility(View.GONE);
-                    binding.rlSearch.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+                binding.tvNo.setVisibility(View.VISIBLE);
+                binding.RVhistorylist.setVisibility(View.GONE);
+                binding.rlSearch.setVisibility(View.GONE);
             }
         });
     }

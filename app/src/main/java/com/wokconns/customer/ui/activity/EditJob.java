@@ -58,13 +58,13 @@ import static com.schibstedspain.leku.LocationPickerActivityKt.LATITUDE;
 import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
 
 public class EditJob extends AppCompatActivity implements View.OnClickListener {
-    private String TAG = EditJob.class.getSimpleName();
+    private final String TAG = EditJob.class.getSimpleName();
     private Context mContext;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private ArrayList<CategoryDTO> categoryDTOS;
-    private HashMap<String, String> parmsadd = new HashMap<>();
-    private HashMap<String, String> parmsCategory = new HashMap<>();
+    private final HashMap<String, String> parmsadd = new HashMap<>();
+    private final HashMap<String, String> parmsCategory = new HashMap<>();
     Uri picUri;
     int PICK_FROM_CAMERA = 1, PICK_FROM_GALLERY = 2;
     int CROP_CAMERA_IMAGE = 3, CROP_GALLERY_IMAGE = 4;
@@ -107,76 +107,68 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         binding.llPost.setOnClickListener(this);
         builder = new BottomSheet.Builder(EditJob.this).sheet(R.menu.menu_cards);
         builder.title(getResources().getString(R.string.take_image));
-        builder.listener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
+        builder.listener((dialog, which) -> {
+            switch (which) {
 
-                    case R.id.camera_cards:
-                        if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
-                            if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                try {
-                                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                                    File file = getOutputMediaFile(1);
-                                    if (!file.exists()) {
-                                        try {
-                                            file.createNewFile();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        //Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.asd", newFile);
-                                        picUri = FileProvider.getUriForFile(EditJob.this.getApplicationContext(), EditJob.this.getApplicationContext().getPackageName() + ".fileprovider", file);
-                                    } else {
-                                        picUri = Uri.fromFile(file); // create
-                                    }
-
-
-                                    prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
-                                    startActivityForResult(intent, PICK_FROM_CAMERA);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }
-
-                        break;
-                    case R.id.gallery_cards:
-                        if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
-                            if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                case R.id.camera_cards:
+                    if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
+                        if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            try {
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                                 File file = getOutputMediaFile(1);
-                                if (!file.exists()) {
+                                if (!(file != null && file.exists())) {
                                     try {
                                         file.createNewFile();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
                                 }
-                                picUri = Uri.fromFile(file);
 
-                                Intent intent = new Intent();
-                                intent.setType("image/*");
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    //Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.asd", newFile);
+                                    picUri = FileProvider.getUriForFile(EditJob.this.getApplicationContext(), EditJob.this.getApplicationContext().getPackageName() + ".fileprovider", file);
+                                } else {
+                                    picUri = Uri.fromFile(file); // create
+                                }
 
+
+                                prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
+                                startActivityForResult(intent, PICK_FROM_CAMERA);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
-                        break;
-                    case R.id.cancel_cards:
-                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                dialog.dismiss();
+
+                    }
+
+                    break;
+                case R.id.gallery_cards:
+                    if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
+                        if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                            File file = getOutputMediaFile(1);
+                            if (!(file != null && file.exists())) {
+                                try {
+                                    file.createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        });
-                        break;
-                }
+                            picUri = Uri.fromFile(file);
+
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
+
+                        }
+                    }
+                    break;
+                case R.id.cancel_cards:
+                    builder.setOnDismissListener(DialogInterface::dismiss);
+                    break;
             }
         });
 
@@ -490,7 +482,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                         categoryDTOS = new ArrayList<>();
                         Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
                         }.getType();
-                        categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                        categoryDTOS = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
                         showData();
 

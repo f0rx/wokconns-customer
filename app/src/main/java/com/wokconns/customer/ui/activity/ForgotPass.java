@@ -33,18 +33,8 @@ public class ForgotPass extends AppCompatActivity {
     }
 
     public void setUiAction() {
-        binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitForm();
-            }
-        });
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.btnSubmit.setOnClickListener(v -> submitForm());
+        binding.llBack.setOnClickListener(v -> finish());
     }
 
     public void submitForm() {
@@ -71,20 +61,17 @@ public class ForgotPass extends AppCompatActivity {
     }
 
     public void updatepass() {
-        parms.put(Consts.EMAIL_ID, ProjectUtils.getEditTextValue( binding.etEmail));
+        parms.put(Consts.EMAIL_ID, ProjectUtils.getEditTextValue(binding.etEmail));
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.FORGET_PASSWORD_API, parms, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    finish();
-                    overridePendingTransition(R.anim.anim_slide_in_left,
-                            R.anim.anim_slide_out_left);
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
+        new HttpsRequest(Consts.FORGET_PASSWORD_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                finish();
+                overridePendingTransition(R.anim.anim_slide_in_left,
+                        R.anim.anim_slide_out_left);
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }

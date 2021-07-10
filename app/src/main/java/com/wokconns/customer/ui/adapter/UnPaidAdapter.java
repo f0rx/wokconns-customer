@@ -6,18 +6,19 @@ package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
@@ -42,12 +43,13 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
     private UserDTO userDTO;
     private SharedPrefrence prefrence;
     private LayoutInflater inflater;
+
     public UnPaidAdapter(UnPaidFrag unPaidFrag, ArrayList<HistoryDTO> objects, UserDTO userDTO, LayoutInflater inflater) {
         this.unPaidFrag = unPaidFrag;
         this.mContext = unPaidFrag.getActivity();
         this.objects = objects;
         this.userDTO = userDTO;
-        this.historyDTOList = new ArrayList<HistoryDTO>();
+        this.historyDTOList = new ArrayList<>();
         this.historyDTOList.addAll(objects);
         this.inflater = inflater;
         prefrence = SharedPrefrence.getInstance(mContext);
@@ -65,11 +67,12 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
-        holder.CTVBservice.setText(mContext.getResources().getString(R.string.service)+" " + objects.get(position).getInvoice_id());
-        try{
+        holder.CTVBservice.setText(String.format("%s %s",
+                mContext.getResources().getString(R.string.service),
+                objects.get(position).getInvoice_id()));
+        try {
             holder.CTVdate.setText(ProjectUtils.convertTimestampDateToTime(ProjectUtils.correctTimestamp(Long.parseLong(objects.get(position).getCreated_at()))));
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -95,14 +98,10 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
             holder.tvStatus.setText(mContext.getResources().getString(R.string.paid));
             holder.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_green));
         }
-        holder.llPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(mContext, PaymentProActivity.class);
-                in.putExtra(Consts.HISTORY_DTO, objects.get(position));
-                mContext.startActivity(in);
-
-            }
+        holder.llPay.setOnClickListener(v -> {
+            Intent in = new Intent(mContext, PaymentProActivity.class);
+            in.putExtra(Consts.HISTORY_DTO, objects.get(position));
+            mContext.startActivity(in);
         });
 
         holder.tvView.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +120,7 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
             Date dt = sdf.parse(objects.get(position).getWorking_min());
             sdf = new SimpleDateFormat("HH:mm:ss");
 
-            holder.CTVTime.setText(mContext.getResources().getString(R.string.duration)+" " + sdf.format(dt));
+            holder.CTVTime.setText(mContext.getResources().getString(R.string.duration) + " " + sdf.format(dt));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,7 +137,7 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public CustomTextViewBold CTVBservice;
-        public CustomTextView CTVprice, CTVdate, CTVServicetype, CTVwork, CTVname, tvStatus,CTVTime,tvView;
+        public CustomTextView CTVprice, CTVdate, CTVServicetype, CTVwork, CTVname, tvStatus, CTVTime, tvView;
         public ImageView IVprofile;
         public LinearLayout llStatus, llPay;
 
@@ -160,6 +159,7 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
 
         }
     }
+
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         objects.clear();
@@ -175,8 +175,6 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
         }
         notifyDataSetChanged();
     }
-
-
 
 
 }

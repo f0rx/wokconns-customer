@@ -75,6 +75,7 @@ import com.wokconns.customer.utils.CustomTypeFaceSpan;
 import com.wokconns.customer.utils.FontCache;
 import com.wokconns.customer.utils.ProjectUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-    private String TAG = BaseActivity.class.getSimpleName();
+    private final String TAG = BaseActivity.class.getSimpleName();
     HashMap<String, String> parms = new HashMap<>();
 
     private FrameLayout frame;
@@ -120,7 +121,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final float END_SCALE = 0.8f;
     InputMethodManager inputManager;
     DiscoverNearBy discoverNearBy = null;
-    private boolean shouldLoadHomeFragOnBackPress = true;
+    private final boolean shouldLoadHomeFragOnBackPress = true;
     public CustomTextViewBold headerNameTV;
     private Location mylocation;
     private GoogleApiClient googleApiClient;
@@ -150,14 +151,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         setUpGClient();
 
-        header = (RelativeLayout) findViewById(R.id.header);
-        frame = (FrameLayout) findViewById(R.id.frame);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        header = findViewById(R.id.header);
+        frame = findViewById(R.id.frame);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
         contentView = findViewById(R.id.content);
         headerNameTV = findViewById(R.id.headerNameTV);
-        menuLeftIV = (ImageView) findViewById(R.id.menuLeftIV);
-        ivFilter = (ImageView) findViewById(R.id.ivFilter);
+        menuLeftIV = findViewById(R.id.menuLeftIV);
+        ivFilter = findViewById(R.id.ivFilter);
 
 
         navHeader = navigationView.getHeaderView(0);
@@ -171,37 +172,21 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         llProfileClick = navHeader.findViewById(R.id.llProfileClick);
 
 
-        llProfileClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ivFilter.setVisibility(View.GONE);
-                header.setVisibility(View.GONE);
-                navItemIndex = 10;
-                CURRENT_TAG = TAG_PROFILE_SETINGS;
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.frame, new ProfileSettingActivity());
-                fragmentTransaction.commitAllowingStateLoss();
-                drawer.closeDrawers();
-            }
+        llProfileClick.setOnClickListener(v -> {
+            ivFilter.setVisibility(View.GONE);
+            header.setVisibility(View.GONE);
+            navItemIndex = 10;
+            CURRENT_TAG = TAG_PROFILE_SETINGS;
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frame, new ProfileSettingActivity());
+            fragmentTransaction.commitAllowingStateLoss();
+            drawer.closeDrawers();
         });
 
-        tvEnglish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                language("en");
-
-            }
-        });
-        tvOther.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                language("ar");
-
-            }
-        });
+        tvEnglish.setOnClickListener(v -> language("en"));
+        tvOther.setOnClickListener(v -> language("ar"));
         Glide.with(mContext).
                 load(userDTO.getImage())
                 .placeholder(R.drawable.dummyuser_image)
@@ -283,13 +268,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         }
-        menuLeftIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                drawerOpen();
-            }
-        });
+        menuLeftIV.setOnClickListener(v -> drawerOpen());
 
         setUpNavigationView();
         Menu menu = navigationView.getMenu();
@@ -314,26 +293,26 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         drawer.setScrimColor(Color.TRANSPARENT);
         drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-                                     @Override
-                                     public void onDrawerSlide(View drawerView, float slideOffset) {
+                 @Override
+                 public void onDrawerSlide(View drawerView, float slideOffset) {
 
-                                         // Scale the View based on current slide offset
-                                         final float diffScaledOffset = slideOffset * (1 - END_SCALE);
-                                         final float offsetScale = 1 - diffScaledOffset;
-                                         contentView.setScaleX(offsetScale);
-                                         contentView.setScaleY(offsetScale);
+                     // Scale the View based on current slide offset
+                     final float diffScaledOffset = slideOffset * (1 - END_SCALE);
+                     final float offsetScale = 1 - diffScaledOffset;
+                     contentView.setScaleX(offsetScale);
+                     contentView.setScaleY(offsetScale);
 
-                                         // Translate the View, accounting for the scaled width
-                                         final float xOffset = drawerView.getWidth() * slideOffset;
-                                         final float xOffsetDiff = contentView.getWidth() * diffScaledOffset / 2;
-                                         final float xTranslation = xOffset - xOffsetDiff;
-                                         contentView.setTranslationX(xTranslation);
-                                     }
+                     // Translate the View, accounting for the scaled width
+                     final float xOffset = drawerView.getWidth() * slideOffset;
+                     final float xOffsetDiff = contentView.getWidth() * diffScaledOffset / 2;
+                     final float xTranslation = xOffset - xOffsetDiff;
+                     contentView.setTranslationX(xTranslation);
+                 }
 
-                                     @Override
-                                     public void onDrawerClosed(View drawerView) {
-                                     }
-                                 }
+                 @Override
+                 public void onDrawerClosed(View drawerView) {
+                 }
+             }
         );
 
 
@@ -367,17 +346,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void loadHomeFragment(final Fragment fragment, final String TAG) {
 
-        Runnable mPendingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.frame, fragment, TAG);
-                fragmentTransaction.commitAllowingStateLoss();
-                ivFilter.setVisibility(View.VISIBLE);
+        Runnable mPendingRunnable = () -> {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frame, fragment, TAG);
+            fragmentTransaction.commitAllowingStateLoss();
+            ivFilter.setVisibility(View.VISIBLE);
 
-            }
         };
 
         if (mPendingRunnable != null) {
@@ -407,132 +383,124 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void setUpNavigationView() {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
 
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
+            switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.GONE);
+                    navItemIndex = 0;
+                    CURRENT_TAG = TAG_HOME;
+                    fragmentTransaction.replace(R.id.frame, new Home());
+                    break;
+                case R.id.nav_discover_jobs:
+                    ivFilter.setVisibility(View.VISIBLE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 1;
+                    CURRENT_TAG = TAG_MAIN;
+                    fragmentTransaction.replace(R.id.frame, new DiscoverNearBy());
+                    break;
+                case R.id.nav_chat:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 2;
+                    CURRENT_TAG = TAG_CHAT;
+                    fragmentTransaction.replace(R.id.frame, new ChatList());
+                    break;
+                case R.id.nav_booking:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 3;
+                    CURRENT_TAG = TAG_BOOKING;
+                    fragmentTransaction.replace(R.id.frame, new MyBooking());
+                    break;
+                case R.id.nav_jobs:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 4;
+                    CURRENT_TAG = TAG_JOBS;
+                    fragmentTransaction.replace(R.id.frame, new Jobs());
+                    break;
+                case R.id.nav_appointment:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 5;
+                    CURRENT_TAG = TAG_APPOINTMENT;
+                    fragmentTransaction.replace(R.id.frame, new AppointmentFrag());
+                    break;
+                case R.id.nav_setting:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 6;
+                    CURRENT_TAG = TAG_SETTING;
+                    fragmentTransaction.replace(R.id.frame, new Setting());
+                    break;
+                case R.id.nav_notification:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 7;
+                    CURRENT_TAG = TAG_NOTIFICATION;
+                    fragmentTransaction.replace(R.id.frame, new NotificationActivity());
+                    break;
+                case R.id.nav_history:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 8;
+                    CURRENT_TAG = TAG_DISCOUNT;
+                    fragmentTransaction.replace(R.id.frame, new HistoryFragment());
+                    break;
+                case R.id.nav_discount:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 9;
+                    CURRENT_TAG = TAG_HISTORY;
+                    fragmentTransaction.replace(R.id.frame, new GetDiscountActivity());
+                    break;
+                case R.id.nav_wallet:
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    navItemIndex = 10;
+                    CURRENT_TAG = TAG_WALLET;
+                    fragmentTransaction.replace(R.id.frame, new Wallet());
+                    break;
+                case R.id.nav_profilesetting:
+                    navItemIndex = 11;
+                    CURRENT_TAG = TAG_PROFILE_SETINGS;
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.GONE);
+                    fragmentTransaction.replace(R.id.frame, new ProfileSettingActivity());
+                    break;
+                case R.id.nav_tickets:
+                    navItemIndex = 12;
+                    CURRENT_TAG = TAG_TICKETS;
+                    ivFilter.setVisibility(View.GONE);
+                    header.setVisibility(View.VISIBLE);
+                    fragmentTransaction.replace(R.id.frame, new Tickets());
+                    break;
+                case R.id.nav_logout:
+                    confirmLogout();
+                    break;
+                default:
+                    ivFilter.setVisibility(View.VISIBLE);
+                    header.setVisibility(View.GONE);
+                    navItemIndex = 0;
+                    CURRENT_TAG = TAG_HOME;
+                    fragmentTransaction.replace(R.id.frame, new Home());
+                    break;
 
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_home:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.GONE);
-                        navItemIndex = 0;
-                        CURRENT_TAG = TAG_HOME;
-                        fragmentTransaction.replace(R.id.frame, new Home());
-                        break;
-                    case R.id.nav_discover_jobs:
-                        ivFilter.setVisibility(View.VISIBLE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 1;
-                        CURRENT_TAG = TAG_MAIN;
-                        fragmentTransaction.replace(R.id.frame, new DiscoverNearBy());
-                        break;
-                    case R.id.nav_chat:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 2;
-                        CURRENT_TAG = TAG_CHAT;
-                        fragmentTransaction.replace(R.id.frame, new ChatList());
-                        break;
-                    case R.id.nav_booking:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 3;
-                        CURRENT_TAG = TAG_BOOKING;
-                        fragmentTransaction.replace(R.id.frame, new MyBooking());
-                        break;
-                    case R.id.nav_jobs:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 4;
-                        CURRENT_TAG = TAG_JOBS;
-                        fragmentTransaction.replace(R.id.frame, new Jobs());
-                        break;
-                    case R.id.nav_appointment:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 5;
-                        CURRENT_TAG = TAG_APPOINTMENT;
-                        fragmentTransaction.replace(R.id.frame, new AppointmentFrag());
-                        break;
-                    case R.id.nav_setting:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 6;
-                        CURRENT_TAG = TAG_SETTING;
-                        fragmentTransaction.replace(R.id.frame, new Setting());
-                        break;
-                    case R.id.nav_notification:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 7;
-                        CURRENT_TAG = TAG_NOTIFICATION;
-                        fragmentTransaction.replace(R.id.frame, new NotificationActivity());
-                        break;
-                    case R.id.nav_history:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 8;
-                        CURRENT_TAG = TAG_DISCOUNT;
-                        fragmentTransaction.replace(R.id.frame, new HistoryFragment());
-                        break;
-                    case R.id.nav_discount:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 9;
-                        CURRENT_TAG = TAG_HISTORY;
-                        fragmentTransaction.replace(R.id.frame, new GetDiscountActivity());
-                        break;
-                    case R.id.nav_wallet:
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        navItemIndex = 10;
-                        CURRENT_TAG = TAG_WALLET;
-                        fragmentTransaction.replace(R.id.frame, new Wallet());
-                        break;
-                    case R.id.nav_profilesetting:
-                        navItemIndex = 11;
-                        CURRENT_TAG = TAG_PROFILE_SETINGS;
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.GONE);
-                        fragmentTransaction.replace(R.id.frame, new ProfileSettingActivity());
-                        break;
-                    case R.id.nav_tickets:
-                        navItemIndex = 12;
-                        CURRENT_TAG = TAG_TICKETS;
-                        ivFilter.setVisibility(View.GONE);
-                        header.setVisibility(View.VISIBLE);
-                        fragmentTransaction.replace(R.id.frame, new Tickets());
-                        break;
-                    case R.id.nav_logout:
-                        confirmLogout();
-                        break;
-                    default:
-                        ivFilter.setVisibility(View.VISIBLE);
-                        header.setVisibility(View.GONE);
-                        navItemIndex = 0;
-                        CURRENT_TAG = TAG_HOME;
-                        fragmentTransaction.replace(R.id.frame, new Home());
-                        break;
-
-                }
-                fragmentTransaction.commitAllowingStateLoss();
-                drawer.closeDrawers();
-
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
-                    menuItem.setChecked(true);
-                }
-                menuItem.setChecked(true);
-
-                //   loadHomeFragment();
-
-                return true;
             }
+            fragmentTransaction.commitAllowingStateLoss();
+            drawer.closeDrawers();
+
+            menuItem.setChecked(!menuItem.isChecked());
+            menuItem.setChecked(true);
+
+            //   loadHomeFragment();
+
+            return true;
         });
 
     }
@@ -563,25 +531,17 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                 .setIcon(R.mipmap.ic_launcher)
                 .setTitle(getResources().getString(R.string.app_name))
                 .setMessage(getResources().getString(R.string.closeMsg))
-                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        Intent i = new Intent();
-                        i.setAction(Intent.ACTION_MAIN);
-                        i.addCategory(Intent.CATEGORY_HOME);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
+                .setPositiveButton(getResources().getString(R.string.yes), (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_MAIN);
+                    i.addCategory(Intent.CATEGORY_HOME);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
 
-                        finish();
-                    }
+                    finish();
                 })
-                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -719,7 +679,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         int permissionLocation = ContextCompat.checkSelfPermission(BaseActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
@@ -740,15 +700,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void updateLocation() {
         // ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.UPDATE_LOCATION_API, parms, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
+        new HttpsRequest(Consts.UPDATE_LOCATION_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
 
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+            } else {
+                ProjectUtils.showToast(mContext, msg);
 
-                }
             }
         });
     }
@@ -780,23 +737,15 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                     .setTitle(getResources().getString(R.string.app_name))
                     .setMessage(getResources().getString(R.string.logout_msg))
                     .setCancelable(false)
-                    .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            prefrence.clearAllPreferences();
-                            Intent intent = new Intent(mContext, SignInActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            ((BaseActivity)mContext).finish();
-                        }
+                    .setPositiveButton(getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog.dismiss();
+                        prefrence.clearAllPreferences();
+                        Intent intent = new Intent(mContext, SignInActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        ((BaseActivity)mContext).finish();
                     })
-                    .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
+                    .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {

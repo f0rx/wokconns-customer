@@ -6,8 +6,6 @@ package com.wokconns.customer.ui.adapter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.ArtistProfile;
@@ -31,8 +31,6 @@ import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +50,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
     public AppliedJobAdapter(AppliedJob appliedJob, ArrayList<AppliedJobDTO> objects, UserDTO userDTO) {
         this.appliedJob = appliedJob;
         this.objects = objects;
-        this.appliedJobDTOSList = new ArrayList<AppliedJobDTO>();
+        this.appliedJobDTOSList = new ArrayList<>();
         this.appliedJobDTOSList.addAll(objects);
         this.userDTO = userDTO;
         prefrence = SharedPrefrence.getInstance(appliedJob);
@@ -69,7 +67,10 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        holder.tvDate.setText(appliedJob.getResources().getString(R.string.date) + " " + ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()) + " " + objects.get(position).getTime());
+        holder.tvDate.setText(String.format("%s %s %s",
+                appliedJob.getResources().getString(R.string.date),
+                ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()),
+                objects.get(position).getTime()));
         holder.tvJobId.setText(objects.get(position).getJob_id());
         holder.tvName.setText(objects.get(position).getArtist_name());
         holder.tvDescription.setText(objects.get(position).getDescription());
@@ -77,8 +78,10 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
         holder.tvAddress.setText(objects.get(position).getArtist_address());
         holder.tvEmail.setText(objects.get(position).getArtist_email());
         holder.tvMobile.setText(objects.get(position).getArtist_mobile());
-        holder.tvPrice.setText(objects.get(position).getCurrency_symbol() + objects.get(position).getPrice());
-        holder.tvRating.setText("(" + objects.get(position).getAva_rating() + "/5)");
+        holder.tvPrice.setText(String.format("%s%s",
+                objects.get(position).getCurrency_symbol(),
+                objects.get(position).getPrice()));
+        holder.tvRating.setText(String.format("(%s/5)", objects.get(position).getAva_rating()));
         holder.ratingbar.setRating(Float.parseFloat(objects.get(position).getAva_rating()));
 
         Glide.with(appliedJob).
@@ -121,54 +124,39 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
         }
 
 
-        holder.llDecline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                params = new HashMap<>();
-                params.put(Consts.AJ_ID, objects.get(position).getAj_id());
-                params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                params.put(Consts.STATUS, "3");
-                rejectDialog(appliedJob.getResources().getString(R.string.reject), appliedJob.getResources().getString(R.string.reject_msg));
-            }
+        holder.llDecline.setOnClickListener(v -> {
+            params = new HashMap<>();
+            params.put(Consts.AJ_ID, objects.get(position).getAj_id());
+            params.put(Consts.JOB_ID, objects.get(position).getJob_id());
+            params.put(Consts.STATUS, "3");
+            rejectDialog(appliedJob.getResources().getString(R.string.reject), appliedJob.getResources().getString(R.string.reject_msg));
         });
-        holder.llAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                params = new HashMap<>();
-                params.put(Consts.AJ_ID, objects.get(position).getAj_id());
-                params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                params.put(Consts.STATUS, "1");
-                rejectDialog(appliedJob.getResources().getString(R.string.confirm), appliedJob.getResources().getString(R.string.confirm_msg));
-            }
+        holder.llAccept.setOnClickListener(v -> {
+            params = new HashMap<>();
+            params.put(Consts.AJ_ID, objects.get(position).getAj_id());
+            params.put(Consts.JOB_ID, objects.get(position).getJob_id());
+            params.put(Consts.STATUS, "1");
+            rejectDialog(appliedJob.getResources().getString(R.string.confirm), appliedJob.getResources().getString(R.string.confirm_msg));
         });
-        holder.llComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                params = new HashMap<>();
-                params.put(Consts.AJ_ID, objects.get(position).getAj_id());
-                params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                params.put(Consts.STATUS, "2");
-                rejectDialog(appliedJob.getResources().getString(R.string.complete), appliedJob.getResources().getString(R.string.complete_msg));
-            }
+        holder.llComplete.setOnClickListener(v -> {
+            params = new HashMap<>();
+            params.put(Consts.AJ_ID, objects.get(position).getAj_id());
+            params.put(Consts.JOB_ID, objects.get(position).getJob_id());
+            params.put(Consts.STATUS, "2");
+            rejectDialog(appliedJob.getResources().getString(R.string.complete), appliedJob.getResources().getString(R.string.complete_msg));
         });
-        holder.rlPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(appliedJob, ArtistProfile.class);
-                in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
-                in.putExtra(Consts.FLAG, 1);
-                appliedJob.startActivity(in);
-            }
+        holder.rlPhoto.setOnClickListener(v -> {
+            Intent in = new Intent(appliedJob, ArtistProfile.class);
+            in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
+            in.putExtra(Consts.FLAG, 1);
+            appliedJob.startActivity(in);
         });
 
-        holder.icChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(appliedJob, OneTwoOneChat.class);
-                in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
-                in.putExtra(Consts.ARTIST_NAME, objects.get(position).getArtist_name());
-                appliedJob.startActivity(in);
-            }
+        holder.icChat.setOnClickListener(v -> {
+            Intent in = new Intent(appliedJob, OneTwoOneChat.class);
+            in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
+            in.putExtra(Consts.ARTIST_NAME, objects.get(position).getArtist_name());
+            appliedJob.startActivity(in);
         });
     }
 
@@ -216,19 +204,16 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
 
     public void reject() {
 
-        new HttpsRequest(Consts.JOB_STATUS_USER_API, params, appliedJob).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showToast(appliedJob, msg);
-                    dialog_book.dismiss();
-                    appliedJob.getjobs();
-                } else {
-                    ProjectUtils.showToast(appliedJob, msg);
-                }
-
-
+        new HttpsRequest(Consts.JOB_STATUS_USER_API, params, appliedJob).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showToast(appliedJob, msg);
+                dialog_book.dismiss();
+                appliedJob.getjobs();
+            } else {
+                ProjectUtils.showToast(appliedJob, msg);
             }
+
+
         });
     }
 
@@ -239,21 +224,12 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
                     .setTitle(title)
                     .setMessage(msg)
                     .setCancelable(false)
-                    .setPositiveButton(appliedJob.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog_book = dialog;
-                            reject();
+                    .setPositiveButton(appliedJob.getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog_book = dialog;
+                        reject();
 
-                        }
                     })
-                    .setNegativeButton(appliedJob.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
+                    .setNegativeButton(appliedJob.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {

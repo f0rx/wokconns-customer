@@ -35,7 +35,7 @@ import java.util.List;
 
 public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefreshListener{
     private View view;
-    private String TAG = UnPaidFrag.class.getSimpleName();
+    private final String TAG = UnPaidFrag.class.getSimpleName();
     private RecyclerView RVhistorylist;
     private UnPaidAdapter unPaidAdapter;
     private ArrayList<HistoryDTO> historyDTOList;
@@ -60,7 +60,7 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
     }
 
     public void setUiAction(View v) {
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout);
         rlSearch = v.findViewById(R.id.rlSearch);
         svSearch = v.findViewById(R.id.svSearch);
         tvNo = v.findViewById(R.id.tvNo);
@@ -80,7 +80,7 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.length() > 0) {
-                    unPaidAdapter.filter(newText.toString());
+                    unPaidAdapter.filter(newText);
 
                 } else {
 
@@ -110,7 +110,7 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
                         historyDTOList = new ArrayList<>();
                         Type getpetDTO = new TypeToken<List<HistoryDTO>>() {
                         }.getType();
-                        historyDTOList = (ArrayList<HistoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                        historyDTOList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
                         showData();
 
                     } catch (Exception e) {
@@ -131,21 +131,18 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
     public void onResume() {
         super.onResume();
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
+        swipeRefreshLayout.post(() -> {
 
-                                        Log.e("Runnable", "FIRST");
-                                        if (NetworkManager.isConnectToInternet(getActivity())) {
-                                            swipeRefreshLayout.setRefreshing(true);
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(getActivity())) {
+                swipeRefreshLayout.setRefreshing(true);
 
-                                            getHistroy();
+                getHistroy();
 
-                                        } else {
-                                            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                                        }
-                                    }
-                                }
+            } else {
+                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+            }
+        }
         );
     }
 

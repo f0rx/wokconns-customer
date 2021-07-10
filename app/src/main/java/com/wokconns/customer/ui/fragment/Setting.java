@@ -43,11 +43,11 @@ public class Setting extends Fragment implements View.OnClickListener {
     private CustomEditText etOldPassD, etNewPassD, etConfrimPassD;
     private ImageView ivClose;
     private HashMap<String, String> params;
-    private HashMap<String, String> paramsLogout = new HashMap<>();
-    private HashMap<String, File> paramsFile = new HashMap<>();
+    private final HashMap<String, String> paramsLogout = new HashMap<>();
+    private final HashMap<String, File> paramsFile = new HashMap<>();
     private SharedPrefrence preference;
     private UserDTO userDTO;
-    private String TAG = Setting.class.getSimpleName();
+    private final String TAG = Setting.class.getSimpleName();
     private View view;
     private BaseActivity baseActivity;
     FragmentSettingBinding binding;
@@ -136,70 +136,59 @@ public class Setting extends Fragment implements View.OnClickListener {
         dialog_pass.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_pass.setContentView(R.layout.dailog_password);
 
-        ivClose = (ImageView) dialog_pass.findViewById(R.id.iv_close);
-        etOldPassD = (CustomEditText) dialog_pass.findViewById(R.id.etOldPassD);
-        etNewPassD = (CustomEditText) dialog_pass.findViewById(R.id.etNewPassD);
-        etConfrimPassD = (CustomEditText) dialog_pass.findViewById(R.id.etConfrimPassD);
+        ivClose = dialog_pass.findViewById(R.id.iv_close);
+        etOldPassD = dialog_pass.findViewById(R.id.etOldPassD);
+        etNewPassD = dialog_pass.findViewById(R.id.etNewPassD);
+        etConfrimPassD = dialog_pass.findViewById(R.id.etConfrimPassD);
 
         etOldPassD.setTransformationMethod(new PasswordTransformationMethod());
         etNewPassD.setTransformationMethod(new PasswordTransformationMethod());
         etConfrimPassD.setTransformationMethod(new PasswordTransformationMethod());
 
-        tvYesPass = (CustomTextViewBold) dialog_pass.findViewById(R.id.tvYesPass);
+        tvYesPass = dialog_pass.findViewById(R.id.tvYesPass);
         dialog_pass.show();
         dialog_pass.setCancelable(false);
 
         tvYesPass.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        params = new HashMap<>();
-                        params.put(Consts.USER_ID, userDTO.getUser_id());
-                        params.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(etOldPassD));
-                        params.put(Consts.NEW_PASSWORD, ProjectUtils.getEditTextValue(etNewPassD));
+                v -> {
+                    params = new HashMap<>();
+                    params.put(Consts.USER_ID, userDTO.getUser_id());
+                    params.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(etOldPassD));
+                    params.put(Consts.NEW_PASSWORD, ProjectUtils.getEditTextValue(etNewPassD));
 
-                        if (NetworkManager.isConnectToInternet(getActivity())) {
-                            Submit();
+                    if (NetworkManager.isConnectToInternet(getActivity())) {
+                        Submit();
 
-                        } else {
-                            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                        }
+                    } else {
+                        ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
                     }
                 });
 
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog_pass.dismiss();
-            }
-        });
+        ivClose.setOnClickListener(v -> dialog_pass.dismiss());
     }
 
 
     public void updateProfile() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.UPDATE_PROFILE_API, params, paramsFile, getActivity()).imagePost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        ProjectUtils.showToast(getActivity(), msg);
-
-                        userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
-                        preference.setParentUser(userDTO, Consts.USER_DTO);
-                        baseActivity.showImage();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
+        new HttpsRequest(Consts.UPDATE_PROFILE_API, params, paramsFile, getActivity()).imagePost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
                     ProjectUtils.showToast(getActivity(), msg);
+
+                    userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
+                    preference.setParentUser(userDTO, Consts.USER_DTO);
+                    baseActivity.showImage();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-
+            } else {
+                ProjectUtils.showToast(getActivity(), msg);
             }
+
+
         });
     }
 
