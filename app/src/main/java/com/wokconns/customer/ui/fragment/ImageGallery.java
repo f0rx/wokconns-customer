@@ -2,24 +2,25 @@ package com.wokconns.customer.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import android.view.View;
-
 import com.bumptech.glide.Glide;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentImageGalleryBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.GalleryDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.ui.adapter.AdapterGallery;
 
 import java.util.ArrayList;
 
 public class ImageGallery extends AppCompatActivity implements View.OnClickListener {
+    FragmentImageGalleryBinding binding;
+    Context context;
     private String TAG = ImageGallery.class.getSimpleName();
     private View view;
     private ArtistDetailsDTO artistDetailsDTO;
@@ -27,8 +28,6 @@ public class ImageGallery extends AppCompatActivity implements View.OnClickListe
     private AdapterGallery adapterGallery;
     private Bundle bundle;
     private GridLayoutManager gridLayoutManager;
-    FragmentImageGalleryBinding binding;
-    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,18 +2,19 @@ package com.wokconns.customer.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.NotificationDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -64,7 +65,6 @@ public class NotificationActivity extends Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -72,35 +72,32 @@ public class NotificationActivity extends Fragment {
             getNotification();
 
         } else {
-            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
         }
     }
 
     public void getNotification() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_NOTIFICATION_API, getparm(), getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    tvNo.setVisibility(View.GONE);
-                    RVnotification.setVisibility(View.VISIBLE);
-                    try {
-                        notificationDTOlist = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<NotificationDTO>>() {
-                        }.getType();
-                        notificationDTOlist = (ArrayList<NotificationDTO>) new Gson().fromJson(response.getJSONArray("my_notifications").toString(), getpetDTO);
-                        showData();
+        new HttpsRequest(Consts.GET_NOTIFICATION_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                tvNo.setVisibility(View.GONE);
+                RVnotification.setVisibility(View.VISIBLE);
+                try {
+                    notificationDTOlist = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<NotificationDTO>>() {
+                    }.getType();
+                    notificationDTOlist = (ArrayList<NotificationDTO>) new Gson().fromJson(response.getJSONArray("my_notifications").toString(), getpetDTO);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    tvNo.setVisibility(View.VISIBLE);
-                    RVnotification.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                tvNo.setVisibility(View.VISIBLE);
+                RVnotification.setVisibility(View.GONE);
             }
         });
     }

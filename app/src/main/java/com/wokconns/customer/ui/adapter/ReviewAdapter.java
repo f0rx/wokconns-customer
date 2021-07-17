@@ -3,17 +3,19 @@ package com.wokconns.customer.ui.adapter;
 /**
  * Created by VARUN on 01/01/19.
  */
+
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.wokconns.customer.dto.ReviewsDTO;
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.ReviewsDTO;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -49,10 +51,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
         holder.tvComment.setText(reviewsDTOList.get(position).getComment());
 
 
-        try{
+        try {
             holder.tvTime.setText(ProjectUtils.getDisplayableTime(ProjectUtils.correctTimestamp(Long.parseLong(reviewsDTOList.get(position).getCreated_at()))));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

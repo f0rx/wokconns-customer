@@ -24,32 +24,24 @@ import androidx.core.app.ActivityCompat;
 
 public class GPSTracker extends Service implements LocationListener {
 
-    private final Context mContext;
-
-    // flag for GPS status
-    boolean isGPSEnabled = false;
-
-    //shredPrefrence
-
-    // flag for network status
-    boolean isNetworkEnabled = false;
-
-    // flag for GPS status
-    boolean canGetLocation = false;
-
-    Location location; // location
-    double latitude; // latitude
-    double longitude; // longitude
-
-
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
 
+    //shredPrefrence
+    private final Context mContext;
     // Declaring a Location Manager
     protected LocationManager locationManager;
+    // flag for GPS status
+    boolean isGPSEnabled = false;
+    // flag for network status
+    boolean isNetworkEnabled = false;
+    // flag for GPS status
+    boolean canGetLocation = false;
+    Location location; // location
+    double latitude; // latitude
+    double longitude; // longitude
 
     public GPSTracker(Context context) {
         this.mContext = context;
@@ -184,21 +176,15 @@ public class GPSTracker extends Service implements LocationListener {
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(
-                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        mContext.startActivity(intent);
-                    }
+                (dialog, which) -> {
+                    Intent intent = new Intent(
+                            Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mContext.startActivity(intent);
                 });
 
         // on pressing cancel button
         alertDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, which) -> dialog.cancel());
 
         // Showing Alert Message
         alertDialog.show();

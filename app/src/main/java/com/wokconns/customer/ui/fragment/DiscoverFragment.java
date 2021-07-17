@@ -7,15 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +15,22 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.DailogFilterJobBinding;
 import com.wokconns.customer.dto.AllAtristListDTO;
 import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -55,6 +54,11 @@ import java.util.List;
 
 
 public class DiscoverFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+    public String categoryValue = "";
+    HashMap<String, String> parms = new HashMap<>();
+    AlertDialog alertDialog1;
+    CharSequence[] values;
+    DailogFilterJobBinding dailogFilterJobBinding;
     private String TAG = DiscoverFragment.class.getSimpleName();
     private View view;
     private RecyclerView rvDiscover;
@@ -63,23 +67,17 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     private ArrayList<AllAtristListDTO> allAtristListDTOList = new ArrayList<>();
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
-    HashMap<String, String> parms = new HashMap<>();
     private LayoutInflater myInflater;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomTextViewBold tvFilter, tvNotFound;
     private ArrayList<CategoryDTO> categoryDTOS = new ArrayList<>();
     private HashMap<String, String> parmsCategory = new HashMap<>();
     private SpinnerDialog spinnerDialogCate;
-    AlertDialog alertDialog1;
-    CharSequence[] values;
     private ArrayList<AllAtristListDTO> tempList;
     private BaseActivity baseActivity;
-
     private HashMap<String, String> params = new HashMap<>();
     private Dialog dialogFilterJob;
-    DailogFilterJobBinding dailogFilterJobBinding;
     private ArrayList<CurrencyDTO> currencyDTOArrayList = new ArrayList<>();
-    public String categoryValue ="";
 
     @Nullable
     @Override
@@ -118,21 +116,18 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
         super.onResume();
         categoryValue = baseActivity.prefrence.getValue(Consts.VALUE);
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
+        swipeRefreshLayout.post(() -> {
 
-                                        Log.e("Runnable", "FIRST");
-                                        if (NetworkManager.isConnectToInternet(getActivity())) {
-                                            swipeRefreshLayout.setRefreshing(true);
-                                            parms.put(Consts.CATEGORY_ID, ""+categoryValue);
-                                            getArtist();
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(getActivity())) {
+                swipeRefreshLayout.setRefreshing(true);
+                parms.put(Consts.CATEGORY_ID, "" + categoryValue);
+                getArtist();
 
-                                        } else {
-                                            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                                        }
-                                    }
-                                }
+            } else {
+                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
+            }
+        }
         );
 
         getCurrencyValue();
@@ -159,32 +154,29 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     public void getArtist() {
         parms.put(Consts.LATITUDE, prefrence.getValue(Consts.LATITUDE));
         parms.put(Consts.LONGITUDE, prefrence.getValue(Consts.LONGITUDE));
-        new HttpsRequest(Consts.GET_ALL_ARTISTS_API, parms, getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    try {
-                        allAtristListDTOList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<AllAtristListDTO>>() {
-                        }.getType();
-                        allAtristListDTOList = (ArrayList<AllAtristListDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                        showData();
+        new HttpsRequest(Consts.GET_ALL_ARTISTS_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                try {
+                    allAtristListDTOList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<AllAtristListDTO>>() {
+                    }.getType();
+                    allAtristListDTOList = (ArrayList<AllAtristListDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
 
-                    }
-
-
-                } else {
-                    tvNotFound.setVisibility(View.VISIBLE);
-                    rvDiscover.setVisibility(View.GONE);
-                    baseActivity.ivFilter.setVisibility(View.GONE);
                 }
 
-                prefrence.setValue(Consts.VALUE, "");
+
+            } else {
+                tvNotFound.setVisibility(View.VISIBLE);
+                rvDiscover.setVisibility(View.GONE);
+                baseActivity.ivFilter.setVisibility(View.GONE);
             }
+
+            prefrence.setValue(Consts.VALUE, "");
         });
     }
 
@@ -200,98 +192,80 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onRefresh() {
         Log.e("ONREFREST_Firls", "FIRS");
-        parms.put(Consts.CATEGORY_ID, ""+categoryValue);
+        parms.put(Consts.CATEGORY_ID, "" + categoryValue);
         tvFilter.setText(getResources().getString(R.string.all_category));
         getArtist();
     }
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    try {
-                        categoryDTOS = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
-                        }.getType();
-                        categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    categoryDTOS = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
+                    }.getType();
+                    categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
-                        spinnerDialogCate = new SpinnerDialog((Activity) getActivity(), categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
-                        spinnerDialogCate.bindOnSpinerListener(new OnSpinerItemClick() {
-                            @Override
-                            public void onClick(String item, String id, int position) {
-                                try {
-                                    tvFilter.setText(item);
-                                    parms.put(Consts.CATEGORY_ID, id);
+                    spinnerDialogCate = new SpinnerDialog((Activity) getActivity(), categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
+                    spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
+                        try {
+                            tvFilter.setText(item);
+                            parms.put(Consts.CATEGORY_ID, id);
 //                                    getArtist();
 
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                                dailogFilterJobBinding.etCategoryD.setText(item);
-                                params.put(Consts.CATEGORY_ID, id);
-                            }
-                        });
+                        dailogFilterJobBinding.etCategoryD.setText(item);
+                        params.put(Consts.CATEGORY_ID, id);
+                    });
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    ProjectUtils.showToast(getActivity(), msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                ProjectUtils.showToast(getActivity(), msg);
             }
         });
     }
 
     public void shortlistlowtohigh() {
-        Collections.sort(allAtristListDTOList, new Comparator<AllAtristListDTO>() {
+        Collections.sort(allAtristListDTOList, (obj1, obj2) -> {
+            int az = Integer.parseInt(obj1.getPrice());
+            int za = Integer.parseInt(obj2.getPrice());
+            return (az < za) ? -1 : (az > za) ? 1 : 0;
 
-            public int compare(AllAtristListDTO obj1, AllAtristListDTO obj2) {
-                int az = Integer.parseInt(obj1.getPrice());
-                int za = Integer.parseInt(obj2.getPrice());
-                return (az < za) ? -1 : (az > za) ? 1 : 0;
-
-            }
         });
     }
 
     public void shortJobs() {
-        Collections.sort(allAtristListDTOList, new Comparator<AllAtristListDTO>() {
+        Collections.sort(allAtristListDTOList, (obj1, obj2) -> {
+            int az = Integer.parseInt(obj1.getJobDone());
+            int za = Integer.parseInt(obj2.getJobDone());
+            return (az > za) ? -1 : (az > za) ? 1 : 0;
 
-            public int compare(AllAtristListDTO obj1, AllAtristListDTO obj2) {
-                int az = Integer.parseInt(obj1.getJobDone());
-                int za = Integer.parseInt(obj2.getJobDone());
-                return (az > za) ? -1 : (az > za) ? 1 : 0;
-
-            }
         });
     }
 
     public void shortFeatured() {
-        Collections.sort(allAtristListDTOList, new Comparator<AllAtristListDTO>() {
+        Collections.sort(allAtristListDTOList, (obj1, obj2) -> {
+            int az = Integer.parseInt(obj1.getFeatured());
+            int za = Integer.parseInt(obj2.getFeatured());
+            return (az > za) ? -1 : (az > za) ? 1 : 0;
 
-            public int compare(AllAtristListDTO obj1, AllAtristListDTO obj2) {
-                int az = Integer.parseInt(obj1.getFeatured());
-                int za = Integer.parseInt(obj2.getFeatured());
-                return (az > za) ? -1 : (az > za) ? 1 : 0;
-
-            }
         });
     }
 
     public void shortFavourite() {
-        Collections.sort(allAtristListDTOList, new Comparator<AllAtristListDTO>() {
+        Collections.sort(allAtristListDTOList, (obj1, obj2) -> {
+            int az = Integer.parseInt(obj1.getFav_status());
+            int za = Integer.parseInt(obj2.getFav_status());
 
-            public int compare(AllAtristListDTO obj1, AllAtristListDTO obj2) {
-                int az = Integer.parseInt(obj1.getFav_status());
-                int za = Integer.parseInt(obj2.getFav_status());
+            return (az > za) ? -1 : (az > za) ? 1 : 0;
 
-                return (az > za) ? -1 : (az > za) ? 1 : 0;
-
-            }
         });
     }
 
@@ -301,30 +275,27 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
 
         builder.setTitle("Sort by");
 
-        builder.setSingleChoiceItems(values, -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(values, -1, (dialog, item) -> {
 
-            public void onClick(DialogInterface dialog, int item) {
-
-                switch (item) {
-                    case 0:
-                        shortlistlowtohigh();
-                        discoverAdapter.notifyDataSetChanged();
-                        break;
-                    case 1:
-                        shortJobs();
-                        discoverAdapter.notifyDataSetChanged();
-                        break;
-                    case 2:
-                        shortFeatured();
-                        discoverAdapter.notifyDataSetChanged();
-                        break;
-                    case 3:
-                        shortFavourite();
-                        discoverAdapter.notifyDataSetChanged();
-                        break;
-                }
-                alertDialog1.dismiss();
+            switch (item) {
+                case 0:
+                    shortlistlowtohigh();
+                    discoverAdapter.notifyDataSetChanged();
+                    break;
+                case 1:
+                    shortJobs();
+                    discoverAdapter.notifyDataSetChanged();
+                    break;
+                case 2:
+                    shortFeatured();
+                    discoverAdapter.notifyDataSetChanged();
+                    break;
+                case 3:
+                    shortFavourite();
+                    discoverAdapter.notifyDataSetChanged();
+                    break;
             }
+            alertDialog1.dismiss();
         });
         alertDialog1 = builder.create();
         alertDialog1.show();
@@ -345,15 +316,12 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
         dailogFilterJobBinding = DataBindingUtil.inflate(LayoutInflater.from(baseActivity), R.layout.dailog_filter_job, null, false);
         dialogFilterJob.setContentView(dailogFilterJobBinding.getRoot());
 
-        dailogFilterJobBinding.etCategoryD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkManager.isConnectToInternet(baseActivity)) {
-                    if (categoryDTOS.size() > 0)
-                        spinnerDialogCate.showSpinerDialog();
-                } else {
-                    ProjectUtils.showToast(baseActivity, getResources().getString(R.string.internet_concation));
-                }
+        dailogFilterJobBinding.etCategoryD.setOnClickListener(v -> {
+            if (NetworkManager.isConnectToInternet(baseActivity)) {
+                if (categoryDTOS.size() > 0)
+                    spinnerDialogCate.showSpinerDialog();
+            } else {
+                ProjectUtils.showToast(baseActivity, getResources().getString(R.string.internet_connection));
             }
         });
 
@@ -367,40 +335,23 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
             e.printStackTrace();
         }
 
-        dailogFilterJobBinding.etCurrencyD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dailogFilterJobBinding.etCurrencyD.showDropDown();
-            }
-        });
+        dailogFilterJobBinding.etCurrencyD.setOnClickListener(v -> dailogFilterJobBinding.etCurrencyD.showDropDown());
 
-        dailogFilterJobBinding.etCurrencyD.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dailogFilterJobBinding.etCurrencyD.showDropDown();
-                CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
-                Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
-                params.put(Consts.CURRENCY, currencyDTO.getCurrency_symbol());
-            }
+        dailogFilterJobBinding.etCurrencyD.setOnItemClickListener((parent, view, position, id) -> {
+            dailogFilterJobBinding.etCurrencyD.showDropDown();
+            CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
+            Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
+            params.put(Consts.CURRENCY, currencyDTO.getCurrency_symbol());
         });
 
         dialogFilterJob.show();
         dialogFilterJob.setCancelable(false);
 
-        dailogFilterJobBinding.tvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogFilterJob.dismiss();
-
-            }
-        });
+        dailogFilterJobBinding.tvCancel.setOnClickListener(v -> dialogFilterJob.dismiss());
         dailogFilterJobBinding.tvSubmit.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e(TAG, "onClick: " + dailogFilterJobBinding.seekBar.getProgress());
-                        filteredList();
-                    }
+                v -> {
+                    Log.e(TAG, "onClick: " + dailogFilterJobBinding.seekBar.getProgress());
+                    filteredList();
                 });
     }
 
@@ -412,47 +363,41 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
         params.put(Consts.LATITUDE, prefrence.getValue(Consts.LATITUDE));
         params.put(Consts.LONGITUDE, prefrence.getValue(Consts.LONGITUDE));
 
-        new HttpsRequest(Consts.GET_ALL_ARTIST_FILTER, params, baseActivity).imagePost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                dialogFilterJob.dismiss();
-                if (flag) {
+        new HttpsRequest(Consts.GET_ALL_ARTIST_FILTER, params, baseActivity).imagePost(TAG, (flag, msg, response) -> {
+            dialogFilterJob.dismiss();
+            if (flag) {
 
-                    try {
-                        allAtristListDTOList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<AllAtristListDTO>>() {
-                        }.getType();
-                        allAtristListDTOList = (ArrayList<AllAtristListDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                        showData();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    ProjectUtils.showToast(baseActivity, msg);
+                try {
+                    allAtristListDTOList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<AllAtristListDTO>>() {
+                    }.getType();
+                    allAtristListDTOList = (ArrayList<AllAtristListDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    showData();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
+                ProjectUtils.showToast(baseActivity, msg);
             }
         });
     }
 
     public void getCurrencyValue() {
 
-        new HttpsRequest(Consts.GET_CURRENCY_API, baseActivity).stringGet(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    try {
-                        currencyDTOArrayList = new ArrayList<>();
-                        Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
-                        }.getType();
-                        currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
+        new HttpsRequest(Consts.GET_CURRENCY_API, baseActivity).stringGet(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    currencyDTOArrayList = new ArrayList<>();
+                    Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
+                    }.getType();
+                    currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    ProjectUtils.showToast(baseActivity, msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+            } else {
+                ProjectUtils.showToast(baseActivity, msg);
             }
         });
     }

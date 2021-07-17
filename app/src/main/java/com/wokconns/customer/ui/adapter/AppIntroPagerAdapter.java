@@ -1,12 +1,13 @@
 package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
-import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AppintropagerAdapterBinding;
@@ -16,8 +17,8 @@ import com.wokconns.customer.ui.activity.AppIntro;
  * Created by VARUN on 01/01/19.
  */
 public class AppIntroPagerAdapter extends PagerAdapter {
-    private Context mContext;
     LayoutInflater mLayoutInflater;
+    private Context mContext;
     private int[] mResources;
     private AppIntro activity;
 
@@ -41,16 +42,13 @@ public class AppIntroPagerAdapter extends PagerAdapter {
 
 
         container.addView(binding.getRoot());
-        binding.ctvText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.ctvText.setOnClickListener(v -> {
 
 
-                int pos = position + 1;
-                activity.scrollPage(pos);
+            int pos = position + 1;
+            activity.scrollPage(pos);
 
 
-            }
         });
         return binding.getRoot();
     }

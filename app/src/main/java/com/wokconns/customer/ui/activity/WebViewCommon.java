@@ -1,12 +1,12 @@
 package com.wokconns.customer.ui.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityWebViewCommonBinding;
@@ -20,15 +20,10 @@ public class WebViewCommon extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        // supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_web_view_common);
 
-        binding.rlclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.rlclose.setOnClickListener(v -> finish());
 
         if (getIntent().hasExtra(Consts.URL)) {
             url = getIntent().getStringExtra(Consts.URL);

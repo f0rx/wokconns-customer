@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    IntentFilter intentFilter = new IntentFilter();
     private String TAG = NotificationActivity.class.getSimpleName();
     private RecyclerView rvBooking;
     private AdapterCustomerBooking adapterCustomerBooking;
@@ -56,7 +57,18 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private SwipeRefreshLayout swipeRefreshLayout;
     private SearchView svSearch;
     private RelativeLayout rlSearch;
-    IntentFilter intentFilter = new IntentFilter();
+    BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)
+                    || intent.getAction().equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)
+                    || intent.getAction().equalsIgnoreCase(Consts.END_BOOKING_ARTIST_NOTIFICATION)
+                    || intent.getAction().equalsIgnoreCase(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
+                getBooking();
+                Log.e("BROADCAST", "BROADCAST");
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +81,6 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
         setUiAction(view);
         return view;
     }
-
 
     public void setUiAction(View v) {
         rlSearch = v.findViewById(R.id.rlSearch);
@@ -108,56 +119,51 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(() -> {
             Log.e("Runnable", "FIRST");
-            if (NetworkManager.isConnectToInternet(getActivity())) {
+            if (NetworkManager.isConnectToInternet(MyBooking.this.getActivity())) {
                 swipeRefreshLayout.setRefreshing(true);
 
-                getBooking();
+                MyBooking.this.getBooking();
 
             } else {
-                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(MyBooking.this.getActivity(), MyBooking.this.getResources().getString(R.string.internet_connection));
             }
         }
         );
     }
 
-
     public void getBooking() {
         // ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.CURRENT_BOOKING_API, getparm(), getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                //   ProjectUtils.pauseProgressDialog();
-                swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    tvNo.setVisibility(View.GONE);
-                    swipeRefreshLayout.setVisibility(View.VISIBLE);
-                    rlSearch.setVisibility(View.VISIBLE);
+        new HttpsRequest(Consts.CURRENT_BOOKING_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            //   ProjectUtils.pauseProgressDialog();
+            swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                tvNo.setVisibility(View.GONE);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                rlSearch.setVisibility(View.VISIBLE);
 
-                    try {
-                        userBookingList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<UserBooking>>() {
-                        }.getType();
-                        userBookingList = (ArrayList<UserBooking>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                        // setSection();
-                        showData();
+                try {
+                    userBookingList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<UserBooking>>() {
+                    }.getType();
+                    userBookingList = (ArrayList<UserBooking>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    // setSection();
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    tvNo.setVisibility(View.VISIBLE);
-                    swipeRefreshLayout.setVisibility(View.GONE);
-                    rlSearch.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                tvNo.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setVisibility(View.GONE);
+                rlSearch.setVisibility(View.GONE);
             }
         });
     }
@@ -218,18 +224,5 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
         showData();
 
     }
-
-    BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)
-                    || intent.getAction().equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)
-                    || intent.getAction().equalsIgnoreCase(Consts.END_BOOKING_ARTIST_NOTIFICATION)
-                    || intent.getAction().equalsIgnoreCase(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
-                getBooking();
-                Log.e("BROADCAST", "BROADCAST");
-            }
-        }
-    };
 
 }

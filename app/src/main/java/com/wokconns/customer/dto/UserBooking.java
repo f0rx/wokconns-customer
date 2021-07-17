@@ -33,10 +33,10 @@ public class UserBooking implements Serializable {
     String longitude = "";
     String address = "";
     String discount_amount = "";
-    String currency_symbol="";
-    String currency_name="";
-    String currency_code="";
-    String commission="";
+    String currency_symbol = "";
+    String currency_name = "";
+    String currency_code = "";
+    String commission = "";
     String artistImage = "";
     String category_name = "";
     String artistName = "";

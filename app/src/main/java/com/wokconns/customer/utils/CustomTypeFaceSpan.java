@@ -10,9 +10,9 @@ import android.text.style.TypefaceSpan;
  * Created by VARUN on 01/01/19.
  */
 @SuppressLint("ParcelCreator")
-public class CustomTypeFaceSpan extends TypefaceSpan
-{
+public class CustomTypeFaceSpan extends TypefaceSpan {
     private final Typeface type;
+
     /**
      * @param family The font family for this typeface.  Examples include
      *               "monospace", "serif", and "sans-serif".
@@ -25,14 +25,15 @@ public class CustomTypeFaceSpan extends TypefaceSpan
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
-        applyCustomFont(ds,type);
+        applyCustomFont(ds, type);
     }
 
     @Override
     public void updateMeasureState(TextPaint paint) {
         super.updateMeasureState(paint);
-        applyCustomFont(paint,type);
+        applyCustomFont(paint, type);
     }
+
     /*public CustomTypeFaceSpan(Context context, AttributeSet attrs) {
         super(context, attrs);
         applyCustomFont(context);
@@ -50,24 +51,19 @@ public class CustomTypeFaceSpan extends TypefaceSpan
     private void applyCustomFont(Paint paint, Typeface tf) {
         int oldStyle;
         Typeface old = paint.getTypeface();
-        if (old == null)
-        {
+        if (old == null) {
             oldStyle = 0;
-        }
-        else
-        {
+        } else {
             oldStyle = old.getStyle();
         }
         int fake = oldStyle & ~tf.getStyle();
-        if((fake & Typeface.BOLD)!=0)
-        {
+        if ((fake & Typeface.BOLD) != 0) {
             paint.setFakeBoldText(true);
         }
         {
             paint.setFakeBoldText(true);
         }
-        if((fake & Typeface.ITALIC)!=0)
-        {
+        if ((fake & Typeface.ITALIC) != 0) {
             paint.setTextSkewX(-0.25f);
         }
         paint.setTypeface(tf);

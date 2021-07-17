@@ -37,22 +37,22 @@
 
             <com.wokconns.customer.utils.CustomTextView
                 android:id="@+id/CTVprice"
-                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text=""
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:visibility="visible" />
 
             <com.wokconns.customer.utils.CustomTextView
                 android:id="@+id/CTVTime"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/CTVprice"
                 android:layout_alignParentEnd="true"
                 android:text=""
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone" />
 
             <View
                 android:id="@+id/view"
@@ -120,10 +120,10 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_image"
-                    android:layout_marginStart="@dimen/_5sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:orientation="vertical"
                     app:cardCornerRadius="@dimen/_8sdp">
 

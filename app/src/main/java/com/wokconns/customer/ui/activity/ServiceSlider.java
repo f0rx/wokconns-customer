@@ -1,17 +1,17 @@
 package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.ToxicBakery.viewpager.transforms.StackTransformer;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.ui.adapter.ServicePagerAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 public class ServiceSlider extends AppCompatActivity {
     ViewPager mViewPager;
+    int pos = 0;
     private Context mContext;
     private ArrayList<ProductDTO> productDTOList = new ArrayList<>();
     private ServicePagerAdapter mAdapter;
-    int pos = 0;
     private ImageView ivBack;
     private ArtistDetailsDTO artistDetailsDTO;
     private String artist_id = "";
@@ -51,12 +51,7 @@ public class ServiceSlider extends AppCompatActivity {
         mViewPager.setPageTransformer(true, new StackTransformer());
         mViewPager.setCurrentItem(pos);
 
-        ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        ivBack.setOnClickListener(v -> onBackPressed());
     }
 
     @Override

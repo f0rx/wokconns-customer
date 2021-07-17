@@ -8,8 +8,7 @@ import android.widget.TextView;
 /**
  * Created by VARUN on 01/01/19.
  */
-public class CustomTextView extends TextView
-{
+public class CustomTextView extends TextView {
 
     public CustomTextView(Context context) {
 
@@ -31,6 +30,7 @@ public class CustomTextView extends TextView
         super(context, attrs, defStyleAttr, defStyleRes);
         applyCustomFont(context);
     }
+
     private void applyCustomFont(Context context) {
         Typeface customFont = FontCache.getTypeface("Montserrat-Light.otf", context);
         setTypeface(customFont);

@@ -142,6 +142,7 @@ public interface Consts {
     String NEW_PASSWORD = "new_password";
     String GENDER = "gender";
     String MOBILE = "mobile";
+    String MOBILE_NUMBER = "mobile_no";
     String OFFICE_ADDRESS = "office_address";
     String ADDRESS = "address";
     String IMAGE = "image";
@@ -227,7 +228,7 @@ public interface Consts {
     String CURRENCY = "currency";
 
     /*Home*/
-    String DISTANCE ="distance";
+    String DISTANCE = "distance";
 
     String CURRENCY_ID = "currency";
 
@@ -264,6 +265,6 @@ public interface Consts {
     String URL = "url";
     String HEADER = "header";
 
-    String VALUE ="value";
+    String VALUE = "value";
 }
 

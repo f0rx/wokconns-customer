@@ -16,6 +16,11 @@ public class SmsReceiver extends BroadcastReceiver {
     private static SmsListener mListener;
     private static String receiverString;
 
+    public static void bindListener(SmsListener listener, String msg) {
+        mListener = listener;
+        receiverString = msg;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle data = intent.getExtras();
@@ -37,11 +42,6 @@ public class SmsReceiver extends BroadcastReceiver {
             }
         }
 
-    }
-
-    public static void bindListener(SmsListener listener, String msg) {
-        mListener = listener;
-        receiverString = msg;
     }
 
 

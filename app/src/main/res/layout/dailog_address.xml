@@ -60,7 +60,7 @@
                         android:hint="@string/set_address"
                         android:paddingStart="5dp"
                         android:singleLine="true"
-                        android:text=""/>
+                        android:text="" />
 
                 </com.wokconns.customer.utils.InputOpenFieldView>
 

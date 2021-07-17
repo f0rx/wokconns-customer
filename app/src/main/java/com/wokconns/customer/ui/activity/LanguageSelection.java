@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class LanguageSelection extends AppCompatActivity implements View.OnClickListener {
-    private ActivityLanguageSelectionBinding binding;
     private static final String TAG = LanguageSelection.class.getSimpleName();
+    public static int flag = 0;
+    String type = "";
+    private ActivityLanguageSelectionBinding binding;
     private SharedPrefrence sharedPrefrence;
     private Context mContext;
     private AdapterLanguage adapterLanguage;
     private ArrayList<LanguageDTO> languageDTOList;
-    public static int flag = 0;
     private UserDTO userDTO;
     private LinearLayoutManager layoutManager;
-    String type ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class LanguageSelection extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.llBack:
                 finish();
                 break;

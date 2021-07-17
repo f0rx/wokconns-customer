@@ -1,254 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context="com.wokconns.customer.ui.activity.SignUpActivity">
 
-    <ScrollView
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/RRsncbar"
-        android:fillViewport="true">
+        android:background="@color/white"
+        tools:context="com.wokconns.customer.ui.activity.SignUpActivity">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/RRsncbar"
+            android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/ivLogo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/logo" />
-
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/ivLogo"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:padding="30dp">
+                android:layout_height="match_parent">
 
-
-                <com.wokconns.customer.utils.CustomEditText
-                    android:id="@+id/CETfirstname"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/edittext_background"
-                    android:hint="@string/first_name"
-                    android:inputType="textCapWords"
-                    android:paddingStart="20dp"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/editketext" />
-
-                <com.wokconns.customer.utils.CustomEditText
-                    android:id="@+id/CETemailadd"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edittext_background"
-                    android:hint="@string/email_address1"
-                    android:inputType="textEmailAddress"
-                    android:paddingStart="20dp"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/editketext" />
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edittext_background">
-
-                    <com.wokconns.customer.utils.CustomEditText
-                        android:id="@+id/CETenterpassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_toStartOf="@+id/ivEnterShow"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/enter_password"
-                        android:inputType="textPassword"
-                        android:paddingStart="20dp"
-                        android:singleLine="true"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/editketext" />
-
-                    <ImageView
-                        android:id="@+id/ivEnterShow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerInParent="true"
-                        android:layout_marginEnd="10dp"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_pass_invisible" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edittext_background">
-
-                    <com.wokconns.customer.utils.CustomEditText
-                        android:id="@+id/CETenterpassagain"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_toStartOf="@+id/ivReEnterShow"
-                        android:background="@android:color/transparent"
-                        android:drawablePadding="10dp"
-                        android:hint="@string/enter_password_again"
-                        android:inputType="textPassword"
-                        android:paddingStart="20dp"
-                        android:singleLine="true"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/editketext" />
-
-                    <ImageView
-                        android:id="@+id/ivReEnterShow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerInParent="true"
-                        android:layout_marginEnd="10dp"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_pass_invisible" />
-
-                </RelativeLayout>
-
-                <com.wokconns.customer.utils.CustomEditText
-                    android:id="@+id/etReferal"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edittext_background"
-                    android:hint="@string/referal"
-                    android:inputType="text"
-                    android:paddingStart="20dp"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/editketext" />
+                <ImageView
+                    android:id="@+id/ivLogo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="40dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/logo" />
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/ivLogo"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:padding="30dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/CETfirstname"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="@string/first_name"
+                        android:inputType="textCapWords"
+                        android:paddingStart="@dimen/_20sdp"
+                        android:paddingEnd="@dimen/_20sdp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/editketext" />
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/CETemailadd"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="@string/email_address1"
+                        android:inputType="textEmailAddress"
+                        android:paddingStart="@dimen/_20sdp"
+                        android:paddingEnd="@dimen/_20sdp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/editketext" />
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/phoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="@string/phone_number"
+                        android:inputType="phone"
+                        android:maxLength="14"
+                        android:paddingStart="@dimen/_20sdp"
+                        android:paddingEnd="@dimen/_20sdp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/editketext" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background">
 
-                        <CheckBox
-                            android:id="@+id/termsCB"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="-5dp"
-                            android:text="@string/agreed"
+                        <com.wokconns.customer.utils.CustomEditText
+                            android:id="@+id/CETenterpassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_toStartOf="@+id/ivEnterShow"
+                            android:background="@android:color/transparent"
+                            android:hint="@string/enter_password"
+                            android:inputType="textPassword"
+                            android:paddingStart="@dimen/_20sdp"
+                            android:paddingEnd="@dimen/_20sdp"
+                            android:singleLine="true"
                             android:textColor="@color/black"
-                            android:textSize="14sp" />
+                            android:textColorHint="@color/editketext" />
 
-                        <com.wokconns.customer.utils.CustomTextViewBold
-                            android:id="@+id/tvTerms"
+                        <ImageView
+                            android:id="@+id/ivEnterShow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:padding="3dp"
-                            android:text="@string/terms_of_use"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="14sp" />
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="10dp"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_pass_invisible" />
 
+                    </RelativeLayout>
 
-                    </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background">
+
+                        <com.wokconns.customer.utils.CustomEditText
+                            android:id="@+id/CETenterpassagain"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_toStartOf="@+id/ivReEnterShow"
+                            android:background="@android:color/transparent"
+                            android:drawablePadding="10dp"
+                            android:hint="@string/enter_password_again"
+                            android:inputType="textPassword"
+                            android:paddingStart="@dimen/_20sdp"
+                            android:paddingEnd="@dimen/_20sdp"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/editketext" />
+
+                        <ImageView
+                            android:id="@+id/ivReEnterShow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="10dp"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_pass_invisible" />
+
+                    </RelativeLayout>
+
+                    <com.wokconns.customer.utils.CustomEditText
+                        android:id="@+id/etReferal"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="@string/referral"
+                        android:inputType="text"
+                        android:paddingStart="@dimen/_20sdp"
+                        android:paddingEnd="@dimen/_20sdp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/editketext" />
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                        <com.wokconns.customer.utils.CustomTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:padding="3dp"
-                            android:text="@string/and"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
-
-                        <com.wokconns.customer.utils.CustomTextViewBold
-                            android:id="@+id/tvPrivacy"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:padding="3dp"
-                            android:text="@string/privacy_policy"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="14sp" />
+                            android:orientation="horizontal">
 
+                            <CheckBox
+                                android:id="@+id/termsCB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="-5dp"
+                                android:text="@string/agreed"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <com.wokconns.customer.utils.CustomTextViewBold
+                                android:id="@+id/tvTerms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="3dp"
+                                android:text="@string/terms_of_use"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="14sp" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.wokconns.customer.utils.CustomTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="3dp"
+                                android:text="@string/and"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <com.wokconns.customer.utils.CustomTextViewBold
+                                android:id="@+id/tvPrivacy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:padding="3dp"
+                                android:text="@string/privacy_policy"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
                     </LinearLayout>
+
+
+                    <com.wokconns.customer.utils.CustomButton
+                        android:id="@+id/CBsignup"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/button_selector2"
+                        android:text="@string/sign_up"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
+
+
                 </LinearLayout>
 
-
-                <com.wokconns.customer.utils.CustomButton
-                    android:id="@+id/CBsignup"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/button_selector2"
-                    android:text="@string/sign_up"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <com.wokconns.customer.utils.CustomTextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/do_you_have_an_account_already"
-                    android:textColor="@color/black" />
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
-                <com.wokconns.customer.utils.CustomTextView
-                    android:id="@+id/CTVsignin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/sign_in"
-                    android:textColor="@color/colorPrimary" />
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/do_you_have_an_account_already"
+                        android:textColor="@color/black" />
 
-            </LinearLayout>
+                    <com.wokconns.customer.utils.CustomTextView
+                        android:id="@+id/CTVsignin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/sign_in"
+                        android:textColor="@color/colorPrimary" />
 
-        </RelativeLayout>
-    </ScrollView>
+                </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/RRsncbar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentBottom="true"></RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
 
-</RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/RRsncbar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"></RelativeLayout>
+
+    </RelativeLayout>
 </layout>

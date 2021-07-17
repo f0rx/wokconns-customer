@@ -27,12 +27,12 @@ import java.util.Locale;
  */
 
 public class AdapterLanguage extends RecyclerView.Adapter<AdapterLanguage.LanguageHolder> {
+    String language = "";
+    String type = "";
     private ArrayList<LanguageDTO> datas = new ArrayList<>();
     private Context mContext;
     private SharedPrefrence prefrence;
     private String half, second_half;
-    String language = "";
-    String type = "";
 
     public AdapterLanguage(ArrayList<LanguageDTO> datas, Context mContext, String type) {
         this.datas = datas;
@@ -66,51 +66,36 @@ public class AdapterLanguage extends RecyclerView.Adapter<AdapterLanguage.Langua
             e.printStackTrace();
         }
 
-        holder.lllanguagelayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (type.equalsIgnoreCase("0")) {
-                    Intent intent = new Intent(mContext, AppIntro.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ((Activity) mContext).startActivity(intent);
-                    ((Activity) mContext).finish();
-                } else if (type.equalsIgnoreCase("1")) {
-                    ((Activity) mContext).finish();
+        holder.lllanguagelayout.setOnClickListener(v -> {
+            if (type.equalsIgnoreCase("0")) {
+                Intent intent = new Intent(mContext, AppIntro.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                ((Activity) mContext).startActivity(intent);
+                ((Activity) mContext).finish();
+            } else if (type.equalsIgnoreCase("1")) {
+                ((Activity) mContext).finish();
 
-                    Intent mIntent = new Intent(mContext, BaseActivity.class);
-                    mIntent.putExtra("finish", true);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ((Activity) mContext).finish();
-                    mContext.startActivity(mIntent);
-                }
-
-
-                prefrence.setValue(Consts.LANGUAGE_SELECTION, datas.get(position).getLanguage_code());
-                prefrence.setValue(Consts.VOICE_PREFERENCE, datas.get(position).getLanguage_code());
-                language(datas.get(position).getLanguage_code());
+                Intent mIntent = new Intent(mContext, BaseActivity.class);
+                mIntent.putExtra("finish", true);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                ((Activity) mContext).finish();
+                mContext.startActivity(mIntent);
             }
+
+
+            prefrence.setValue(Consts.LANGUAGE_SELECTION, datas.get(position).getLanguage_code());
+            prefrence.setValue(Consts.VOICE_PREFERENCE, datas.get(position).getLanguage_code());
+            language(datas.get(position).getLanguage_code());
         });
     }
 
     @Override
     public int getItemCount() {
         return datas.size();
-    }
-
-
-    public class LanguageHolder extends RecyclerView.ViewHolder {
-        public LinearLayout lllanguagelayout;
-        public TextView tvLanguage;
-
-        public LanguageHolder(View itemView) {
-            super(itemView);
-            tvLanguage = (TextView) itemView.findViewById(R.id.tvLanguage);
-            lllanguagelayout = (LinearLayout) itemView.findViewById(R.id.lllanguagelayout);
-        }
     }
 
     public void language(String language) {
@@ -126,6 +111,17 @@ public class AdapterLanguage extends RecyclerView.Adapter<AdapterLanguage.Langua
         mContext.getResources().updateConfiguration(config,
                 mContext.getResources().getDisplayMetrics());
 
+    }
+
+    public class LanguageHolder extends RecyclerView.ViewHolder {
+        public LinearLayout lllanguagelayout;
+        public TextView tvLanguage;
+
+        public LanguageHolder(View itemView) {
+            super(itemView);
+            tvLanguage = (TextView) itemView.findViewById(R.id.tvLanguage);
+            lllanguagelayout = (LinearLayout) itemView.findViewById(R.id.lllanguagelayout);
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package com.wokconns.customer.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +49,7 @@ public interface CardValidatorInterface {
     }
 
     default int[] cleanExpiryDate(@NotNull String expiryDate) {
-        if (expiryDate.trim().isEmpty()) return new int[] {0, 0};
+        if (expiryDate.trim().isEmpty()) return new int[]{0, 0};
 
         try {
             String[] cardExpiryArray = expiryDate.split("/");
@@ -58,7 +57,7 @@ public interface CardValidatorInterface {
             int year = Integer.parseInt(cardExpiryArray[1]);
             return new int[]{month, year};
         } catch (Throwable e) {
-            return new int[] {0, 0};
+            return new int[]{0, 0};
         }
     }
 

@@ -87,8 +87,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
                 android:gravity="end"
                 android:text="0/200"
                 android:textSize="14sp" />
@@ -99,8 +99,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
                 android:background="@drawable/button_selector2"
                 android:text="@string/submit"
                 android:textColor="@color/white" />

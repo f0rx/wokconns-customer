@@ -2,8 +2,6 @@ package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -11,11 +9,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketCommentDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -36,7 +37,7 @@ import java.util.List;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
-public class CommentOneByOne extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public class CommentOneByOne extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private String TAG = CommentOneByOne.class.getSimpleName();
     private ListView lvComment;
     private CustomEditText etMessage;
@@ -44,17 +45,18 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
     private AdapterViewCommentTicket adapterViewCommentTicket;
     private String id = "";
     private ArrayList<TicketCommentDTO> ticketCommentDTOSList;
-    private  InputMethodManager inputManager;
+    private InputMethodManager inputManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private EmojiconEditText edittextMessage;
     private EmojIconActions emojIcon;
     private RelativeLayout relative;
     private Context mContext;
-    private  HashMap<String, String> parmsGet = new HashMap<>();
+    private HashMap<String, String> parmsGet = new HashMap<>();
     private CustomTextViewBold tvNameHedar;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private String ticket_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +67,12 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
 
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        if (getIntent().hasExtra(Consts.TICKET_ID)){
+        if (getIntent().hasExtra(Consts.TICKET_ID)) {
 
             ticket_id = getIntent().getStringExtra(Consts.TICKET_ID);
 
             parmsGet.put(Consts.TICKET_ID, ticket_id);
             parmsGet.put(Consts.USER_ID, userDTO.getUser_id());
-
 
 
         }
@@ -93,20 +94,17 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
         buttonSendMessage.setOnClickListener(this);
         IVback.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
+        swipeRefreshLayout.post(() -> {
 
-                                        Log.e("Runnable", "FIRST");
-                                        if (NetworkManager.isConnectToInternet(mContext)) {
-                                            swipeRefreshLayout.setRefreshing(true);
-                                            getComment();
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(mContext)) {
+                swipeRefreshLayout.setRefreshing(true);
+                getComment();
 
-                                        } else {
-                                            ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
-                                        }
-                                    }
-                                }
+            } else {
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
+            }
+        }
         );
 
         emojIcon = new EmojIconActions(this, relative, edittextMessage, emojiButton, "#495C66", "#DCE1E2", "#E6EBEF");
@@ -150,7 +148,7 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
             if (NetworkManager.isConnectToInternet(mContext)) {
                 doComment();
             } else {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
             }
 
 
@@ -183,32 +181,28 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
 
     public void getComment() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_TICKET_COMMENTS_API, parmsGet, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    try {
-                        ticketCommentDTOSList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<TicketCommentDTO>>() {
-                        }.getType();
-                        ticketCommentDTOSList = (ArrayList<TicketCommentDTO>) new Gson().fromJson(response.getJSONArray("ticket_comment").toString(), getpetDTO);
-                        showData();
+        new HttpsRequest(Consts.GET_TICKET_COMMENTS_API, parmsGet, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                try {
+                    ticketCommentDTOSList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<TicketCommentDTO>>() {
+                    }.getType();
+                    ticketCommentDTOSList = (ArrayList<TicketCommentDTO>) new Gson().fromJson(response.getJSONArray("ticket_comment").toString(), getpetDTO);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
             }
         });
     }
 
-    public void showData()
-    {
+    public void showData() {
         adapterViewCommentTicket = new AdapterViewCommentTicket(mContext, ticketCommentDTOSList, userDTO);
         lvComment.setAdapter(adapterViewCommentTicket);
         lvComment.setSelection(ticketCommentDTOSList.size() - 1);
@@ -217,15 +211,12 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
 
     public void doComment() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.ADD_TICKET_COMMENTS_API, getParamDO(), mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    edittextMessage.setText("");
-                    getComment();
-                } else {
-                }
+        new HttpsRequest(Consts.ADD_TICKET_COMMENTS_API, getParamDO(), mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                edittextMessage.setText("");
+                getComment();
+            } else {
             }
         });
     }

@@ -1,132 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context="com.wokconns.customer.ui.activity.SignUpActivity">
 
-
-    <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logo" />
-
-
-    <LinearLayout
-        android:id="@+id/LLsign"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ivLogo"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:padding="30dp">
+        android:background="@color/white"
+        tools:context="com.wokconns.customer.ui.activity.SignUpActivity">
 
 
-        <com.wokconns.customer.utils.CustomEditText
-            android:id="@+id/CETemailadd"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/edittext_background"
-            android:hint="@string/email_address1"
-            android:inputType="textEmailAddress"
-            android:paddingStart="20dp"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@color/black"
-            android:textColorHint="@color/editketext" />
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/edittext_background">
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo" />
+
+
+        <LinearLayout
+            android:id="@+id/LLsign"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ivLogo"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:padding="30dp">
+
 
             <com.wokconns.customer.utils.CustomEditText
-                android:id="@+id/CETenterpassword"
+                android:id="@+id/CETemailadd"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_toStartOf="@+id/ivEnterShow"
-                android:background="@android:color/transparent"
-                android:hint="@string/enter_password"
-                android:inputType="textPassword"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edittext_background"
+                android:hint="@string/email_address1"
+                android:inputType="textEmailAddress"
                 android:paddingStart="20dp"
                 android:singleLine="true"
+                android:text=""
                 android:textColor="@color/black"
                 android:textColorHint="@color/editketext" />
 
-            <ImageView
-                android:id="@+id/ivEnterShow"
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edittext_background">
+
+                <com.wokconns.customer.utils.CustomEditText
+                    android:id="@+id/CETenterpassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_toStartOf="@+id/ivEnterShow"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/enter_password"
+                    android:inputType="textPassword"
+                    android:paddingStart="20dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/editketext" />
+
+                <ImageView
+                    android:id="@+id/ivEnterShow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="10dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_pass_invisible" />
+
+            </RelativeLayout>
+
+
+            <com.wokconns.customer.utils.CustomButton
+                android:id="@+id/CBsignIn"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_selector2"
+                android:text="@string/sign_in"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <com.wokconns.customer.utils.CustomTextViewBold
+                android:id="@+id/CTVBforgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ic_pass_invisible" />
+                android:layout_below="@+id/LLsign"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:text="@string/forgotten_password"
+                android:textColor="@color/black" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-
-        <com.wokconns.customer.utils.CustomButton
-            android:id="@+id/CBsignIn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_selector2"
-            android:text="@string/sign_in"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-
-        <com.wokconns.customer.utils.CustomTextViewBold
-            android:id="@+id/CTVBforgot"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/LLsign"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:text="@string/forgotten_password"
-            android:textColor="@color/black" />
+            android:layout_above="@+id/RRsncbar"
+            android:layout_margin="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <com.wokconns.customer.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/didn_t_have_any_account"
+                android:textColor="@color/black" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/RRsncbar"
-        android:layout_margin="16dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+            <com.wokconns.customer.utils.CustomTextView
+                android:id="@+id/CTVsignup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/sign_up"
+                android:textColor="@color/colorPrimary" />
 
-        <com.wokconns.customer.utils.CustomTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/didn_t_have_any_account"
-            android:textColor="@color/black" />
+        </LinearLayout>
 
-        <com.wokconns.customer.utils.CustomTextView
-            android:id="@+id/CTVsignup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/sign_up"
-            android:textColor="@color/colorPrimary" />
+        <RelativeLayout
+            android:id="@+id/RRsncbar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"></RelativeLayout>
 
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/RRsncbar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentBottom="true"></RelativeLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
 </layout>

@@ -4,24 +4,26 @@ package com.wokconns.customer.ui.adapter;
  * Created by VARUN on 01/01/19.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterJobsBinding;
 import com.wokconns.customer.databinding.ItemSectionBinding;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -39,6 +41,10 @@ import java.util.Locale;
 
 
 public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_SECTION = 0;
+    ItemSectionBinding itemSectionBinding;
+    AdapterJobsBinding adapterJobsBinding;
     private String TAG = AppliedJobAdapter.class.getSimpleName();
     private HashMap<String, String> params;
     private HashMap<String, String> paramsComplete;
@@ -49,11 +55,6 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<PostedJobDTO> postedJobDTOSList;
     private UserDTO userDTO;
     private SharedPrefrence preferences;
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_SECTION = 0;
-
-    ItemSectionBinding itemSectionBinding;
-    AdapterJobsBinding adapterJobsBinding;
 
     public JobsAdapter(Jobs jobs, ArrayList<PostedJobDTO> objects, UserDTO userDTO) {
         this.jobs = jobs;
@@ -79,6 +80,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return vh;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderMain, final int position) {
 
@@ -93,7 +95,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.adapterJobsBinding.tvDescription.setText(objects.get(position).getDescription());
             holder.adapterJobsBinding.tvCategory.setText(objects.get(position).getCategory_name());
             holder.adapterJobsBinding.tvAddress.setText(objects.get(position).getAddress());
-            holder.adapterJobsBinding.tvDate.setText(mContext.getResources().getString(R.string.date) + " " + ProjectUtils.changeDateFormate1(objects.get(position).getJob_date())+" "+objects.get(position).getTime());
+            holder.adapterJobsBinding.tvDate.setText(mContext.getResources().getString(R.string.date) + " " + ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()) + " " + objects.get(position).getTime());
             holder.adapterJobsBinding.tvApplied.setText(mContext.getResources().getString(R.string.applied1) + " " + objects.get(position).getApplied_job());
             holder.adapterJobsBinding.tvPrice.setText(objects.get(position).getCurrency_symbol() + objects.get(position).getPrice());
 
@@ -122,47 +124,35 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.adapterJobsBinding.ivImage);
 
-            holder.adapterJobsBinding.rlClick.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent in = new Intent(mContext, AppliedJob.class);
-                    preferences.setValue(Consts.JOB_ID, objects.get(position).getJob_id());
+            holder.adapterJobsBinding.rlClick.setOnClickListener(v -> {
+                Intent in = new Intent(mContext, AppliedJob.class);
+                preferences.setValue(Consts.JOB_ID, objects.get(position).getJob_id());
+                mContext.startActivity(in);
+            });
+
+            holder.adapterJobsBinding.tvEdit.setOnClickListener(v -> {
+                if (objects.get(position).getIs_edit().equalsIgnoreCase("1")) {
+                    Intent in = new Intent(mContext, EditJob.class);
+                    in.putExtra(Consts.POST_JOB_DTO, objects.get(position));
                     mContext.startActivity(in);
+                } else {
+                    ProjectUtils.showLong(mContext, mContext.getResources().getString(R.string.not_edit_job));
                 }
+
             });
+            holder.adapterJobsBinding.tvDecline.setOnClickListener(v -> {
+                params = new HashMap<>();
+                params.put(Consts.JOB_ID, objects.get(position).getJob_id());
+                params.put(Consts.STATUS, "4");
 
-            holder.adapterJobsBinding.tvEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (objects.get(position).getIs_edit().equalsIgnoreCase("1")) {
-                        Intent in = new Intent(mContext, EditJob.class);
-                        in.putExtra(Consts.POST_JOB_DTO, objects.get(position));
-                        mContext.startActivity(in);
-                    } else {
-                        ProjectUtils.showLong(mContext, mContext.getResources().getString(R.string.not_edit_job));
-                    }
-
-                }
+                JobsAdapter.this.rejectDialog(mContext.getResources().getString(R.string.delete) + " " + objects.get(position).getTitle(), mContext.getResources().getString(R.string.delete_job));
             });
-            holder.adapterJobsBinding.tvDecline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    params = new HashMap<>();
-                    params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                    params.put(Consts.STATUS, "4");
+            holder.adapterJobsBinding.tvComplete.setOnClickListener(v -> {
+                paramsComplete = new HashMap<>();
+                paramsComplete.put(Consts.JOB_ID, objects.get(position).getJob_id());
+                paramsComplete.put(Consts.USER_ID, objects.get(position).getUser_id());
 
-                    rejectDialog(mContext.getResources().getString(R.string.delete) + " " + objects.get(position).getTitle(), mContext.getResources().getString(R.string.delete_job));
-                }
-            });
-            holder.adapterJobsBinding.tvComplete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paramsComplete = new HashMap<>();
-                    paramsComplete.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                    paramsComplete.put(Consts.USER_ID, objects.get(position).getUser_id());
-
-                    completeDialog(mContext.getResources().getString(R.string.complete), mContext.getResources().getString(R.string.complete_job));
-                }
+                JobsAdapter.this.completeDialog(mContext.getResources().getString(R.string.complete), mContext.getResources().getString(R.string.complete_job));
             });
         } else {
             MyViewHolderSection view = (MyViewHolderSection) holderMain;
@@ -182,50 +172,33 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return objects.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        AdapterJobsBinding adapterJobsBinding;
-
-        public MyViewHolder(AdapterJobsBinding adapterJobsBinding) {
-            super(adapterJobsBinding.getRoot());
-           this.adapterJobsBinding = adapterJobsBinding;
-
-        }
-    }
-
-
     public void reject() {
 
-        new HttpsRequest(Consts.DELETE_JOB_API, params, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    dialog_book.dismiss();
-                    jobs.getjobs();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
-
-
+        new HttpsRequest(Consts.DELETE_JOB_API, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                dialog_book.dismiss();
+                jobs.getjobs();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
+
+
         });
     }
 
     public void complete() {
 
-        new HttpsRequest(Consts.JOB_COMPLETE_API, paramsComplete, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    dialog_book.dismiss();
-                    jobs.getjobs();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
-
-
+        new HttpsRequest(Consts.JOB_COMPLETE_API, paramsComplete, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                dialog_book.dismiss();
+                jobs.getjobs();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
+
+
         });
     }
 
@@ -236,21 +209,12 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .setTitle(title)
                     .setMessage(msg)
                     .setCancelable(false)
-                    .setPositiveButton(mContext.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog_book = dialog;
-                            reject();
+                    .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog_book = dialog;
+                        reject();
 
-                        }
                     })
-                    .setNegativeButton(mContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
+                    .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {
@@ -265,21 +229,12 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .setTitle(title)
                     .setMessage(msg)
                     .setCancelable(false)
-                    .setPositiveButton(mContext.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog_book = dialog;
-                            complete();
+                    .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog_book = dialog;
+                        complete();
 
-                        }
                     })
-                    .setNegativeButton(mContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
+                    .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {
@@ -301,6 +256,16 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         notifyDataSetChanged();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        AdapterJobsBinding adapterJobsBinding;
+
+        public MyViewHolder(AdapterJobsBinding adapterJobsBinding) {
+            super(adapterJobsBinding.getRoot());
+            this.adapterJobsBinding = adapterJobsBinding;
+
+        }
     }
 
     public static class MyViewHolderSection extends RecyclerView.ViewHolder {

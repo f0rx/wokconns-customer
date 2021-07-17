@@ -4,19 +4,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import android.view.View;
-
 import com.google.gson.JsonArray;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityViewServicesBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AdapterServices;
@@ -25,6 +24,7 @@ import com.wokconns.customer.utils.ProjectUtils;
 import java.util.ArrayList;
 
 public class ViewServices extends AppCompatActivity implements View.OnClickListener {
+    public ActivityViewServicesBinding binding;
     private Context mContext;
     private ArtistDetailsDTO artistDetailsDTO;
     private AdapterServices adapterServices;
@@ -36,7 +36,6 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private String artist_id = "";
-    public ActivityViewServicesBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +87,7 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.cardBook:
                 updateList();
-                if ((array.size() > 0) ) {
+                if ((array.size() > 0)) {
                     Intent in = new Intent(mContext, Booking.class);
                     in.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
                     in.putExtra(Consts.ARTIST_ID, artist_id);

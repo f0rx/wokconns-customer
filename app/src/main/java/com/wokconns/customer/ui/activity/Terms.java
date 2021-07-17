@@ -1,11 +1,12 @@
 package com.wokconns.customer.ui.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
@@ -13,6 +14,7 @@ import com.wokconns.customer.interfacess.Consts;
 public class Terms extends AppCompatActivity {
     private WebView mWebView;
     private RelativeLayout rlclose;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,12 +22,7 @@ public class Terms extends AppCompatActivity {
         setContentView(R.layout.activity_terms);
         mWebView = (WebView) findViewById(R.id.mWebView);
         rlclose = (RelativeLayout) findViewById(R.id.rlclose);
-        rlclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        rlclose.setOnClickListener(v -> finish());
 
         mWebView.setWebViewClient(new MyBrowser());
         mWebView.getSettings().setLoadsImagesAutomatically(true);

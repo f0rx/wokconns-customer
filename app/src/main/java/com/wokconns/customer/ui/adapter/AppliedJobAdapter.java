@@ -4,6 +4,7 @@ package com.wokconns.customer.ui.adapter;
  * Created by VARUN on 01/01/19.
  */
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.ArtistProfile;
@@ -31,6 +33,8 @@ import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +68,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
         return new MyViewHolder(itemView);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
@@ -119,7 +124,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
             holder.llACDE.setVisibility(View.GONE);
             holder.llComplete.setVisibility(View.GONE);
             holder.llWating.setVisibility(View.GONE);
-            holder.tvStatus.setText(appliedJob.getResources().getString(R.string.inprogress));
+            holder.tvStatus.setText(appliedJob.getResources().getString(R.string.in_progress));
             holder.llStatus.setBackground(appliedJob.getResources().getDrawable(R.drawable.rectangle_green));
         }
 
@@ -129,21 +134,21 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
             params.put(Consts.AJ_ID, objects.get(position).getAj_id());
             params.put(Consts.JOB_ID, objects.get(position).getJob_id());
             params.put(Consts.STATUS, "3");
-            rejectDialog(appliedJob.getResources().getString(R.string.reject), appliedJob.getResources().getString(R.string.reject_msg));
+            AppliedJobAdapter.this.rejectDialog(appliedJob.getResources().getString(R.string.reject), appliedJob.getResources().getString(R.string.reject_msg));
         });
         holder.llAccept.setOnClickListener(v -> {
             params = new HashMap<>();
             params.put(Consts.AJ_ID, objects.get(position).getAj_id());
             params.put(Consts.JOB_ID, objects.get(position).getJob_id());
             params.put(Consts.STATUS, "1");
-            rejectDialog(appliedJob.getResources().getString(R.string.confirm), appliedJob.getResources().getString(R.string.confirm_msg));
+            AppliedJobAdapter.this.rejectDialog(appliedJob.getResources().getString(R.string.confirm), appliedJob.getResources().getString(R.string.confirm_msg));
         });
         holder.llComplete.setOnClickListener(v -> {
             params = new HashMap<>();
             params.put(Consts.AJ_ID, objects.get(position).getAj_id());
             params.put(Consts.JOB_ID, objects.get(position).getJob_id());
             params.put(Consts.STATUS, "2");
-            rejectDialog(appliedJob.getResources().getString(R.string.complete), appliedJob.getResources().getString(R.string.complete_msg));
+            AppliedJobAdapter.this.rejectDialog(appliedJob.getResources().getString(R.string.complete), appliedJob.getResources().getString(R.string.complete_msg));
         });
         holder.rlPhoto.setOnClickListener(v -> {
             Intent in = new Intent(appliedJob, ArtistProfile.class);
@@ -164,6 +169,57 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
     public int getItemCount() {
 
         return objects.size();
+    }
+
+    public void reject() {
+
+        new HttpsRequest(Consts.JOB_STATUS_USER_API, params, appliedJob).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showToast(appliedJob, msg);
+                dialog_book.dismiss();
+                appliedJob.getjobs();
+            } else {
+                ProjectUtils.showToast(appliedJob, msg);
+            }
+
+
+        });
+    }
+
+    public void rejectDialog(String title, String msg) {
+        try {
+            new AlertDialog.Builder(appliedJob)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setTitle(title)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setPositiveButton(appliedJob.getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog_book = dialog;
+                        AppliedJobAdapter.this.reject();
+
+                    })
+                    .setNegativeButton(appliedJob.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                    .show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        objects.clear();
+        if (charText.length() == 0) {
+            objects.addAll(appliedJobDTOSList);
+        } else {
+            for (AppliedJobDTO appliedJobDTO : appliedJobDTOSList) {
+                if (appliedJobDTO.getArtist_name().toLowerCase(Locale.getDefault())
+                        .contains(charText)) {
+                    objects.add(appliedJobDTO);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -200,57 +256,6 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
             ratingbar = view.findViewById(R.id.ratingbar);
             rlPhoto = view.findViewById(R.id.rlPhoto);
         }
-    }
-
-    public void reject() {
-
-        new HttpsRequest(Consts.JOB_STATUS_USER_API, params, appliedJob).stringPost(TAG, (flag, msg, response) -> {
-            if (flag) {
-                ProjectUtils.showToast(appliedJob, msg);
-                dialog_book.dismiss();
-                appliedJob.getjobs();
-            } else {
-                ProjectUtils.showToast(appliedJob, msg);
-            }
-
-
-        });
-    }
-
-    public void rejectDialog(String title, String msg) {
-        try {
-            new AlertDialog.Builder(appliedJob)
-                    .setIcon(R.mipmap.ic_launcher)
-                    .setTitle(title)
-                    .setMessage(msg)
-                    .setCancelable(false)
-                    .setPositiveButton(appliedJob.getResources().getString(R.string.yes), (dialog, which) -> {
-                        dialog_book = dialog;
-                        reject();
-
-                    })
-                    .setNegativeButton(appliedJob.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
-                    .show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        objects.clear();
-        if (charText.length() == 0) {
-            objects.addAll(appliedJobDTOSList);
-        } else {
-            for (AppliedJobDTO appliedJobDTO : appliedJobDTOSList) {
-                if (appliedJobDTO.getArtist_name().toLowerCase(Locale.getDefault())
-                        .contains(charText)) {
-                    objects.add(appliedJobDTO);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 
 }

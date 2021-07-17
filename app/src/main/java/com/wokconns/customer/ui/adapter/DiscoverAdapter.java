@@ -4,20 +4,21 @@ package com.wokconns.customer.ui.adapter;
  * Created by VARUN on 01/01/19.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterdiscoverBinding;
 import com.wokconns.customer.dto.AllAtristListDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.ArtistProfileNew;
@@ -28,10 +29,10 @@ import java.util.ArrayList;
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.MyViewHolder> {
 
     Context mContext;
+    AdapterdiscoverBinding binding;
     private ArrayList<AllAtristListDTO> allAtristListDTOList;
     private LayoutInflater inflater;
     private SharedPrefrence prefrence;
-    AdapterdiscoverBinding binding;
 
     public DiscoverAdapter(Context mContext, ArrayList<AllAtristListDTO> allAtristListDTOList, LayoutInflater inflater) {
         this.mContext = mContext;
@@ -46,6 +47,7 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.MyView
         return new MyViewHolder(binding);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
@@ -63,13 +65,13 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.MyView
             }
         } else {
             if (allAtristListDTOList.get(position).getCommission_type().equalsIgnoreCase("0")) {
-                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " "+mContext.getResources().getString(R.string.fixed_rate_add_on));
+                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " " + mContext.getResources().getString(R.string.fixed_rate_add_on));
             } else if (allAtristListDTOList.get(position).getCommission_type().equalsIgnoreCase("1") && allAtristListDTOList.get(position).getFlat_type().equalsIgnoreCase("2")) {
-                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " "+mContext.getResources().getString(R.string.fixed_rate_add_on));
+                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " " + mContext.getResources().getString(R.string.fixed_rate_add_on));
             } else if (allAtristListDTOList.get(position).getCommission_type().equalsIgnoreCase("1") && allAtristListDTOList.get(position).getFlat_type().equalsIgnoreCase("1")) {
-                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " "+mContext.getResources().getString(R.string.fixed_rate_add_on));
+                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " " + mContext.getResources().getString(R.string.fixed_rate_add_on));
             } else {
-                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " "+mContext.getResources().getString(R.string.fixed_rate_add_on));
+                holder.binding.CTVartistchargeprh.setText(allAtristListDTOList.get(position).getCurrency_type() + allAtristListDTOList.get(position).getPrice() + " " + mContext.getResources().getString(R.string.fixed_rate_add_on));
             }
         }
 
@@ -95,13 +97,10 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.MyView
             holder.binding.ivfeatured.setVisibility(View.GONE);
         }
         holder.binding.ratingbar.setRating(Float.parseFloat(allAtristListDTOList.get(position).getAva_rating()));
-        holder.binding.rlClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(mContext, ArtistProfileNew.class);
-                in.putExtra(Consts.ARTIST_ID, allAtristListDTOList.get(position).getUser_id());
-                mContext.startActivity(in);
-            }
+        holder.binding.rlClick.setOnClickListener(v -> {
+            Intent in = new Intent(mContext, ArtistProfileNew.class);
+            in.putExtra(Consts.ARTIST_ID, allAtristListDTOList.get(position).getUser_id());
+            mContext.startActivity(in);
         });
     }
 

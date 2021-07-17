@@ -1,17 +1,18 @@
 package com.wokconns.customer.ui.fragment;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.QualificationsDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.ui.adapter.QualificationAdapter;
 import com.wokconns.customer.utils.CustomTextView;
@@ -20,14 +21,15 @@ import java.util.ArrayList;
 
 public class PersnoalInfo extends Fragment {
     private View view;
-    private CustomTextView tvAbout, tvArtistRate, tvRating, tvJobComplete, tvProfileComplete,tvLocation;
+    private CustomTextView tvAbout, tvArtistRate, tvRating, tvJobComplete, tvProfileComplete, tvLocation;
     private RatingBar ratingbar;
     private ArtistDetailsDTO artistDetailsDTO;
     private Bundle bundle;
     private RecyclerView rvQualification;
     private QualificationAdapter qualificationAdapter;
     private ArrayList<QualificationsDTO> qualificationsDTOList;
-    private LinearLayoutManager  mLayoutManagerQuali;
+    private LinearLayoutManager mLayoutManagerQuali;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class PersnoalInfo extends Fragment {
         showData();
     }
 
-    public void showData(){
+    public void showData() {
         ratingbar.setRating(Float.parseFloat(artistDetailsDTO.getAva_rating()));
         if (artistDetailsDTO.getArtist_commission_type().equalsIgnoreCase("0")) {
 

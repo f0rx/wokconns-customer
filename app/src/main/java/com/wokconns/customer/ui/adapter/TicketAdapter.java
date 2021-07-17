@@ -3,18 +3,21 @@ package com.wokconns.customer.ui.adapter;
 /**
  * Created by VARUN on 01/01/19.
  */
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.ui.activity.CommentOneByOne;
 import com.wokconns.customer.ui.fragment.Tickets;
@@ -49,6 +52,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.MyViewHold
         return new MyViewHolder(itemView);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
@@ -56,10 +60,10 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.MyViewHold
         holder.tvTicket.setText(ticketDTOSList.get(position).getReason());
 
 
-        try{
+        try {
             holder.tvDate.setText(ProjectUtils.convertTimestampDateToTime(ProjectUtils.correctTimestamp(Long.parseLong(ticketDTOSList.get(position).getCraeted_at()))));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -75,13 +79,10 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.MyViewHold
             holder.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_green));
         }
 
-        holder.rlClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(mContext, CommentOneByOne.class);
-                in.putExtra(Consts.TICKET_ID, ticketDTOSList.get(position).getId());
-                mContext.startActivity(in);
-            }
+        holder.rlClick.setOnClickListener(v -> {
+            Intent in = new Intent(mContext, CommentOneByOne.class);
+            in.putExtra(Consts.TICKET_ID, ticketDTOSList.get(position).getId());
+            mContext.startActivity(in);
         });
 
 

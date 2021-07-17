@@ -5,17 +5,18 @@ package com.wokconns.customer.ui.adapter;
  */
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.wokconns.customer.dto.ArtistBookingDTO;
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.ArtistBookingDTO;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
@@ -27,8 +28,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PreviousworkPagerAdapter extends RecyclerView.Adapter<PreviousworkPagerAdapter.MyViewHolder> {
     Context context;
-    private SharedPrefrence prefrence;
     LayoutInflater layoutInflater;
+    private SharedPrefrence prefrence;
     private ArrayList<ArtistBookingDTO> artistBookingDTOList;
 
     public PreviousworkPagerAdapter(Context context, ArrayList<ArtistBookingDTO> artistBookingDTOList) {

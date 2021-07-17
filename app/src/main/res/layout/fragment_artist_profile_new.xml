@@ -35,9 +35,9 @@
                     android:layout_height="126dp"
                     android:layout_gravity="center_horizontal"
                     android:elevation="8dp"
+                    android:src="@drawable/dummyuser_image"
                     app:civ_border_color="@color/white"
-                    app:civ_border_width="5dp"
-                    android:src="@drawable/dummyuser_image" />
+                    app:civ_border_width="5dp" />
 
                 <LinearLayout
                     android:id="@+id/materialup"
@@ -123,9 +123,9 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_fav_blank"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
+                    android:src="@drawable/ic_fav_blank"
                     android:visibility="visible" />
 
 
@@ -376,11 +376,11 @@
 
                     <LinearLayout
                         android:id="@+id/ll_works"
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <com.wokconns.customer.utils.CustomTextViewBold
                             android:layout_width="wrap_content"
@@ -404,18 +404,18 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:visibility="gone"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
-                        android:background="@color/light_gray" />
+                        android:background="@color/light_gray"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/ll_review"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <com.wokconns.customer.utils.CustomTextViewBold
                             android:layout_width="wrap_content"
@@ -492,12 +492,12 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:layout_weight="0.25"
-                    android:visibility="gone"
                     android:background="@drawable/button_selector3"
                     android:gravity="center"
                     android:text="@string/products"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </RelativeLayout>

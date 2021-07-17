@@ -28,9 +28,9 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
     Context mContext;
     ArrayList<HistoryDTO> objects = null;
     ArrayList<HistoryDTO> historyDTOList;
+    AdapterInvoiceBinding binding;
     private SharedPrefrence preference;
     private LayoutInflater inflater;
-    AdapterInvoiceBinding binding;
 
     public AdapterInvoice(Context mContext, ArrayList<HistoryDTO> objects, LayoutInflater inflater) {
         this.mContext = mContext;
@@ -83,16 +83,6 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
         return objects.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        AdapterInvoiceBinding binding;
-
-        public MyViewHolder(AdapterInvoiceBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-    }
-
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         objects.clear();
@@ -107,6 +97,16 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
             }
         }
         notifyDataSetChanged();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        AdapterInvoiceBinding binding;
+
+        public MyViewHolder(AdapterInvoiceBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
     }
 
 }

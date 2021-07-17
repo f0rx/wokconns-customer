@@ -1,10 +1,11 @@
 package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityForgotPassBinding;
@@ -27,14 +28,14 @@ public class ForgotPass extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding= DataBindingUtil.setContentView(this,R.layout.activity_forgot_pass);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_forgot_pass);
         mContext = ForgotPass.this;
         setUiAction();
     }
 
     public void setUiAction() {
-        binding.btnSubmit.setOnClickListener(v -> submitForm());
-        binding.llBack.setOnClickListener(v -> finish());
+        binding.btnSubmit.setOnClickListener(v -> ForgotPass.this.submitForm());
+        binding.llBack.setOnClickListener(v -> ForgotPass.this.finish());
     }
 
     public void submitForm() {
@@ -45,14 +46,14 @@ public class ForgotPass extends AppCompatActivity {
                 updatepass();
 
             } else {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
             }
         }
     }
 
 
     public boolean ValidateEmail() {
-        if (!ProjectUtils.isEmailValid( binding.etEmail.getText().toString().trim())) {
+        if (!ProjectUtils.isEmailValid(binding.etEmail.getText().toString().trim())) {
             binding.etEmail.setError(getResources().getString(R.string.val_email));
             binding.etEmail.requestFocus();
             return false;
@@ -67,8 +68,8 @@ public class ForgotPass extends AppCompatActivity {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
-                finish();
-                overridePendingTransition(R.anim.anim_slide_in_left,
+                ForgotPass.this.finish();
+                ForgotPass.this.overridePendingTransition(R.anim.anim_slide_in_left,
                         R.anim.anim_slide_out_left);
             } else {
                 ProjectUtils.showToast(mContext, msg);

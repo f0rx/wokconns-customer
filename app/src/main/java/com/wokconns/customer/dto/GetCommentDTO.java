@@ -14,6 +14,7 @@ public class GetCommentDTO implements Serializable {
     String send_at = "";
     String image = "";
     String chat_type = "";
+
     public String getId() {
         return id;
     }
@@ -77,6 +78,7 @@ public class GetCommentDTO implements Serializable {
     public void setSend_at(String send_at) {
         this.send_at = send_at;
     }
+
     public String getImage() {
         return image;
     }

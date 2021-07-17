@@ -38,20 +38,20 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Setting extends Fragment implements View.OnClickListener {
+    private final HashMap<String, String> paramsLogout = new HashMap<>();
+    private final HashMap<String, File> paramsFile = new HashMap<>();
+    private final String TAG = Setting.class.getSimpleName();
+    FragmentSettingBinding binding;
+    String baseURL = "";
     private Dialog dialog_pass;
     private CustomTextViewBold tvYesPass, tvNoPass;
     private CustomEditText etOldPassD, etNewPassD, etConfrimPassD;
     private ImageView ivClose;
     private HashMap<String, String> params;
-    private final HashMap<String, String> paramsLogout = new HashMap<>();
-    private final HashMap<String, File> paramsFile = new HashMap<>();
     private SharedPrefrence preference;
     private UserDTO userDTO;
-    private final String TAG = Setting.class.getSimpleName();
     private View view;
     private BaseActivity baseActivity;
-    FragmentSettingBinding binding;
-    String baseURL = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,7 +81,7 @@ public class Setting extends Fragment implements View.OnClickListener {
                 if (NetworkManager.isConnectToInternet(getActivity())) {
                     dialogPassword();
                 } else {
-                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                 }
                 break;
             case R.id.ll_language:
@@ -103,28 +103,25 @@ public class Setting extends Fragment implements View.OnClickListener {
 
 
     private void getURLForWebView() {
-        new HttpsRequest(baseURL, baseActivity).stringGet(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    try {
-                        if (baseURL.equalsIgnoreCase(Consts.PRIVACY_URL)) {
-                            Intent intent1 = new Intent(baseActivity, WebViewCommon.class);
-                            intent1.putExtra(Consts.URL, msg);
-                            intent1.putExtra(Consts.HEADER, getResources().getString(R.string.privacy_policy));
-                            startActivity(intent1);
-                        } else if (baseURL.equalsIgnoreCase(Consts.FAQ_URL)) {
-                            Intent intent3 = new Intent(getActivity(), WebViewCommon.class);
-                            intent3.putExtra(Consts.URL, msg);
-                            intent3.putExtra(Consts.HEADER, getResources().getString(R.string.faq));
-                            startActivity(intent3);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        new HttpsRequest(baseURL, baseActivity).stringGet(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    if (baseURL.equalsIgnoreCase(Consts.PRIVACY_URL)) {
+                        Intent intent1 = new Intent(baseActivity, WebViewCommon.class);
+                        intent1.putExtra(Consts.URL, msg);
+                        intent1.putExtra(Consts.HEADER, getResources().getString(R.string.privacy_policy));
+                        startActivity(intent1);
+                    } else if (baseURL.equalsIgnoreCase(Consts.FAQ_URL)) {
+                        Intent intent3 = new Intent(getActivity(), WebViewCommon.class);
+                        intent3.putExtra(Consts.URL, msg);
+                        intent3.putExtra(Consts.HEADER, getResources().getString(R.string.faq));
+                        startActivity(intent3);
                     }
-                } else {
-                    ProjectUtils.showToast(baseActivity, msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
+                ProjectUtils.showToast(baseActivity, msg);
             }
         });
     }
@@ -156,11 +153,11 @@ public class Setting extends Fragment implements View.OnClickListener {
                     params.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(etOldPassD));
                     params.put(Consts.NEW_PASSWORD, ProjectUtils.getEditTextValue(etNewPassD));
 
-                    if (NetworkManager.isConnectToInternet(getActivity())) {
-                        Submit();
+                    if (NetworkManager.isConnectToInternet(Setting.this.getActivity())) {
+                        Setting.this.Submit();
 
                     } else {
-                        ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                        ProjectUtils.showToast(Setting.this.getActivity(), Setting.this.getResources().getString(R.string.internet_connection));
                     }
                 });
 
@@ -174,7 +171,7 @@ public class Setting extends Fragment implements View.OnClickListener {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
-                    ProjectUtils.showToast(getActivity(), msg);
+                    ProjectUtils.showToast(Setting.this.getActivity(), msg);
 
                     userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
                     preference.setParentUser(userDTO, Consts.USER_DTO);
@@ -185,7 +182,7 @@ public class Setting extends Fragment implements View.OnClickListener {
                 }
 
             } else {
-                ProjectUtils.showToast(getActivity(), msg);
+                ProjectUtils.showToast(Setting.this.getActivity(), msg);
             }
 
 
@@ -208,7 +205,7 @@ public class Setting extends Fragment implements View.OnClickListener {
                 updateProfile();
                 dialog_pass.dismiss();
             } else {
-                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
             }
 
         }

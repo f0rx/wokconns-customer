@@ -1,22 +1,23 @@
 package com.wokconns.customer.ui.fragment;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -99,52 +100,46 @@ public class PaidFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     public void onResume() {
         super.onResume();
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
+        swipeRefreshLayout.post(() -> {
 
-                                        Log.e("Runnable", "FIRST");
-                                        if (NetworkManager.isConnectToInternet(getActivity())) {
-                                            swipeRefreshLayout.setRefreshing(true);
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(getActivity())) {
+                swipeRefreshLayout.setRefreshing(true);
 
-                                            getHistroy();
+                getHistroy();
 
-                                        } else {
-                                            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                                        }
-                                    }
-                                }
+            } else {
+                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
+            }
+        }
         );
     }
 
     public void getHistroy() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_INVOICE_API, getparm(), getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    tvNo.setVisibility(View.GONE);
-                    RVhistorylist.setVisibility(View.VISIBLE);
-                    rlSearch.setVisibility(View.VISIBLE);
-                    try {
-                        historyDTOList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<HistoryDTO>>() {
-                        }.getType();
-                        historyDTOList = (ArrayList<HistoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                        showData();
+        new HttpsRequest(Consts.GET_INVOICE_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                tvNo.setVisibility(View.GONE);
+                RVhistorylist.setVisibility(View.VISIBLE);
+                rlSearch.setVisibility(View.VISIBLE);
+                try {
+                    historyDTOList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<HistoryDTO>>() {
+                    }.getType();
+                    historyDTOList = (ArrayList<HistoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    tvNo.setVisibility(View.VISIBLE);
-                    RVhistorylist.setVisibility(View.GONE);
-                    rlSearch.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                tvNo.setVisibility(View.VISIBLE);
+                RVhistorylist.setVisibility(View.GONE);
+                rlSearch.setVisibility(View.GONE);
             }
         });
     }

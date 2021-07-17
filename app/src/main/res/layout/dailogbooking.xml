@@ -46,8 +46,8 @@
                     android:id="@+id/etService"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/select_services"
                     android:editable="false"
+                    android:hint="@string/select_services"
                     android:text="" />
 
             </com.wokconns.customer.utils.InputOpenFieldView>
@@ -83,6 +83,7 @@
                     android:text="" />
 
             </com.wokconns.customer.utils.InputOpenFieldView>
+
             <com.wokconns.customer.utils.InputOpenFieldView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,8 +95,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/estimate_time_minutes"
                     android:inputType="number"
-                    android:singleLine="true"
                     android:maxLength="3"
+                    android:singleLine="true"
                     android:text="" />
 
             </com.wokconns.customer.utils.InputOpenFieldView>

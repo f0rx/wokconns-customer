@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,10 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,11 +26,12 @@ import com.cocosw.bottomsheet.BottomSheet;
 import com.google.android.gms.location.places.Place;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.schibstedspain.leku.LocationPickerActivity;
+import com.wokconns.customer.R;
+import com.wokconns.customer.databinding.ActivityEditJobBinding;
 import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
-import com.wokconns.customer.databinding.ActivityEditJobBinding;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -40,7 +42,6 @@ import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 import org.json.JSONObject;
 
@@ -58,11 +59,8 @@ import static com.schibstedspain.leku.LocationPickerActivityKt.LATITUDE;
 import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
 
 public class EditJob extends AppCompatActivity implements View.OnClickListener {
+    public static final int MEDIA_TYPE_VIDEO = 6;
     private final String TAG = EditJob.class.getSimpleName();
-    private Context mContext;
-    private SharedPrefrence prefrence;
-    private UserDTO userDTO;
-    private ArrayList<CategoryDTO> categoryDTOS;
     private final HashMap<String, String> parmsadd = new HashMap<>();
     private final HashMap<String, String> parmsCategory = new HashMap<>();
     Uri picUri;
@@ -72,9 +70,12 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
     String pathOfImage = "";
     Bitmap bm;
     ImageCompression imageCompression;
-    private File image;
-    public static final int MEDIA_TYPE_VIDEO = 6;
     HashMap<String, File> parmsFile = new HashMap<>();
+    private Context mContext;
+    private SharedPrefrence prefrence;
+    private UserDTO userDTO;
+    private ArrayList<CategoryDTO> categoryDTOS;
+    private File image;
     private Place place;
     private SpinnerDialog spinnerDialogCate;
     private PostedJobDTO postedJobDTO;
@@ -83,7 +84,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding= DataBindingUtil.setContentView(this,R.layout.activity_edit_job);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_job);
         mContext = EditJob.this;
         prefrence = SharedPrefrence.getInstance(mContext);
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
@@ -116,7 +117,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                             try {
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                                File file = getOutputMediaFile(1);
+                                File file = EditJob.this.getOutputMediaFile(1);
                                 if (!(file != null && file.exists())) {
                                     try {
                                         file.createNewFile();
@@ -135,7 +136,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
 
                                 prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
-                                startActivityForResult(intent, PICK_FROM_CAMERA);
+                                EditJob.this.startActivityForResult(intent, PICK_FROM_CAMERA);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -148,7 +149,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                     if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
                         if (ProjectUtils.hasPermissionInManifest(EditJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                            File file = getOutputMediaFile(1);
+                            File file = EditJob.this.getOutputMediaFile(1);
                             if (!(file != null && file.exists())) {
                                 try {
                                     file.createNewFile();
@@ -161,7 +162,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                             Intent intent = new Intent();
                             intent.setType("image/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
+                            EditJob.this.startActivityForResult(Intent.createChooser(intent, EditJob.this.getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
 
                         }
                     }
@@ -175,7 +176,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         if (NetworkManager.isConnectToInternet(mContext)) {
             getCategory();
         } else {
-            ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_concation));
+            ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
         }
 
         parmsadd.put(Consts.CURRENCY_ID, postedJobDTO.getCurrency_id());
@@ -218,7 +219,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                 addPost();
 
             } else {
-                ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
             }
         }
     }
@@ -263,18 +264,15 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                     pathOfImage = picUri.getPath();
                     imageCompression = new ImageCompression(EditJob.this);
                     imageCompression.execute(pathOfImage);
-                    imageCompression.setOnTaskFinishedEvent(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(String imagePath) {
-                            Glide.with(mContext).load("file://" + imagePath)
-                                    .thumbnail(0.5f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(binding.ivImg);
+                    imageCompression.setOnTaskFinishedEvent(imagePath -> {
+                        Glide.with(mContext).load("file://" + imagePath)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(binding.ivImg);
 
-                            pathOfImage = imagePath;
-                            image = new File(imagePath);
-                            parmsFile.put(Consts.AVTAR, image);
-                        }
+                        pathOfImage = imagePath;
+                        image = new File(imagePath);
+                        parmsFile.put(Consts.AVTAR, image);
                     });
 
 
@@ -295,20 +293,17 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                     pathOfImage = picUri.getPath();
                     imageCompression = new ImageCompression(EditJob.this);
                     imageCompression.execute(pathOfImage);
-                    imageCompression.setOnTaskFinishedEvent(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(String imagePath) {
+                    imageCompression.setOnTaskFinishedEvent(imagePath -> {
 
-                            Glide.with(mContext).load("file://" + imagePath)
-                                    .thumbnail(0.5f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(binding.ivImg);
-                            image = new File(imagePath);
+                        Glide.with(mContext).load("file://" + imagePath)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(binding.ivImg);
+                        image = new File(imagePath);
 
-                            pathOfImage = imagePath;
-                            parmsFile.put(Consts.AVTAR, image);
+                        pathOfImage = imagePath;
+                        parmsFile.put(Consts.AVTAR, image);
 
-                        }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -411,18 +406,14 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         parmsadd.put(Consts.ADDRESS, ProjectUtils.getEditTextValue(binding.etAddress));
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.EDIT_POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showLong(mContext, msg);
-                    finish();
-                } else {
-                    ProjectUtils.showLong(mContext, msg);
-                }
+        new HttpsRequest(Consts.EDIT_POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showLong(mContext, msg);
+                finish();
+            } else {
+                ProjectUtils.showLong(mContext, msg);
             }
-
         });
     }
 
@@ -474,26 +465,23 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
 
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    try {
-                        categoryDTOS = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
-                        }.getType();
-                        categoryDTOS = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    categoryDTOS = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
+                    }.getType();
+                    categoryDTOS = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
-                        showData();
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
@@ -511,12 +499,9 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
             }
         }
         spinnerDialogCate = new SpinnerDialog((Activity) mContext, categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
-        spinnerDialogCate.bindOnSpinerListener(new OnSpinerItemClick() {
-            @Override
-            public void onClick(String item, String id, int position) {
-                binding.tvCategory.setText(item);
-                parmsadd.put(Consts.CATEGORY_ID, id);
-            }
+        spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
+            binding.tvCategory.setText(item);
+            parmsadd.put(Consts.CATEGORY_ID, id);
         });
 
         Glide.with(mContext).load(postedJobDTO.getAvtar())

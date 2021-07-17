@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.wokconns.customer.dto.HomeNearByArtistsDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterNearByArtistBinding;
+import com.wokconns.customer.dto.HomeNearByArtistsDTO;
 
 import java.util.ArrayList;
 

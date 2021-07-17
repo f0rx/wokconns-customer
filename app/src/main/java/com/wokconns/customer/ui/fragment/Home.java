@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
+import com.wokconns.customer.R;
+import com.wokconns.customer.application.GlobalState;
+import com.wokconns.customer.databinding.FragmentHomeBinding;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.HomeBannerDTO;
 import com.wokconns.customer.dto.HomeCategoryDTO;
@@ -23,9 +26,6 @@ import com.wokconns.customer.dto.HomeNearByArtistsDTO;
 import com.wokconns.customer.dto.HomeRecomendedDTO;
 import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
-import com.wokconns.customer.application.GlobalState;
-import com.wokconns.customer.databinding.FragmentHomeBinding;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -40,46 +40,38 @@ import com.wokconns.customer.ui.adapter.AdapterRecommended;
 import com.wokconns.customer.ui.adapter.HomeBannerPagerAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
 
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Home extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+    HashMap<String, String> params = new HashMap<>();
+    FragmentHomeBinding binding;
+    HomeDataDTO homeDataDTO;
+    GlobalState globalState;
+    ArrayList<HomeBannerDTO> bannerDTOArrayList = new ArrayList<>();
+    HomeBannerPagerAdapter homeBannerPagerAdapter;
+    AdapterNearByArtist nearByAdapter;
+    LinearLayoutManager linearLayoutManager;
+    ArrayList<HomeNearByArtistsDTO> nearByArtistsDTOArrayList = new ArrayList<>();
+    AdapterCustomerBooking activeBookingAdapter;
+    LinearLayoutManager linearLayoutManager1;
+    ArrayList<UserBooking> activeBookingDTOArrayList = new ArrayList<>();
+    LinearLayoutManager linearLayoutManager4;
+    AdapterRecommended recommendedAdapter;
+    ArrayList<HomeRecomendedDTO> recomendedDTOArrayList = new ArrayList<>();
+    LinearLayoutManager linearLayoutManager3;
+    AdapterInvoice invoiceAdapter;
+    ArrayList<HistoryDTO> invoiceDTOArrayList = new ArrayList<>();
+    LinearLayoutManager linearLayoutManager2;
+    AdapterCategory categoryAdapter;
+    ArrayList<HomeCategoryDTO> categoryDTOArrayList = new ArrayList<>();
     private View view;
     private String TAG = Home.class.getSimpleName();
     private SharedPrefrence preference;
     private UserDTO userDTO;
-
-    HashMap<String, String> params = new HashMap<>();
     private BaseActivity baseActivity;
-    FragmentHomeBinding binding;
-    HomeDataDTO homeDataDTO;
-    GlobalState globalState;
-
-    ArrayList<HomeBannerDTO> bannerDTOArrayList = new ArrayList<>();
-    HomeBannerPagerAdapter homeBannerPagerAdapter;
-
-    AdapterNearByArtist nearByAdapter;
-    LinearLayoutManager linearLayoutManager;
-    ArrayList<HomeNearByArtistsDTO> nearByArtistsDTOArrayList = new ArrayList<>();
-
-    AdapterCustomerBooking activeBookingAdapter;
-    LinearLayoutManager linearLayoutManager1;
-    ArrayList<UserBooking> activeBookingDTOArrayList = new ArrayList<>();
-
-    LinearLayoutManager linearLayoutManager4;
-    AdapterRecommended recommendedAdapter;
-    ArrayList<HomeRecomendedDTO> recomendedDTOArrayList = new ArrayList<>();
-
-    LinearLayoutManager linearLayoutManager3;
-    AdapterInvoice invoiceAdapter;
-    ArrayList<HistoryDTO> invoiceDTOArrayList = new ArrayList<>();
-
-    LinearLayoutManager linearLayoutManager2;
-    AdapterCategory categoryAdapter;
-    ArrayList<HomeCategoryDTO> categoryDTOArrayList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,8 +114,8 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
         binding.tvSeeAll6.setOnClickListener(this);
 
         params.put(Consts.USER_ID, userDTO.getUser_id());
-        params.put(Consts.LATITUDE, ""+preference.getValue(Consts.LATITUDE));
-        params.put(Consts.LONGITUDE, ""+preference.getValue(Consts.LONGITUDE));
+        params.put(Consts.LATITUDE, "" + preference.getValue(Consts.LATITUDE));
+        params.put(Consts.LONGITUDE, "" + preference.getValue(Consts.LONGITUDE));
         params.put(Consts.DISTANCE, "50");
     }
 
@@ -190,28 +182,25 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
 
     public void getHomeData() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.CUSTOMER_HOME_DATA, params, getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                binding.swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    binding.tvNo.setVisibility(View.GONE);
-                    try {
-                        homeDataDTO = new Gson().fromJson(response.getJSONObject("data").toString(), HomeDataDTO.class);
-                        globalState.setHomeData(homeDataDTO);
-                        setData();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    binding.tvNo.setVisibility(View.VISIBLE);
-                    binding.rvNearBy.setVisibility(View.GONE);
-                    binding.rvRecommended.setVisibility(View.GONE);
-                    binding.rvMyBookings.setVisibility(View.GONE);
-                    binding.rvCategories.setVisibility(View.GONE);
-                    binding.rvRecentInvoice.setVisibility(View.GONE);
+        new HttpsRequest(Consts.CUSTOMER_HOME_DATA, params, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            binding.swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                binding.tvNo.setVisibility(View.GONE);
+                try {
+                    homeDataDTO = new Gson().fromJson(response.getJSONObject("data").toString(), HomeDataDTO.class);
+                    globalState.setHomeData(homeDataDTO);
+                    setData();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
+                binding.tvNo.setVisibility(View.VISIBLE);
+                binding.rvNearBy.setVisibility(View.GONE);
+                binding.rvRecommended.setVisibility(View.GONE);
+                binding.rvMyBookings.setVisibility(View.GONE);
+                binding.rvCategories.setVisibility(View.GONE);
+                binding.rvRecentInvoice.setVisibility(View.GONE);
             }
         });
     }
@@ -219,20 +208,17 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
     @Override
     public void onResume() {
         super.onResume();
-        binding.swipeRefreshLayout.post(new Runnable() {
-                                            @Override
-                                            public void run() {
+        binding.swipeRefreshLayout.post(() -> {
 
-                                                Log.e("Runnable", "FIRST");
-                                                if (NetworkManager.isConnectToInternet(getActivity())) {
-                                                    binding.swipeRefreshLayout.setRefreshing(true);
-                                                    getHomeData();
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(Home.this.getActivity())) {
+                binding.swipeRefreshLayout.setRefreshing(true);
+                Home.this.getHomeData();
 
-                                                } else {
-                                                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                                                }
-                                            }
-                                        }
+            } else {
+                ProjectUtils.showToast(Home.this.getActivity(), Home.this.getResources().getString(R.string.internet_connection));
+            }
+        }
         );
 
     }

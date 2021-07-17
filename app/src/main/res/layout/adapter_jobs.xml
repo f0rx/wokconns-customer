@@ -33,8 +33,8 @@
                     <LinearLayout
                         android:id="@+id/ll_first"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <com.wokconns.customer.utils.CustomTextViewSemiBold
@@ -60,9 +60,9 @@
                         android:layout_height="30dp"
                         android:layout_marginStart="5dp"
                         android:layout_weight="0.1"
+                        android:gravity="center"
                         android:src="@drawable/ic_delete"
-                        app:tint="@color/red"
-                        android:gravity="center" />
+                        app:tint="@color/red" />
 
                 </LinearLayout>
 
@@ -87,9 +87,9 @@
                     android:id="@+id/tvJobIdValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/tvJobId"
-                    android:layout_marginStart="@dimen/_5sdp"
                     android:layout_below="@id/view11"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_toEndOf="@id/tvJobId"
                     android:text="" />
 
                 <com.wokconns.customer.utils.CustomTextView

@@ -49,10 +49,10 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_header"
-                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
-                    android:background="@android:color/transparent">
+                    android:background="@android:color/transparent"
+                    android:visibility="visible">
 
                     <com.wokconns.customer.utils.CustomTextViewBold
                         android:id="@+id/tvHome"
@@ -120,17 +120,17 @@
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/see_all"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/_9sdp"
-                        android:textAllCaps="true"/>
+                        android:textSize="@dimen/_9sdp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_near_by1"
-                    android:layout_below="@id/rl_near_by"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_near_by"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp">
 
@@ -172,17 +172,17 @@
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/see_all"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/_9sdp"
-                        android:textAllCaps="true"/>
+                        android:textSize="@dimen/_9sdp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_recommended1"
-                    android:layout_below="@id/rl_recommended"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_recommended"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp">
 
@@ -224,17 +224,17 @@
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/see_all"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/_9sdp"
-                        android:textAllCaps="true"/>
+                        android:textSize="@dimen/_9sdp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_my_bookings1"
-                    android:layout_below="@id/rl_my_bookings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_my_bookings"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp">
 
@@ -270,24 +270,24 @@
 
                     <com.wokconns.customer.utils.CustomTextViewBold
                         android:id="@+id/tv_see_all3"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/see_all"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/_9sdp"
-                        android:textAllCaps="true"/>
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_categories1"
-                    android:layout_below="@id/rl_categories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_categories"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp">
 
@@ -329,17 +329,17 @@
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/see_all"
+                        android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/_9sdp"
-                        android:textAllCaps="true"/>
+                        android:textSize="@dimen/_9sdp" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rl_recent_invoice1"
-                    android:layout_below="@id/rl_recent_invoice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_recent_invoice"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp">
 

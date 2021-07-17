@@ -1,25 +1,22 @@
 package com.wokconns.customer.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import androidx.databinding.DataBindingUtil;
-
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.wokconns.customer.dto.UserDTO;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivitySignUpBinding;
+import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -33,14 +30,14 @@ import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = SignUpActivity.class.getSimpleName();
+    String baseURL = "";
     private Context mContext;
-    private String TAG = SignUpActivity.class.getSimpleName();
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private SharedPreferences firebase;
     private boolean isHide = false;
     private ActivitySignUpBinding binding;
-    String baseURL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +58,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         binding.tvPrivacy.setOnClickListener(this);
         binding.ivReEnterShow.setOnClickListener(this);
         binding.ivEnterShow.setOnClickListener(this);
-
-
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -109,7 +105,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     isHide = true;
                 }
                 break;
-
         }
 
     }
@@ -117,28 +112,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void register() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.REGISTER_API, getparm(), mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        ProjectUtils.showToast(mContext, msg);
+        new HttpsRequest(Consts.REGISTER_API, getParam(), mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
 
-                        finish();
-
-                        startActivity(new Intent(mContext, SignInActivity.class));
-                        overridePendingTransition(R.anim.anim_slide_in_left,
-                                R.anim.anim_slide_out_left);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
+            if (flag) {
+                try {
                     ProjectUtils.showToast(mContext, msg);
+
+                    SignUpActivity.this.finish();
+
+                    SignUpActivity.this.startActivity(new Intent(mContext, SignInActivity.class));
+                    SignUpActivity.this.overridePendingTransition(R.anim.anim_slide_in_left,
+                            R.anim.anim_slide_out_left);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
@@ -146,11 +136,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void clickForSubmit() {
         if (!validation(binding.CETfirstname, getResources().getString(R.string.val_name))) {
             return;
+        } else if (!validation(binding.phoneNumber, getResources().getString(R.string.val_phone))) {
+            return;
         } else if (!ProjectUtils.isEmailValid(binding.CETemailadd.getText().toString().trim())) {
             showSickbar(getResources().getString(R.string.val_email));
         } else if (!ProjectUtils.isPasswordValid(binding.CETenterpassword.getText().toString().trim())) {
             showSickbar(getResources().getString(R.string.val_pass));
-        } else if (!checkpass()) {
+        } else if (!checkPassword()) {
             return;
         } else if (!validateTerms()) {
             return;
@@ -158,14 +150,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             if (NetworkManager.isConnectToInternet(mContext)) {
                 register();
             } else {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
             }
         }
-
-
     }
 
-    private boolean checkpass() {
+    private boolean checkPassword() {
         if (binding.CETenterpassword.getText().toString().trim().equals("")) {
             showSickbar(getResources().getString(R.string.val_pass));
             return false;
@@ -183,16 +173,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (binding.termsCB.isChecked()) {
             return true;
         } else {
-            showSickbar(getResources().getString(R.string.trms_acc));
+            showSickbar(getResources().getString(R.string.terms_acc));
             return false;
         }
     }
 
-    public HashMap<String, String> getparm() {
+    public HashMap<String, String> getParam() {
         HashMap<String, String> parms = new HashMap<>();
         parms.put(Consts.NAME, ProjectUtils.getEditTextValue(binding.CETfirstname));
         parms.put(Consts.EMAIL_ID, ProjectUtils.getEditTextValue(binding.CETemailadd));
         parms.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(binding.CETenterpassword));
+        parms.put(Consts.MOBILE, ProjectUtils.getEditTextValue(binding.phoneNumber));
+        parms.put(Consts.MOBILE_NUMBER, ProjectUtils.getEditTextValue(binding.phoneNumber));
         parms.put(Consts.ROLE, "2");
         parms.put(Consts.DEVICE_TYPE, "ANDROID");
         parms.put(Consts.DEVICE_TOKEN, firebase.getString(Consts.DEVICE_TOKEN, ""));
@@ -256,27 +248,5 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         // super.onBackPressed();
         startActivity(new Intent(mContext, SignInActivity.class));
         finish();
-    }
-
-    private void _mockRegistration() {
-        userDTO = new UserDTO("9023223asa", ProjectUtils.getEditTextValue(binding.CETfirstname),
-                ProjectUtils.getEditTextValue(binding.CETemailadd), "passworD12", "https://firebasestorage.googleapis.com/v0/b/smartlets-x.appspot.com/o/assets%2Fdefault-user.png?alt=media&token=82e08454-1786-4f0f-989a-03605e489a64",
-                "72 Congress Road", "Lekki Phase 1", "",
-                "", "1", "", "1", "",
-                "08100395180", ProjectUtils.getEditTextValue(binding.etReferal), ProjectUtils.getEditTextValue(binding.etReferal), "Male",
-                "Lagos", "", "ANDROID",
-                "ANDR12345OID", "1234390823",
-                firebase.getString(Consts.DEVICE_TOKEN, ""));
-        prefrence.setParentUser(userDTO, Consts.USER_DTO);
-
-        prefrence.setBooleanValue(Consts.IS_REGISTERED, true);
-
-        ProjectUtils.showToast(mContext, "Welcome " + ProjectUtils.getEditTextValue(binding.CETfirstname) + "!!");
-
-        Intent in = new Intent(mContext, BaseActivity.class);
-        startActivity(in);
-        finish();
-        overridePendingTransition(R.anim.anim_slide_in_left,
-                R.anim.anim_slide_out_left);
     }
 }

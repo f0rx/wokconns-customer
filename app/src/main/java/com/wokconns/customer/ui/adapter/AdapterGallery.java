@@ -1,16 +1,17 @@
 package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.wokconns.customer.dto.GalleryDTO;
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.GalleryDTO;
 import com.wokconns.customer.ui.fragment.ImageGallery;
 
 import java.util.ArrayList;

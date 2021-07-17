@@ -62,6 +62,7 @@ public class ArtistDetailsDTO implements Serializable {
     public void setBanner_image(String banner_image) {
         this.banner_image = banner_image;
     }
+
     public String getId() {
         return id;
     }
@@ -238,7 +239,6 @@ public class ArtistDetailsDTO implements Serializable {
     public void setCategory_name(String category_name) {
         this.category_name = category_name;
     }
-
 
 
     public ArrayList<ProductDTO> getProducts() {

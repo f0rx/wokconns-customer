@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:src="@drawable/back"
-                app:tint="@color/black_off"/>
+                app:tint="@color/black_off" />
 
         </LinearLayout>
 

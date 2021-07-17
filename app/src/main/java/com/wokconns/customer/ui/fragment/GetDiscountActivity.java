@@ -6,15 +6,16 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.gson.Gson;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.DiscountDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -73,7 +74,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
         if (NetworkManager.isConnectToInternet(getActivity())) {
             getCode();
         } else {
-            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
         }
     }
 
@@ -88,7 +89,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
                     myClipboard.setPrimaryClip(myClip);
                     ProjectUtils.showLong(getActivity(), getResources().getString(R.string.code_copy));
                 } else {
-                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                 }
 
                 break;
@@ -96,7 +97,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
                 if (NetworkManager.isConnectToInternet(getActivity())) {
                     share();
                 } else {
-                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                 }
                 break;
 
@@ -105,21 +106,18 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
 
     public void getCode() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_REFERRAL_CODE_API, parms, getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
+        new HttpsRequest(Consts.GET_REFERRAL_CODE_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
 
-                        discountDTO = new Gson().fromJson(response.getJSONObject("my_referral_code").toString(), DiscountDTO.class);
-                        showData();
+                    discountDTO = new Gson().fromJson(response.getJSONObject("my_referral_code").toString(), DiscountDTO.class);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
             }
         });
     }
@@ -139,7 +137,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
             startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.app_name)));
         } catch (Exception e) {
             e.printStackTrace();
-            ProjectUtils.showLong(getActivity(), getResources().getString(R.string.opps_share));
+            ProjectUtils.showLong(getActivity(), getResources().getString(R.string.error_share));
         }
 
 

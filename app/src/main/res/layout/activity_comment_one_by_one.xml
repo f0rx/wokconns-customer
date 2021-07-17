@@ -1,7 +1,5 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -52,9 +50,9 @@
         android:id="@+id/linearLayoutFooter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -72,9 +70,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_msg_panel_smiles" />
 
@@ -83,10 +81,10 @@
                 android:id="@+id/buttonLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="10dp"
                 android:layout_toStartOf="@+id/buttonSendMessage"
                 android:layout_toEndOf="@+id/emojiButton"
                 android:background="@drawable/edittext_back"
@@ -134,12 +132,11 @@
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/send_msg_chat"
-                 />
+                android:src="@drawable/send_msg_chat" />
 
 
         </RelativeLayout>

@@ -11,9 +11,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -24,12 +25,12 @@ import com.wokconns.customer.ui.activity.BaseActivity;
 import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    public static final String MyPREFERENCES = "MyPrefs";
     private static final String TAG = "MyFirebaseMsgService";
-
     SharedPrefrence prefrence;
     int i = 0;
     SharedPreferences sharedpreferences;
-    public static final String MyPREFERENCES = "MyPrefs" ;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         prefrence = SharedPrefrence.getInstance(this);
@@ -43,27 +44,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (remoteMessage.getData().containsKey(Consts.TYPE)) {
                 if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.CHAT_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.CHAT_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.TICKET_COMMENT_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.TICKET_COMMENT_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.TICKET_COMMENT_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.TICKET_STATUS_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.TICKET_STATUS_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.TICKET_STATUS_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.WALLET_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.WALLET_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.WALLET_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.START_BOOKING_ARTIST_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.END_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.END_BOOKING_ARTIST_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.END_BOOKING_ARTIST_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.JOB_APPLY_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.JOB_APPLY_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.JOB_APPLY_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.BRODCAST_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.BRODCAST_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.BRODCAST_NOTIFICATION);
-                }else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.ADMIN_NOTIFICATION)) {
+                } else if (remoteMessage.getData().get(Consts.TYPE).equalsIgnoreCase(Consts.ADMIN_NOTIFICATION)) {
                     sendNotification(getValue(remoteMessage.getData(), "body"), Consts.ADMIN_NOTIFICATION);
-                }else {
+                } else {
                     sendNotification(getValue(remoteMessage.getData(), "body"), "");
                 }
             }
@@ -83,6 +84,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return getString(R.string.app_name);
         }
     }
+
     @Override
     public void onNewToken(String token) {
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -93,6 +95,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Refreshed token: " + token);
 
     }
+
     private void sendNotification(String messageBody, String tag) {
 
         Intent broadcastIntent = new Intent();

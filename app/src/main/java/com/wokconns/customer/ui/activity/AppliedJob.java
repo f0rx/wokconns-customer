@@ -1,21 +1,22 @@
 package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wokconns.customer.dto.AppliedJobDTO;
-import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityAppliedJobBinding;
+import com.wokconns.customer.dto.AppliedJobDTO;
+import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -56,7 +57,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
     public void setUiAction() {
         mLayoutManager = new LinearLayoutManager(mContext.getApplicationContext());
         binding.RVhistorylist.setLayoutManager(mLayoutManager);
-        binding.ivBack.setOnClickListener(v -> finish());
+        binding.ivBack.setOnClickListener(v -> AppliedJob.this.finish());
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -83,10 +84,10 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
             Log.e("Runnable", "FIRST");
             if (NetworkManager.isConnectToInternet(mContext)) {
                 binding.swipeRefreshLayout.setRefreshing(true);
-                getjobs();
+                AppliedJob.this.getjobs();
 
             } else {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(mContext, AppliedJob.this.getResources().getString(R.string.internet_connection));
             }
         }
         );
@@ -107,7 +108,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
                     Type getpetDTO = new TypeToken<List<AppliedJobDTO>>() {
                     }.getType();
                     appliedJobDTOSList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                    showData();
+                    AppliedJob.this.showData();
 
                 } catch (Exception e) {
                     e.printStackTrace();

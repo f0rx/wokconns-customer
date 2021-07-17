@@ -1,101 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="20dp"
-        android:background="@drawable/dialog_back"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/dialog_back_blue">
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/dialog_back"
+            android:orientation="vertical">
 
-            <com.wokconns.customer.utils.CustomTextView
-                android:id="@+id/ctvbTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dialog_back_blue">
+
+                <com.wokconns.customer.utils.CustomTextView
+                    android:id="@+id/ctvbTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/payment_option"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/paystackButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_paystack" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/flutterwaveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/payment_option"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/paystackButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_paystack" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_flutterwave" />
 
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/flutterwaveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_flutterwave" />
+            </LinearLayout>
 
 
-        </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="35dp"
-            android:background="@color/colorPrimary" />
-
-        <LinearLayout
-            android:id="@+id/llCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.wokconns.customer.utils.CustomTextView
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
+                android:layout_height="1dp"
+                android:layout_marginTop="35dp"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:id="@+id/llCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/cancel1"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
+
+                <com.wokconns.customer.utils.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/cancel1"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
 
 
-    </LinearLayout>
-
-
-</RelativeLayout>
+    </RelativeLayout>
 </layout>

@@ -1,22 +1,23 @@
 package com.wokconns.customer.ui.fragment;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -33,9 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefreshListener{
-    private View view;
+public class UnPaidFrag extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = UnPaidFrag.class.getSimpleName();
+    private View view;
     private RecyclerView RVhistorylist;
     private UnPaidAdapter unPaidAdapter;
     private ArrayList<HistoryDTO> historyDTOList;
@@ -48,6 +49,7 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
     private SearchView svSearch;
     private RelativeLayout rlSearch;
     private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,35 +96,31 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
     }
 
 
-
     public void getHistroy() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_INVOICE_API, getparm(), getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                swipeRefreshLayout.setRefreshing(false);
-                if (flag) {
-                    tvNo.setVisibility(View.GONE);
-                    RVhistorylist.setVisibility(View.VISIBLE);
-                    rlSearch.setVisibility(View.VISIBLE);
-                    try {
-                        historyDTOList = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<HistoryDTO>>() {
-                        }.getType();
-                        historyDTOList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
-                        showData();
+        new HttpsRequest(Consts.GET_INVOICE_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            swipeRefreshLayout.setRefreshing(false);
+            if (flag) {
+                tvNo.setVisibility(View.GONE);
+                RVhistorylist.setVisibility(View.VISIBLE);
+                rlSearch.setVisibility(View.VISIBLE);
+                try {
+                    historyDTOList = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<HistoryDTO>>() {
+                    }.getType();
+                    historyDTOList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    showData();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    tvNo.setVisibility(View.VISIBLE);
-                    RVhistorylist.setVisibility(View.GONE);
-                    rlSearch.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                tvNo.setVisibility(View.VISIBLE);
+                RVhistorylist.setVisibility(View.GONE);
+                rlSearch.setVisibility(View.GONE);
             }
         });
     }
@@ -134,13 +132,13 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
         swipeRefreshLayout.post(() -> {
 
             Log.e("Runnable", "FIRST");
-            if (NetworkManager.isConnectToInternet(getActivity())) {
+            if (NetworkManager.isConnectToInternet(UnPaidFrag.this.getActivity())) {
                 swipeRefreshLayout.setRefreshing(true);
 
-                getHistroy();
+                UnPaidFrag.this.getHistroy();
 
             } else {
-                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(UnPaidFrag.this.getActivity(), UnPaidFrag.this.getResources().getString(R.string.internet_connection));
             }
         }
         );
@@ -162,7 +160,7 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
             }
         }
 
-        if (historyDTOListUnPaid.size()>0){
+        if (historyDTOListUnPaid.size() > 0) {
             tvNo.setVisibility(View.GONE);
             RVhistorylist.setVisibility(View.VISIBLE);
             rlSearch.setVisibility(View.VISIBLE);
@@ -170,12 +168,13 @@ public class UnPaidFrag extends Fragment implements  SwipeRefreshLayout.OnRefres
             unPaidAdapter = new UnPaidAdapter(UnPaidFrag.this, historyDTOListUnPaid, userDTO, myInflater);
             RVhistorylist.setAdapter(unPaidAdapter);
 
-        }else {
+        } else {
             tvNo.setVisibility(View.VISIBLE);
             RVhistorylist.setVisibility(View.GONE);
             rlSearch.setVisibility(View.GONE);
         }
     }
+
     @Override
     public void onRefresh() {
         Log.e("ONREFREST_Firls", "FIRS");

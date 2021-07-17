@@ -1,8 +1,6 @@
 <layout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -135,8 +133,8 @@
                 android:hint="@string/enter_your_description"
                 android:maxLines="3"
                 android:minLines="3"
-                android:paddingTop="@dimen/_5sdp"
                 android:paddingStart="15dp"
+                android:paddingTop="@dimen/_5sdp"
                 android:text="" />
         </LinearLayout>
 

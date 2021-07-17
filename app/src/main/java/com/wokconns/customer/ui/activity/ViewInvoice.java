@@ -2,16 +2,17 @@ package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityViewInvoiceBinding;
+import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -34,30 +35,22 @@ public class ViewInvoice extends AppCompatActivity {
 
     public void setUiAction() {
 
-        binding.ivCross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        binding.ivCross.setOnClickListener(v -> onBackPressed());
         if (historyDTO.getFlag().equalsIgnoreCase("0")) {
             binding.btnPay.setVisibility(View.VISIBLE);
         } else if (historyDTO.getFlag().equalsIgnoreCase("1")) {
             binding.btnPay.setVisibility(View.GONE);
         }
 
-        binding.btnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkManager.isConnectToInternet(mContext)) {
-                    Intent in = new Intent(mContext, PaymentProActivity.class);
-                    in.putExtra(Consts.HISTORY_DTO, historyDTO);
-                    mContext.startActivity(in);
-                } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
-                }
-
+        binding.btnPay.setOnClickListener(v -> {
+            if (NetworkManager.isConnectToInternet(mContext)) {
+                Intent in = new Intent(mContext, PaymentProActivity.class);
+                in.putExtra(Consts.HISTORY_DTO, historyDTO);
+                mContext.startActivity(in);
+            } else {
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
             }
+
         });
 
         Glide.with(mContext).

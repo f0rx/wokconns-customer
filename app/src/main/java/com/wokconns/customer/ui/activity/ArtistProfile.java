@@ -1,27 +1,28 @@
 package com.wokconns.customer.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import com.google.android.material.appbar.AppBarLayout;
+import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.gson.Gson;
-import com.wokconns.customer.dto.ArtistDetailsDTO;
-import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityArtistProfileBinding;
+import com.wokconns.customer.dto.ArtistDetailsDTO;
+import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -43,6 +44,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class ArtistProfile extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
+    private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
+    public static String name = "", email = "";
+    SimpleDateFormat sdf1, timeZone;
+    int flag = 0;
     private String TAG = ArtistProfile.class.getSimpleName();
     private Context mContext;
     private String artist_id = "";
@@ -51,29 +56,20 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private HashMap<String, String> paramsFav = new HashMap<>();
-    SimpleDateFormat sdf1, timeZone;
-    public static String name = "", email = "";
     private ArrayList<String> list;
-
     private PersnoalInfo persnoalInfo = new PersnoalInfo();
     private ImageGallery imageGallery = new ImageGallery();
     private PreviousWork previousWork = new PreviousWork();
     private Reviews reviews = new Reviews();
-
     private Bundle bundle;
-
-    private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
     private int mMaxScrollSize;
     private DialogInterface dialog_book;
-    private HashMap<String, String> paramsBookingOp = new HashMap<>();
     ;
+    private HashMap<String, String> paramsBookingOp = new HashMap<>();
     private Date date;
     private HashMap<String, String> paramBookAppointment = new HashMap<>();
-
     private ActivityArtistProfileBinding binding;
-    int flag = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +110,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
             getArtist();
 
         } else {
-            ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+            ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
         }
 
         binding.appbarLayout.addOnOffsetChangedListener(this);
@@ -143,7 +139,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                         ProjectUtils.showLong(mContext, getResources().getString(R.string.no_data_found));
                     }
                 } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
 
                 break;
@@ -153,7 +149,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                     paramBookAppointment.put(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
                     clickScheduleDateTime();
                 } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
 
 
@@ -170,7 +166,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                     }
 
                 } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
 
 
@@ -182,7 +178,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                     in.putExtra(Consts.ARTIST_NAME, artistDetailsDTO.getName());
                     mContext.startActivity(in);
                 } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
 
                 break;
@@ -197,7 +193,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                         ProjectUtils.showLong(mContext, getResources().getString(R.string.no_services_found));
                     }
                 } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
 
                 break;
@@ -212,7 +208,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
             if (flag) {
                 try {
                     artistDetailsDTO = new Gson().fromJson(response.getJSONObject("data").toString(), ArtistDetailsDTO.class);
-                    showData();
+                    ArtistProfile.this.showData();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -222,6 +218,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void showData() {
         bundle = new Bundle();
         bundle.putSerializable(Consts.ARTIST_DTO, artistDetailsDTO);
@@ -257,32 +254,26 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
 
     public void addFav() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.ADD_FAVORITES_API, paramsFav, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    getArtist();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
+        new HttpsRequest(Consts.ADD_FAVORITES_API, paramsFav, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                getArtist();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
 
     public void removeFav() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.REMOVE_FAVORITES_API, paramsFav, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    getArtist();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
+        new HttpsRequest(Consts.REMOVE_FAVORITES_API, paramsFav, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                getArtist();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
@@ -319,6 +310,36 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void clickScheduleDateTime() {
+        new SingleDateAndTimePickerDialog.Builder(this)
+                .bottomSheet()
+                .curved()
+                .mustBeOnFuture()
+                .defaultDate(new Date())
+                .listener(date -> {
+                    paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    bookAppointment();
+                })
+                .display();
+    }
+
+    public void bookAppointment() {
+
+        ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
+        new HttpsRequest(Consts.BOOK_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.pauseProgressDialog();
+                ProjectUtils.showToast(mContext, msg);
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+            }
+
+
+        });
+    }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -346,42 +367,5 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-
-    public void clickScheduleDateTime() {
-        new SingleDateAndTimePickerDialog.Builder(this)
-                .bottomSheet()
-                .curved()
-                .mustBeOnFuture()
-                .defaultDate(new Date())
-                .listener(new SingleDateAndTimePickerDialog.Listener() {
-                    @Override
-                    public void onDateSelected(Date date) {
-                        paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                        paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
-                        bookAppointment();
-                    }
-                })
-                .display();
-    }
-
-    public void bookAppointment() {
-
-        ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.BOOK_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.pauseProgressDialog();
-                    ProjectUtils.showToast(mContext, msg);
-
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
-
-
-            }
-        });
     }
 }

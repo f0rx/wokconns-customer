@@ -2,34 +2,31 @@ package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.databinding.DataBindingUtil;
-
 import android.location.Address;
 import android.location.Geocoder;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
+import com.schibstedspain.leku.LocationPickerActivity;
+import com.wokconns.customer.R;
+import com.wokconns.customer.databinding.ActivityBookingBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
-import com.wokconns.customer.databinding.ActivityBookingBinding;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,8 +86,8 @@ public class Booking extends AppCompatActivity {
                 price = getIntent().getStringExtra(Consts.PRICE);
 
 
-                Log.e(TAG, "onCreate:servicesId "+servicesId);
-                Log.e(TAG, "onCreate:servicesName "+serviceList);
+                Log.e(TAG, "onCreate:servicesId " + servicesId);
+                Log.e(TAG, "onCreate:servicesName " + serviceList);
 
                 try {
                     array = new JSONArray(servicesId);
@@ -105,12 +102,7 @@ public class Booking extends AppCompatActivity {
     }
 
     public void setUiAction() {
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        binding.llBack.setOnClickListener(v -> onBackPressed());
         Glide.with(mContext).
                 load(artistDetailsDTO.getImage())
                 .placeholder(R.drawable.dummyuser_image)
@@ -141,36 +133,25 @@ public class Booking extends AppCompatActivity {
             paramsBookingOp.put(Consts.LATITUDE, userDTO.getLive_lat());
             paramsBookingOp.put(Consts.LONGITUDE, userDTO.getLive_long());
         }
-        binding.tvAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkManager.isConnectToInternet(mContext)) {
-                    findPlace();
-                } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
-                }
+        binding.tvAddress.setOnClickListener(v -> {
+            if (NetworkManager.isConnectToInternet(mContext)) {
+                findPlace();
+            } else {
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
             }
         });
-        binding.llDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickScheduleDateTime();
-            }
-        });
-        binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.tvAddress.getText().toString().trim().length() > 0) {
-                    if (screen_tag == 1) {
-                        paramsBookingOp.put(Consts.PRICE, artistDetailsDTO.getPrice());
-                        paramsBookingOp.put(Consts.TITLE, "Direct Booking");
-                        submit();
-                    } else if ((screen_tag == 2)) {
-                        bookForService();
-                    }
-                } else {
-                    ProjectUtils.showLong(mContext, getResources().getString(R.string.val_address));
+        binding.llDate.setOnClickListener(v -> clickScheduleDateTime());
+        binding.btnConfirm.setOnClickListener(v -> {
+            if (binding.tvAddress.getText().toString().trim().length() > 0) {
+                if (screen_tag == 1) {
+                    paramsBookingOp.put(Consts.PRICE, artistDetailsDTO.getPrice());
+                    paramsBookingOp.put(Consts.TITLE, "Direct Booking");
+                    submit();
+                } else if ((screen_tag == 2)) {
+                    bookForService();
                 }
+            } else {
+                ProjectUtils.showLong(mContext, getResources().getString(R.string.val_address));
             }
         });
     }
@@ -178,7 +159,8 @@ public class Booking extends AppCompatActivity {
     public void bookForService() {
         if ((array.length() > 0)) {
             String strTitle = serviceList.toString().replace("[", "")
-                    .replace("]", "").replace(", ", ",");;
+                    .replace("]", "").replace(", ", ",");
+            ;
             paramsBookingOp.put(Consts.SERVICE_ID, array.toString());
             paramsBookingOp.put(Consts.TITLE, strTitle);
             submit();
@@ -192,22 +174,19 @@ public class Booking extends AppCompatActivity {
         paramsBookingOp.put(Consts.USER_ID, userDTO.getUser_id());
         paramsBookingOp.put(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
 
-        Log.e(TAG, "bookArtist: "+paramsBookingOp.toString() );
+        Log.e(TAG, "bookArtist: " + paramsBookingOp.toString());
 
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.BOOK_ARTIST_API, paramsBookingOp, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    finish();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
-
-
+        new HttpsRequest(Consts.BOOK_ARTIST_API, paramsBookingOp, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                finish();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
+
+
         });
     }
 
@@ -282,13 +261,10 @@ public class Booking extends AppCompatActivity {
                 .curved()
                 .mustBeOnFuture()
                 .defaultDate(new Date())
-                .listener(new SingleDateAndTimePickerDialog.Listener() {
-                    @Override
-                    public void onDateSelected(Date date) {
-                        paramsBookingOp.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                        paramsBookingOp.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
-                        binding.tvBookingDate.setText(sdf1.format(date).toString().toUpperCase());
-                    }
+                .listener(date -> {
+                    paramsBookingOp.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    paramsBookingOp.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    binding.tvBookingDate.setText(sdf1.format(date).toString().toUpperCase());
                 })
                 .display();
     }
@@ -304,7 +280,7 @@ public class Booking extends AppCompatActivity {
                 bookArtist();
 
             } else {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
             }
         }
     }

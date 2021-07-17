@@ -5,13 +5,14 @@ package com.wokconns.customer.ui.adapter;
  */
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wokconns.customer.dto.NotificationDTO;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.NotificationDTO;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -45,11 +46,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.tvMsg.setText(notificationDTOlist.get(position).getMsg());
 
 
-        try{
+        try {
             holder.tvDay.setText(ProjectUtils.getDisplayableDay(ProjectUtils.correctTimestamp(Long.parseLong(notificationDTOlist.get(position).getCreated_at()))));
             holder.tvDate.setText(ProjectUtils.convertTimestampToTime(ProjectUtils.correctTimestamp(Long.parseLong(notificationDTOlist.get(position).getCreated_at()))));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

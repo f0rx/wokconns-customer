@@ -7,9 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,36 +27,10 @@ import com.wokconns.customer.utils.ProjectUtils;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private SharedPrefrence prefference;
     private static final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 1003;
-    private String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION};
-    private boolean cameraAccepted, storageAccepted, accessNetState, fineLoc, corasLoc;
-    private Handler handler = new Handler();
     private static int SPLASH_TIME_OUT = 3000;
     Context mContext;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-       // Fabric.with(this, new Crashlytics());
-
-        ProjectUtils.Fullscreen(SplashActivity.this);
-        setContentView(R.layout.activity_splash);
-        mContext = SplashActivity.this;
-        prefference = SharedPrefrence.getInstance(SplashActivity.this);
-        FirebaseMessaging.getInstance().subscribeToTopic(Consts.TOPIC_CUSTOMER)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                    }
-                });
-
-
-    }
-
-
+    private SharedPrefrence prefference;
     Runnable mTask = new Runnable() {
         @Override
         public void run() {
@@ -65,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
                 overridePendingTransition(R.anim.anim_slide_in_left,
                         R.anim.anim_slide_out_left);
-            }else {
+            } else {
                 startActivity(new Intent(SplashActivity.this, AppIntro.class));
                 finish();
                 overridePendingTransition(R.anim.anim_slide_in_left,
@@ -76,7 +51,38 @@ public class SplashActivity extends AppCompatActivity {
         }
 
     };
+    private String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
+    private boolean cameraAccepted, storageAccepted, accessNetState, fineLoc, corasLoc;
+    private Handler handler = new Handler();
 
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Fabric.with(this, new Crashlytics());
+
+        ProjectUtils.Fullscreen(SplashActivity.this);
+        setContentView(R.layout.activity_splash);
+        mContext = SplashActivity.this;
+        prefference = SharedPrefrence.getInstance(SplashActivity.this);
+        FirebaseMessaging.getInstance().subscribeToTopic(Consts.TOPIC_CUSTOMER)
+                .addOnCompleteListener(task -> {
+
+                });
+
+
+    }
 
     @Override
     protected void onResume() {
@@ -117,18 +123,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 break;
         }
-    }
-
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
 

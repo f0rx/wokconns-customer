@@ -12,16 +12,15 @@ public class GlobalState extends MultiDexApplication {
     HomeDataDTO homeData;
     SharedPrefrence sharedPrefrence;
 
+    public static synchronized GlobalState getInstance() {
+        return mInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
         sharedPrefrence = SharedPrefrence.getInstance(this);
-    }
-
-
-    public static synchronized GlobalState getInstance() {
-        return mInstance;
     }
 
     public HomeDataDTO getHomeData() {

@@ -12,7 +12,7 @@
     <string name="intro_1">ابحث عن \nفنان الماكياج \nو Hair Stylish.</string>
     <string name="intro_2">اجعل نفسك أكثر جمالا مما تعتقد.</string>
     <string name="intro_3">وظف أفضل مصور</string>
-    <string name="internet_concation">الرجاء تمكين اتصال الإنترنت الخاص بك.</string>
+    <string name="internet_connection">الرجاء تمكين اتصال الإنترنت الخاص بك.</string>
     <string name="server_error">غير قادر على الاتصال الخادم.</string>
     <string name="closeMsg">هل أنت متأكد أنك تريد إغلاق Wokconns؟</string>
     <string name="yes">نعم</string>
@@ -54,9 +54,9 @@
     <string name="decline_msg">هل أنت متأكد أنك تريد رفض هذا الموعد؟</string>
     <string name="waiting_artist">في انتظار رد الفنان</string>
     <string name="request_acc">تم قبول الطلب من قبل الفنان</string>
-    <string name="invoice_genrate">تم إنشاء الفاتورة</string>
+    <string name="invoice_generate">تم إنشاء الفاتورة</string>
     <string name="invoice_paid">فاتورة المدفوعة</string>
-    <string name="work_inpro">عملك في التقدم</string>
+    <string name="work_in_progress">عملك في التقدم</string>
     <string name="booking_with">الحجز مع</string>
     <string name="booking_cancel_msg">هل أنت متأكد من إلغاء الحجز مع</string>
     <string name="date">تاريخ:</string>
@@ -64,7 +64,7 @@
     <string name="applied1">تم التطبيق:</string>
     <string name="confirm">تم تأكيد</string>
     <string name="complete">اكتمال</string>
-    <string name="inprogress">في تقدم</string>
+    <string name="in_progress">في تقدم</string>
     <string name="reject">رفض</string>
     <string name="reject_msg">هل أنت متأكد أنك تريد رفض الطلب؟</string>
     <string name="confirm_msg">هل أنت متأكد أنك تريد تأكيد التطبيق؟</string>
@@ -87,7 +87,7 @@
     <string name="get_discount">احصل على عرض</string>
     <string name="code_copy">نسخ الرمز</string>
     <string name="my_code">مرحبًا ، هذا هو رمز الإحالة الخاص بي</string>
-    <string name="opps_share">عفوا !! يبدو أنك لم تقم بتثبيت أي تطبيق مشاركة.</string>
+    <string name="error_share">عفوا !! يبدو أنك لم تقم بتثبيت أي تطبيق مشاركة.</string>
     <string name="invoice">فاتورة</string>
     <string name="ic_wallet">محفظة نقود</string>
     <string name="jobs">نشر الوظائف</string>
@@ -123,7 +123,7 @@
     <string name="qualification">المؤهل</string>
     <string name="skills">مهارات</string>
     <string name="products">خدمات</string>
-    <string name="privious_work">عمل سابق</string>
+    <string name="previous_work">عمل سابق</string>
     <string name="no_chat_history_found">لم يتم العثور على محفوظات الدردشة</string>
     <string name="comment">تعليق</string>
     <string name="write_your_message">اكتب رسالتك</string>
@@ -171,7 +171,7 @@
     <string name="city">مدينة</string>
     <string name="country">بلد</string>
     <string name="set_location">تحديد المكان</string>
-    <string name="signout">خروج</string>
+    <string name="sign_out">خروج</string>
     <string name="promotion">ترقية وظيفية</string>
     <string name="apply_code1">تطبيق الكود</string>
     <string name="email_address1">Email Id</string>
@@ -180,7 +180,7 @@
     <string name="didn_t_have_any_account">ليس لديك حساب؟</string>
     <string name="first_name">الاسم الكامل</string>
     <string name="enter_password_again">إعادة إدخال كلمة المرور</string>
-    <string name="referal">أدخل رمز الإحالة</string>
+    <string name="referral">أدخل رمز الإحالة</string>
     <string name="do_you_have_an_account_already">هل لديك حساب بالفعل؟</string>
     <string name="write_review">أكتب مراجعة</string>
     <string name="your_review">مراجعتك*</string>
@@ -254,7 +254,7 @@
     <string name="no_service">لا توجد خدمة</string>
     <string name="no_gallery_found">لم يتم العثور على معرض</string>
     <string name="no_reviews_found">لا توجد مراجعات</string>
-    <string name="no_privious_found">لم يتم العثور على عمل خاص</string>
+    <string name="no_previous_work_found">لم يتم العثور على عمل خاص</string>
     <string name="no_services_found">لا توجد خدمات</string>
     <string name="no_data_found">لاتوجد بيانات</string>
     <string name="date1">تاريخ</string>
@@ -286,7 +286,7 @@
     <string name="home_features">ميزات المنزل</string>
     <string name="bookings_and_job">الحجوزات</string>
     <string name="personal">شخصي</string>
-    <string name="trms_acc">الرجاء قبول شروط الاستخدام وسياسة الخصوصية</string>
+    <string name="terms_acc">الرجاء قبول شروط الاستخدام وسياسة الخصوصية</string>
     <string name="please_select">الرجاء التحديد</string>
     <string name="upload_image_first">لم تقم بإضافة أي صورة للحذف.</string>
     <string name="near_by_artists">بالقرب من الفنانين</string>
@@ -343,4 +343,6 @@
     <string name="dis_jobs_done">المهام المنجزة</string>
     <string name="featured">متميز</string>
     <string name="favourite">مفضل</string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="val_phone">الرجاء إدخال رقم الهاتف.</string>
 </resources>

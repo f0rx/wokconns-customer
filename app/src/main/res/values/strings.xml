@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">Customer</string>
-    <string name="company" translatable="false">Customer</string>
+    <string name="app_name" translatable="false">Wokconns</string>
+    <string name="company" translatable="false">Wokconns</string>
     <string name="permission_pick_rationale">READ_EXTERNAL_STORAGE permission is needed to pick image.</string>
     <string name="permission_crop_rationale">WRITE_EXTERNAL_STORAGE permission is needed to save cropped image.</string>
     <string name="button_allow">Allow</string>
@@ -10,12 +10,12 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="hindi">Hindi</string>
-    <string name="intro_1">Search your nearby \n Make-up Artist \n and Hair Stylish.</string>
+    <string name="intro_1">Search your nearby \n Make-up Artist \n and Hair Stylist.</string>
     <string name="intro_2">Make yourself more beautiful more than you think.</string>
     <string name="intro_3">Hire the best Photographer &amp; create your moment.</string>
-    <string name="internet_concation">Please enable your internet connection.</string>
-    <string name="server_error">Unable to connect server.</string>
-    <string name="closeMsg">Are your sure you want to close FabArtist?</string>
+    <string name="internet_connection">Please enable your internet connection.</string>
+    <string name="server_error">Unable to connect to server.</string>
+    <string name="closeMsg">Do you want to close Wokconns?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="jobs_completed">Jobs Completed</string>
@@ -46,6 +46,7 @@
     <string name="val_pass">Password must contain at least six characters.</string>
     <string name="val_pass1">Renter password contain at least six characters.</string>
     <string name="val_name">Please enter name.</string>
+    <string name="val_phone">Please enter phone number.</string>
     <string name="pass_not_match">Password does not match.</string>
     <string name="pending">Pending</string>
     <string name="accepted">Accepted</string>
@@ -55,9 +56,9 @@
     <string name="decline_msg">Are you sure you want to decline this appointment?</string>
     <string name="waiting_artist">Waiting for artist response</string>
     <string name="request_acc">Request accepted by artist</string>
-    <string name="invoice_genrate">Invoice Generated</string>
+    <string name="invoice_generate">Invoice Generated</string>
     <string name="invoice_paid">Invoice Paid</string>
-    <string name="work_inpro">Your work in progress</string>
+    <string name="work_in_progress">Your work in progress</string>
     <string name="booking_with">Booking With</string>
     <string name="booking_cancel_msg">Are you sure to cancel booking with</string>
     <string name="date">Date:</string>
@@ -65,7 +66,7 @@
     <string name="applied1">Applied:</string>
     <string name="confirm">Confirmed</string>
     <string name="complete">Complete</string>
-    <string name="inprogress">In progress</string>
+    <string name="in_progress">In progress</string>
     <string name="reject">Reject</string>
     <string name="reject_msg">Are you sure you want to reject the application?</string>
     <string name="confirm_msg">Are you sure you want to confirm the application?</string>
@@ -88,7 +89,7 @@
     <string name="get_discount">Get Offer</string>
     <string name="code_copy">Code Copy</string>
     <string name="my_code">Hello, this is my Referral Code</string>
-    <string name="opps_share">Oops!! It seems that you have not installed any sharing app.</string>
+    <string name="error_share">Oops!! It seems that you have not installed any sharing app.</string>
     <string name="invoice">Invoice</string>
     <string name="ic_wallet">Wallet</string>
     <string name="jobs">Post Jobs</string>
@@ -118,7 +119,7 @@
     <string name="qualification">Qualification</string>
     <string name="skills">Skills</string>
     <string name="products">SERVICES</string>
-    <string name="privious_work">Previous Work</string>
+    <string name="previous_work">Previous Work</string>
     <string name="no_chat_history_found">No Chat History Found</string>
     <string name="comment">Comment</string>
     <string name="write_your_message">Write your message</string>
@@ -166,16 +167,17 @@
     <string name="city">City</string>
     <string name="country">Country</string>
     <string name="set_location">Set Location</string>
-    <string name="signout">SignOut</string>
+    <string name="sign_out">SignOut</string>
     <string name="promotion">Promotion</string>
     <string name="apply_code1">Apply Code</string>
     <string name="email_address1">Email Address</string>
+    <string name="phone_number">Phone Number</string>
     <string name="enter_password">Your Password</string>
     <string name="forgotten_password">Forgotten Password?</string>
     <string name="didn_t_have_any_account">Don\'t have an account?</string>
     <string name="first_name">Full Name</string>
     <string name="enter_password_again">Re-enter Password</string>
-    <string name="referal">Enter Referral Code</string>
+    <string name="referral">Enter Referral Code</string>
     <string name="do_you_have_an_account_already">Do you have an account already?</string>
     <string name="write_review">Write Review</string>
     <string name="your_review">Your Review*</string>
@@ -256,7 +258,7 @@
     <string name="no_service">No service found</string>
     <string name="no_gallery_found">No Gallery Found</string>
     <string name="no_reviews_found">No Reviews Found</string>
-    <string name="no_privious_found">No Previous work Found</string>
+    <string name="no_previous_work_found">No Previous work Found</string>
     <string name="no_services_found">No Services Found</string>
     <string name="no_data_found">No data found</string>
     <string name="date1">Date</string>
@@ -288,7 +290,7 @@
     <string name="home_features">Home Features</string>
     <string name="bookings_and_job">Bookings &amp; Jobs</string>
     <string name="personal">Personal</string>
-    <string name="trms_acc">Please accept Terms of Use and Privacy Policy</string>
+    <string name="terms_acc">Please accept Terms of Use and Privacy Policy</string>
     <string name="please_select">Please select</string>
     <string name="upload_image_first">You have not added any image for delete.</string>
 

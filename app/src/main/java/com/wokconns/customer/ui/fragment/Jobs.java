@@ -23,6 +23,7 @@ import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -30,6 +31,8 @@ import com.wokconns.customer.ui.activity.PostJob;
 import com.wokconns.customer.ui.adapter.JobsAdapter;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -79,10 +82,10 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         RVhistorylist.setLayoutManager(mLayoutManager);
 
         ivPost.setOnClickListener(v1 -> {
-            if (NetworkManager.isConnectToInternet(getActivity())) {
-                startActivity(new Intent(getActivity(), PostJob.class));
+            if (NetworkManager.isConnectToInternet(Jobs.this.getActivity())) {
+                Jobs.this.startActivity(new Intent(Jobs.this.getActivity(), PostJob.class));
             } else {
-                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(Jobs.this.getActivity(), Jobs.this.getResources().getString(R.string.internet_connection));
             }
         });
         svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -114,16 +117,16 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         super.onResume();
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(() -> {
-                    Log.e("Runnable", "FIRST");
-                    if (NetworkManager.isConnectToInternet(getActivity())) {
-                        swipeRefreshLayout.setRefreshing(true);
+            Log.e("Runnable", "FIRST");
+            if (NetworkManager.isConnectToInternet(Jobs.this.getActivity())) {
+                swipeRefreshLayout.setRefreshing(true);
 
-                        getjobs();
+                Jobs.this.getjobs();
 
-                    } else {
-                        ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                    }
-                }
+            } else {
+                ProjectUtils.showToast(Jobs.this.getActivity(), Jobs.this.getResources().getString(R.string.internet_connection));
+            }
+        }
         );
     }
 
@@ -143,7 +146,7 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
                     }.getType();
                     postedJobDTOSList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
                     //setSection();
-                    showData();
+                    Jobs.this.showData();
 
                 } catch (Exception e) {
                     e.printStackTrace();

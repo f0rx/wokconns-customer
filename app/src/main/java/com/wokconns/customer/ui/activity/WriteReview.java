@@ -2,16 +2,17 @@ package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -72,12 +73,7 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
          *
          */
 
-        rbReview.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                myrating = ratingBar.getRating();
-            }
-        });
+        rbReview.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> myrating = ratingBar.getRating());
 
         yourReviewET.addTextChangedListener(new TextWatcher() {
 
@@ -134,7 +130,7 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
                 if (NetworkManager.isConnectToInternet(mContext)) {
                     submit();
                 } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
 
                 break;
@@ -152,15 +148,12 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
     public void sendReview() {
         parms.put(Consts.RATING, String.valueOf(myrating));
         parms.put(Consts.COMMENT, ProjectUtils.getEditTextValue(yourReviewET));
-        new HttpsRequest(Consts.ADD_RATING_API, parms, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showLong(mContext, msg);
-                    finish();
-                } else {
-                    ProjectUtils.showLong(mContext, msg);
-                }
+        new HttpsRequest(Consts.ADD_RATING_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showLong(mContext, msg);
+                finish();
+            } else {
+                ProjectUtils.showLong(mContext, msg);
             }
         });
     }

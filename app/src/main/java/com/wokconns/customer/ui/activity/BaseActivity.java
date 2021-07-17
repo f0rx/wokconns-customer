@@ -13,17 +13,6 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
@@ -36,6 +25,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,17 +50,18 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.wokconns.customer.dto.UserDTO;
+import com.google.android.material.navigation.NavigationView;
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.AppointmentFrag;
 import com.wokconns.customer.ui.fragment.ChatList;
+import com.wokconns.customer.ui.fragment.DiscoverNearBy;
 import com.wokconns.customer.ui.fragment.GetDiscountActivity;
 import com.wokconns.customer.ui.fragment.HistoryFragment;
-import com.wokconns.customer.ui.fragment.DiscoverNearBy;
 import com.wokconns.customer.ui.fragment.Home;
 import com.wokconns.customer.ui.fragment.Jobs;
 import com.wokconns.customer.ui.fragment.MyBooking;
@@ -88,19 +89,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-    private final String TAG = BaseActivity.class.getSimpleName();
-    HashMap<String, String> parms = new HashMap<>();
-
-    private FrameLayout frame;
-    private View contentView;
-    public NavigationView navigationView;
-    public RelativeLayout header;
-    public DrawerLayout drawer;
-    public View navHeader;
-    public ImageView menuLeftIV, ivFilter;
-    Context mContext;
-    public SharedPrefrence prefrence;
-    private UserDTO userDTO;
     public static final String TAG_MAIN = "main";
     public static final String TAG_CHAT = "chat";
     public static final String TAG_HOME = "home";
@@ -115,23 +103,35 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String TAG_APPOINTMENT = "appointment";
     public static final String TAG_JOBS = "jobs";
     public static final String TAG_WALLET = "wallet";
-    public static String CURRENT_TAG = TAG_MAIN;
-    public static int navItemIndex = 0;
-    private Handler mHandler;
     private static final float END_SCALE = 0.8f;
-    InputMethodManager inputManager;
-    DiscoverNearBy discoverNearBy = null;
-    private final boolean shouldLoadHomeFragOnBackPress = true;
-    public CustomTextViewBold headerNameTV;
-    private Location mylocation;
-    private GoogleApiClient googleApiClient;
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+    public static String CURRENT_TAG = TAG_MAIN;
+    public static int navItemIndex = 0;
+    private final String TAG = BaseActivity.class.getSimpleName();
+    private final boolean shouldLoadHomeFragOnBackPress = true;
+    public NavigationView navigationView;
+    public RelativeLayout header;
+    public DrawerLayout drawer;
+    public View navHeader;
+    public ImageView menuLeftIV, ivFilter;
+    public SharedPrefrence prefrence;
+    public CustomTextViewBold headerNameTV;
+    HashMap<String, String> parms = new HashMap<>();
+    Context mContext;
+    InputMethodManager inputManager;
+    DiscoverNearBy discoverNearBy = null;
+    String type = "";
+    private FrameLayout frame;
+    private View contentView;
+    private UserDTO userDTO;
+    private Handler mHandler;
+    private Location mylocation;
+    private GoogleApiClient googleApiClient;
     private CircleImageView img_profile;
     private CustomTextViewBold tvName;
     private CustomTextView tvEmail, tvOther, tvEnglish;
     private LinearLayout llProfileClick;
-    String type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +177,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
             header.setVisibility(View.GONE);
             navItemIndex = 10;
             CURRENT_TAG = TAG_PROFILE_SETINGS;
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = BaseActivity.this.getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                     android.R.anim.fade_out);
             fragmentTransaction.replace(R.id.frame, new ProfileSettingActivity());
@@ -185,8 +185,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
             drawer.closeDrawers();
         });
 
-        tvEnglish.setOnClickListener(v -> language("en"));
-        tvOther.setOnClickListener(v -> language("ar"));
+        tvEnglish.setOnClickListener(v -> BaseActivity.this.language("en"));
+        tvOther.setOnClickListener(v -> BaseActivity.this.language("ar"));
         Glide.with(mContext).
                 load(userDTO.getImage())
                 .placeholder(R.drawable.dummyuser_image)
@@ -268,7 +268,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         }
-        menuLeftIV.setOnClickListener(v -> drawerOpen());
+        menuLeftIV.setOnClickListener(v -> BaseActivity.this.drawerOpen());
 
         setUpNavigationView();
         Menu menu = navigationView.getMenu();
@@ -293,26 +293,26 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         drawer.setScrimColor(Color.TRANSPARENT);
         drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-                 @Override
-                 public void onDrawerSlide(View drawerView, float slideOffset) {
+                                     @Override
+                                     public void onDrawerSlide(View drawerView, float slideOffset) {
 
-                     // Scale the View based on current slide offset
-                     final float diffScaledOffset = slideOffset * (1 - END_SCALE);
-                     final float offsetScale = 1 - diffScaledOffset;
-                     contentView.setScaleX(offsetScale);
-                     contentView.setScaleY(offsetScale);
+                                         // Scale the View based on current slide offset
+                                         final float diffScaledOffset = slideOffset * (1 - END_SCALE);
+                                         final float offsetScale = 1 - diffScaledOffset;
+                                         contentView.setScaleX(offsetScale);
+                                         contentView.setScaleY(offsetScale);
 
-                     // Translate the View, accounting for the scaled width
-                     final float xOffset = drawerView.getWidth() * slideOffset;
-                     final float xOffsetDiff = contentView.getWidth() * diffScaledOffset / 2;
-                     final float xTranslation = xOffset - xOffsetDiff;
-                     contentView.setTranslationX(xTranslation);
-                 }
+                                         // Translate the View, accounting for the scaled width
+                                         final float xOffset = drawerView.getWidth() * slideOffset;
+                                         final float xOffsetDiff = contentView.getWidth() * diffScaledOffset / 2;
+                                         final float xTranslation = xOffset - xOffsetDiff;
+                                         contentView.setTranslationX(xTranslation);
+                                     }
 
-                 @Override
-                 public void onDrawerClosed(View drawerView) {
-                 }
-             }
+                                     @Override
+                                     public void onDrawerClosed(View drawerView) {
+                                     }
+                                 }
         );
 
 
@@ -347,7 +347,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     public void loadHomeFragment(final Fragment fragment, final String TAG) {
 
         Runnable mPendingRunnable = () -> {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = BaseActivity.this.getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                     android.R.anim.fade_out);
             fragmentTransaction.replace(R.id.frame, fragment, TAG);
@@ -384,7 +384,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void setUpNavigationView() {
         navigationView.setNavigationItemSelectedListener(menuItem -> {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = BaseActivity.this.getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                     android.R.anim.fade_out);
 
@@ -481,7 +481,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                     fragmentTransaction.replace(R.id.frame, new Tickets());
                     break;
                 case R.id.nav_logout:
-                    confirmLogout();
+                    BaseActivity.this.confirmLogout();
                     break;
                 default:
                     ivFilter.setVisibility(View.VISIBLE);
@@ -537,9 +537,9 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                     i.setAction(Intent.ACTION_MAIN);
                     i.addCategory(Intent.CATEGORY_HOME);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+                    BaseActivity.this.startActivity(i);
 
-                    finish();
+                    BaseActivity.this.finish();
                 })
                 .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                 .show();
@@ -565,46 +565,40 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                     PendingResult result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
-                    result.setResultCallback(new ResultCallback() {
+                    result.setResultCallback(result1 -> {
+                        final Status status = result1.getStatus();
+                        switch (status.getStatusCode()) {
+                            case LocationSettingsStatusCodes.SUCCESS:
+                                // All location settings are satisfied.
+                                // You can initialize location requests here.
+                                int permissionLocation1 = ContextCompat
+                                        .checkSelfPermission(BaseActivity.this,
+                                                Manifest.permission.ACCESS_FINE_LOCATION);
+                                if (permissionLocation1 == PackageManager.PERMISSION_GRANTED) {
+                                    mylocation = LocationServices.FusedLocationApi
+                                            .getLastLocation(googleApiClient);
 
-                        @Override
-                        public void onResult(@NonNull Result result) {
-                            final Status status = result.getStatus();
-                            switch (status.getStatusCode()) {
-                                case LocationSettingsStatusCodes.SUCCESS:
-                                    // All location settings are satisfied.
-                                    // You can initialize location requests here.
-                                    int permissionLocation = ContextCompat
-                                            .checkSelfPermission(BaseActivity.this,
-                                                    Manifest.permission.ACCESS_FINE_LOCATION);
-                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-                                        mylocation = LocationServices.FusedLocationApi
-                                                .getLastLocation(googleApiClient);
-
-                                    }
-                                    break;
-                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                    // Location settings are not satisfied.
-                                    // But could be fixed by showing the fabcustomer a dialog.
-                                    try {
-                                        // Show the dialog by calling startResolutionForResult(),
-                                        // and check the result in onActivityResult().
-                                        // Ask to turn on GPS automatically
-                                        status.startResolutionForResult(BaseActivity.this,
-                                                REQUEST_CHECK_SETTINGS_GPS);
-                                    } catch (IntentSender.SendIntentException e) {
-                                        // Ignore the error.
-                                    }
-                                    break;
-                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                    // Location settings are not satisfied. However, we have no way to fix the
-                                    // settings so we won't show the dialog.
-                                    //finish();
-                                    break;
-                            }
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                // Location settings are not satisfied.
+                                // But could be fixed by showing the fabcustomer a dialog.
+                                try {
+                                    // Show the dialog by calling startResolutionForResult(),
+                                    // and check the result in onActivityResult().
+                                    // Ask to turn on GPS automatically
+                                    status.startResolutionForResult(BaseActivity.this,
+                                            REQUEST_CHECK_SETTINGS_GPS);
+                                } catch (IntentSender.SendIntentException e) {
+                                    // Ignore the error.
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                // Location settings are not satisfied. However, we have no way to fix the
+                                // settings so we won't show the dialog.
+                                //finish();
+                                break;
                         }
-
-
                     });
                 }
             }
@@ -615,16 +609,14 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS_GPS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        getMyLocation();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        break;
-                }
-                break;
+        if (requestCode == REQUEST_CHECK_SETTINGS_GPS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    getMyLocation();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    break;
+            }
         }
     }
 
@@ -679,7 +671,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         int permissionLocation = ContextCompat.checkSelfPermission(BaseActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
@@ -711,9 +704,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void language(String language) {
-        String languageToLoad = language; // your language
-
-        Locale locale = new Locale(languageToLoad);
+        Locale locale = new Locale(language);
         Locale.setDefault(locale);
 
         Configuration config = new Configuration();
@@ -742,8 +733,8 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
                         prefrence.clearAllPreferences();
                         Intent intent = new Intent(mContext, SignInActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        ((BaseActivity)mContext).finish();
+                        BaseActivity.this.startActivity(intent);
+                        ((BaseActivity) mContext).finish();
                     })
                     .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();

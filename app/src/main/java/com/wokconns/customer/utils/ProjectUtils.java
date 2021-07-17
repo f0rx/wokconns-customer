@@ -1,5 +1,6 @@
 package com.wokconns.customer.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -17,8 +18,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.View;
@@ -27,6 +26,9 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.wokconns.customer.R;
 
@@ -45,13 +47,12 @@ import java.util.regex.Pattern;
  */
 public class ProjectUtils {
     public static final String TAG = "ProjectUtility";
+    private static final String VERSION_UNAVAILABLE = "N/A";
+    public static Bitmap bmp;
     private static AlertDialog dialog;
     private static Toast toast;
     private static ProgressDialog mProgressDialog;
-    private static final String VERSION_UNAVAILABLE = "N/A";
     private static Dialog dialog_gif;
-
-    public static Bitmap bmp;
 
     public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -91,7 +92,7 @@ public class ProjectUtils {
     public static void statusbarBackgroundTrans(Activity activity, int drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
-            Drawable background = activity.getResources().getDrawable(drawable);
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable background = activity.getResources().getDrawable(drawable);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
             // window.setNavigationBarColor(activity.getResources().getColor(R.color.transparent));
@@ -203,12 +204,7 @@ public class ProjectUtils {
             title = context.getResources().getString(R.string.app_name);
 
         if (OK == null)
-            OK = new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    hideDialog();
-                }
-            };
+            OK = (paramDialogInterface, paramInt) -> hideDialog();
 
         if (dialog == null) {
             Builder builder = new Builder(context);
@@ -244,22 +240,10 @@ public class ProjectUtils {
             title = context.getResources().getString(R.string.app_name);
 
         if (OK == null)
-            OK = new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface paramDialogInterface,
-                                    int paramInt) {
-                    hideDialog();
-                }
-            };
+            OK = (paramDialogInterface, paramInt) -> hideDialog();
 
         if (cancel == null)
-            cancel = new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface paramDialogInterface,
-                                    int paramInt) {
-                    hideDialog();
-                }
-            };
+            cancel = (paramDialogInterface, paramInt) -> hideDialog();
 
         if (dialog == null) {
             Builder builder = new Builder(context);
@@ -441,6 +425,7 @@ public class ProjectUtils {
             return false;
         }
     }
+
     public static boolean isTextFilled(TextView text) {
         if (text.getText() != null && text.getText().toString().trim().length() > 0) {
             return true;
@@ -478,13 +463,7 @@ public class ProjectUtils {
 
         //On Pressing Setting button
         alertDialog.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                    }
-                });
+                (dialog, which) -> dialog.dismiss());
         alertDialog.show();
     }
 
@@ -560,6 +539,7 @@ public class ProjectUtils {
         }
         return null;
     }
+
     public static String getDisplayableDay(long delta) {
         long difference = 0;
         Long mDate = System.currentTimeMillis();
@@ -605,6 +585,7 @@ public class ProjectUtils {
         }
         return null;
     }
+
     public static String getDisplayableDayTime(long delta) {
         long difference = 0;
         Long mDate = System.currentTimeMillis();
@@ -650,8 +631,6 @@ public class ProjectUtils {
         }
         return null;
     }
-
-
 
 
     public static long correctTimestamp(long timestampInMessage) {
@@ -716,6 +695,7 @@ public class ProjectUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy hh:mm a");
         return sdf.format(cal.getTime());
     }
+
     public static String changeDateFormate(String time) {//2019-05-15 19:36:22
         String inputPattern = "yyyy-MM-dd HH:mm:ss";
         String outputPattern = "dd MMM, yyyy";
@@ -733,6 +713,7 @@ public class ProjectUtils {
         }
         return str;
     }
+
     public static String changeDateFormate1(String time) {//2019-05-15 19:36:22
         String inputPattern = "yyyy-MM-dd";
         String outputPattern = "dd MMM, yyyy";
@@ -757,7 +738,7 @@ public class ProjectUtils {
                 "^https?://.*(?:youtu.be/|v/|u/\\w/|embed/|watch?v=)([^#&?]*).*$",
                 Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(ytUrl);
-        if (matcher.matches()){
+        if (matcher.matches()) {
             vId = matcher.group(1);
         }
         return vId;

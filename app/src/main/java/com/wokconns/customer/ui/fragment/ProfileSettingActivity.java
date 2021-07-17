@@ -15,12 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-
-import androidx.core.view.GravityCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.FileProvider;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +25,21 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import androidx.core.content.FileProvider;
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.google.gson.Gson;
+import com.schibstedspain.leku.LocationPickerActivity;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityProfileSettingBinding;
 import com.wokconns.customer.databinding.DailogAddressBinding;
 import com.wokconns.customer.databinding.DailogPersonalInfoBinding;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -51,7 +51,6 @@ import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 import org.json.JSONObject;
 
@@ -70,17 +69,7 @@ import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
 public class ProfileSettingActivity extends Fragment implements View.OnClickListener {
     public RadioGroup rg_gender_options;
     public RadioButton rb_gender_female, rb_gender_male;
-    private Dialog dialog_profile, dialog_pass, dialog_address;
-    private CustomTextViewBold tvYes, tvNo, tvYesPass, tvYesAddress;
-    private CustomEditText etNameD, etEmailD, etMobileD, etOldPassD, etNewPassD, etConfrimPassD, etAddressD, etCityD, etCountryD;
     ImageView ivCloseAddress, ivCloseInfo;
-    private HashMap<String, String> params;
-    private RelativeLayout RRsncbar;
-    private SharedPrefrence prefrence;
-    private UserDTO userDTO;
-    private String TAG = ProfileSettingActivity.class.getSimpleName();
-
-    private HashMap<String, File> paramsFile = new HashMap<>();
     BottomSheet.Builder builder;
     Uri picUri;
     int PICK_FROM_CAMERA = 1, PICK_FROM_GALLERY = 2;
@@ -92,14 +81,23 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
     byte[] resultByteArray;
     File file;
     Bitmap bitmap = null;
+    ActivityProfileSettingBinding binding;
+    DailogPersonalInfoBinding dailogPersonalInfoBinding;
+    DailogAddressBinding dailogAddressBinding;
+    private Dialog dialog_profile, dialog_pass, dialog_address;
+    private CustomTextViewBold tvYes, tvNo, tvYesPass, tvYesAddress;
+    private CustomEditText etNameD, etEmailD, etMobileD, etOldPassD, etNewPassD, etConfrimPassD, etAddressD, etCityD, etCountryD;
+    private HashMap<String, String> params;
+    private RelativeLayout RRsncbar;
+    private SharedPrefrence prefrence;
+    private UserDTO userDTO;
+    private String TAG = ProfileSettingActivity.class.getSimpleName();
+    private HashMap<String, File> paramsFile = new HashMap<>();
     private View view;
     private BaseActivity baseActivity;
     private HashMap<String, String> paramsDeleteImg = new HashMap<>();
     private double lats = 0.0;
     private double longs = 0.0;
-    ActivityProfileSettingBinding binding;
-    DailogPersonalInfoBinding dailogPersonalInfoBinding;
-    DailogAddressBinding dailogAddressBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,72 +120,64 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
 
         builder = new BottomSheet.Builder(getActivity()).sheet(R.menu.menu_cards);
         builder.title(getResources().getString(R.string.take_image));
-        builder.listener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case R.id.camera_cards:
-                        if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
-                            if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                try {
-                                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                    File file = getOutputMediaFile(1);
-                                    if (!file.exists()) {
-                                        try {
-                                            ProjectUtils.pauseProgressDialog();
-                                            file.createNewFile();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        //Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.asd", newFile);
-                                        picUri = FileProvider.getUriForFile(getActivity().getApplicationContext(), getActivity().getApplicationContext().getPackageName() + ".fileprovider", file);
-                                    } else {
-                                        picUri = Uri.fromFile(file); // create
-                                    }
-
-                                    prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
-                                    startActivityForResult(intent, PICK_FROM_CAMERA);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        break;
-                    case R.id.gallery_cards:
-                        if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
-                            if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
+        builder.listener((dialog, which) -> {
+            switch (which) {
+                case R.id.camera_cards:
+                    if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
+                        if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            try {
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                                 File file = getOutputMediaFile(1);
                                 if (!file.exists()) {
                                     try {
+                                        ProjectUtils.pauseProgressDialog();
                                         file.createNewFile();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
                                 }
-                                picUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    //Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.asd", newFile);
+                                    picUri = FileProvider.getUriForFile(getActivity().getApplicationContext(), getActivity().getApplicationContext().getPackageName() + ".fileprovider", file);
+                                } else {
+                                    picUri = Uri.fromFile(file); // create
+                                }
 
-                                Intent intent = new Intent();
-                                intent.setType("image/*");
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
-
+                                prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
+                                startActivityForResult(intent, PICK_FROM_CAMERA);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
-                        break;
-                    case R.id.cancel_cards:
-                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                dialog.dismiss();
+                    }
+
+                    break;
+                case R.id.gallery_cards:
+                    if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
+                        if (ProjectUtils.hasPermissionInManifest(getActivity(), PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                            File file = getOutputMediaFile(1);
+                            if (!file.exists()) {
+                                try {
+                                    file.createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        });
-                        break;
-                }
+                            picUri = Uri.fromFile(file);
+
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
+
+                        }
+                    }
+                    break;
+                case R.id.cancel_cards:
+                    builder.setOnDismissListener(dialog1 -> dialog1.dismiss());
+                    break;
             }
         });
     }
@@ -227,28 +217,25 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
                     pathOfImage = picUri.getPath();
                     imageCompression = new ImageCompression(getActivity());
                     imageCompression.execute(pathOfImage);
-                    imageCompression.setOnTaskFinishedEvent(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(String imagePath) {
-                            Glide.with(getActivity()).load("file://" + imagePath)
-                                    .thumbnail(0.5f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(binding.ivProfile);
-                            try {
-                                // bitmap = MediaStore.Images.Media.getBitmap(SaveDetailsActivityNew.this.getContentResolver(), resultUri);
-                                file = new File(imagePath);
-                                paramsFile.put(Consts.IMAGE, file);
-                                Log.e("image", imagePath);
-                                params = new HashMap<>();
-                                params.put(Consts.USER_ID, userDTO.getUser_id());
-                                if (NetworkManager.isConnectToInternet(getActivity())) {
-                                    updateProfile();
-                                } else {
-                                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                    imageCompression.setOnTaskFinishedEvent(imagePath -> {
+                        Glide.with(getActivity()).load("file://" + imagePath)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(binding.ivProfile);
+                        try {
+                            // bitmap = MediaStore.Images.Media.getBitmap(SaveDetailsActivityNew.this.getContentResolver(), resultUri);
+                            file = new File(imagePath);
+                            paramsFile.put(Consts.IMAGE, file);
+                            Log.e("image", imagePath);
+                            params = new HashMap<>();
+                            params.put(Consts.USER_ID, userDTO.getUser_id());
+                            if (NetworkManager.isConnectToInternet(getActivity())) {
+                                updateProfile();
+                            } else {
+                                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     });
                 } catch (Exception e) {
@@ -264,29 +251,26 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
                     pathOfImage = picUri.getPath();
                     imageCompression = new ImageCompression(getActivity());
                     imageCompression.execute(pathOfImage);
-                    imageCompression.setOnTaskFinishedEvent(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(String imagePath) {
-                            Glide.with(getActivity()).load("file://" + imagePath)
-                                    .thumbnail(0.5f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(binding.ivProfile);
-                            Log.e("image", imagePath);
-                            try {
-                                file = new File(imagePath);
-                                paramsFile.put(Consts.IMAGE, file);
+                    imageCompression.setOnTaskFinishedEvent(imagePath -> {
+                        Glide.with(getActivity()).load("file://" + imagePath)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(binding.ivProfile);
+                        Log.e("image", imagePath);
+                        try {
+                            file = new File(imagePath);
+                            paramsFile.put(Consts.IMAGE, file);
 
-                                params = new HashMap<>();
-                                params.put(Consts.USER_ID, userDTO.getUser_id());
-                                if (NetworkManager.isConnectToInternet(getActivity())) {
-                                    updateProfile();
-                                } else {
-                                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                                }
-                                Log.e("image", imagePath);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            params = new HashMap<>();
+                            params.put(Consts.USER_ID, userDTO.getUser_id());
+                            if (NetworkManager.isConnectToInternet(getActivity())) {
+                                updateProfile();
+                            } else {
+                                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                             }
+                            Log.e("image", imagePath);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     });
                 } catch (Exception e) {
@@ -377,7 +361,7 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
                 if (NetworkManager.isConnectToInternet(getActivity())) {
                     dialogAddress();
                 } else {
-                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                 }
                 break;
             case R.id.ll_image:
@@ -427,33 +411,24 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
         dialog_profile.show();
         dialog_profile.setCancelable(false);
 
-        ivCloseInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog_profile.dismiss();
-
-            }
-        });
+        ivCloseInfo.setOnClickListener(v -> dialog_profile.dismiss());
         tvYes.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        params = new HashMap<>();
-                        params.put(Consts.USER_ID, userDTO.getUser_id());
-                        params.put(Consts.NAME, ProjectUtils.getEditTextValue(etNameD));
-                        params.put(Consts.MOBILE, ProjectUtils.getEditTextValue(etMobileD));
-                        if (rb_gender_female.isChecked()) {
-                            params.put(Consts.GENDER, "0");
-                        } else {
-                            params.put(Consts.GENDER, "1");
-                        }
+                v -> {
+                    params = new HashMap<>();
+                    params.put(Consts.USER_ID, userDTO.getUser_id());
+                    params.put(Consts.NAME, ProjectUtils.getEditTextValue(etNameD));
+                    params.put(Consts.MOBILE, ProjectUtils.getEditTextValue(etMobileD));
+                    if (rb_gender_female.isChecked()) {
+                        params.put(Consts.GENDER, "0");
+                    } else {
+                        params.put(Consts.GENDER, "1");
+                    }
 
-                        if (NetworkManager.isConnectToInternet(getActivity())) {
-                            updateProfile();
-                            dialog_profile.dismiss();
-                        } else {
-                            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                        }
+                    if (NetworkManager.isConnectToInternet(getActivity())) {
+                        updateProfile();
+                        dialog_profile.dismiss();
+                    } else {
+                        ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                     }
                 });
 
@@ -482,39 +457,24 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
         dialog_address.show();
         dialog_address.setCancelable(false);
 
-        etAddressD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findPlace();
+        etAddressD.setOnClickListener(v -> findPlace());
 
-            }
-        });
-
-        ivCloseAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog_address.dismiss();
-
-            }
-        });
+        ivCloseAddress.setOnClickListener(v -> dialog_address.dismiss());
         tvYesAddress.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        params = new HashMap<>();
-                        params.put(Consts.USER_ID, userDTO.getUser_id());
-                        params.put(Consts.ADDRESS, ProjectUtils.getEditTextValue(etAddressD));
+                v -> {
+                    params = new HashMap<>();
+                    params.put(Consts.USER_ID, userDTO.getUser_id());
+                    params.put(Consts.ADDRESS, ProjectUtils.getEditTextValue(etAddressD));
 //                        params.put(Consts.OFFICE_ADDRESS, ProjectUtils.getEditTextValue(etAddressDs));
-                        params.put(Consts.CITY, ProjectUtils.getEditTextValue(etCityD));
-                        params.put(Consts.COUNTRY, ProjectUtils.getEditTextValue(etCountryD));
-                        params.put(Consts.LATITUDE, String.valueOf(lats));
-                        params.put(Consts.LONGITUDE, String.valueOf(longs));
-                        if (NetworkManager.isConnectToInternet(getActivity())) {
-                            updateProfile();
-                            dialog_address.dismiss();
-                        } else {
-                            ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
-                        }
+                    params.put(Consts.CITY, ProjectUtils.getEditTextValue(etCityD));
+                    params.put(Consts.COUNTRY, ProjectUtils.getEditTextValue(etCountryD));
+                    params.put(Consts.LATITUDE, String.valueOf(lats));
+                    params.put(Consts.LONGITUDE, String.valueOf(longs));
+                    if (NetworkManager.isConnectToInternet(getActivity())) {
+                        updateProfile();
+                        dialog_address.dismiss();
+                    } else {
+                        ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
                     }
                 });
 
@@ -522,29 +482,26 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
 
     public void updateProfile() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.UPDATE_PROFILE_API, params, paramsFile, getActivity()).imagePost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        ProjectUtils.showToast(getActivity(), msg);
-
-                        userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
-                        prefrence.setParentUser(userDTO, Consts.USER_DTO);
-                        baseActivity.showImage();
-                        showData();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
+        new HttpsRequest(Consts.UPDATE_PROFILE_API, params, paramsFile, getActivity()).imagePost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
                     ProjectUtils.showToast(getActivity(), msg);
+
+                    userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
+                    prefrence.setParentUser(userDTO, Consts.USER_DTO);
+                    baseActivity.showImage();
+                    showData();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-
+            } else {
+                ProjectUtils.showToast(getActivity(), msg);
             }
+
+
         });
     }
 
@@ -558,20 +515,17 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
     public void deleteImage() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
         paramsDeleteImg.put(Consts.USER_ID, userDTO.getUser_id());
-        new HttpsRequest(Consts.DELETE_PROFILE_IMAGE_API, paramsDeleteImg, getActivity()).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    userDTO.setImage("");
-                    prefrence.setParentUser(userDTO, Consts.USER_DTO);
-                    showData();
-                } else {
-                    ProjectUtils.showToast(getActivity(), msg);
-                }
-
-
+        new HttpsRequest(Consts.DELETE_PROFILE_IMAGE_API, paramsDeleteImg, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                userDTO.setImage("");
+                prefrence.setParentUser(userDTO, Consts.USER_DTO);
+                showData();
+            } else {
+                ProjectUtils.showToast(getActivity(), msg);
             }
+
+
         });
     }
 
@@ -623,7 +577,7 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
                 updateProfile();
                 dialog_pass.dismiss();
             } else {
-                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
             }
 
         }

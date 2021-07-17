@@ -35,7 +35,7 @@ public class InputFieldView extends InputOpenFieldView {
     }
 
     private void setTheme() {
-     //   getContext().setTheme(R.style.TextInputLayoutApperance.Theme.Default);
+        //   getContext().setTheme(R.style.TextInputLayoutApperance.Theme.Default);
     }
 
     public void setText(String str) {

@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:focusable="false"
     android:clickable="false"
+    android:focusable="false"
+    android:gravity="center"
     android:orientation="horizontal">
 
 
@@ -12,11 +12,11 @@
         android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:focusable="false"
-        android:clickable="false"
         android:layout_alignParentStart="true"
-        android:padding="12dp"
         android:layout_toStartOf="@+id/radioBtn"
+        android:clickable="false"
+        android:focusable="false"
+        android:padding="12dp"
         android:text=""
         android:textSize="18sp" />
 
@@ -26,10 +26,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:focusable="false"
-        android:clickable="false"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
+        android:clickable="false"
+        android:focusable="false"
         android:gravity="center" />
 
 

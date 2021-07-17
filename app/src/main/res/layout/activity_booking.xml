@@ -248,9 +248,9 @@
                     android:layout_alignParentBottom="true"
                     android:layout_margin="30dp"
                     android:layout_marginStart="30dp"
-                    android:textAllCaps="false"
                     android:background="@drawable/button_selector2"
                     android:text="@string/booking_confirm"
+                    android:textAllCaps="false"
                     android:textColor="@color/white" />
 
             </LinearLayout>

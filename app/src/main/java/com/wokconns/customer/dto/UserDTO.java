@@ -28,7 +28,8 @@ public class UserDTO implements Serializable {
     String device_id = "";
     String device_token = "";
 
-    public UserDTO() {}
+    public UserDTO() {
+    }
 
     public UserDTO(String user_id, String name, String email_id, String password, String image, String address, String office_address, String live_lat, String live_long, String role, String status, String approval_status, String created_at, String mobile, String referral_code, String user_referral_code, String gender, String city, String country, String updated_at, String device_type, String device_id, String device_token) {
         this.user_id = user_id;

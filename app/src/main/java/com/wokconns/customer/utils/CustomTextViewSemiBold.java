@@ -8,8 +8,7 @@ import android.widget.TextView;
 /**
  * Created by VARUN on 01/01/19.
  */
-public class CustomTextViewSemiBold extends TextView
-{
+public class CustomTextViewSemiBold extends TextView {
 
     public CustomTextViewSemiBold(Context context) {
 
@@ -31,6 +30,7 @@ public class CustomTextViewSemiBold extends TextView
         super(context, attrs, defStyleAttr, defStyleRes);
         applyCustomFont(context);
     }
+
     private void applyCustomFont(Context context) {
         Typeface customFont = FontCache.getTypeface("Montserrat-SemiBold.otf", context);
         setTypeface(customFont, Typeface.BOLD);

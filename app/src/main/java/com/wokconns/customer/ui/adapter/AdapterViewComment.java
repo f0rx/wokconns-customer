@@ -13,9 +13,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.GetCommentDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -87,12 +87,7 @@ public class AdapterViewComment extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivView);
 
-        ivView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogshare(position);
-            }
-        });
+        ivView.setOnClickListener(v -> dialogshare(position));
         textViewMessage.setText(getCommentDTOList.get(position).getMessage());
         tvName.setText(getCommentDTOList.get(position).getSender_name());
 
@@ -127,13 +122,7 @@ public class AdapterViewComment extends BaseAdapter {
                 .into(ivImageD);
 
         tvNameD.setText(getCommentDTOList.get(pos).getSender_name());
-        tvCloseD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogImg.dismiss();
-
-            }
-        });
+        tvCloseD.setOnClickListener(v -> dialogImg.dismiss());
 
     }
 

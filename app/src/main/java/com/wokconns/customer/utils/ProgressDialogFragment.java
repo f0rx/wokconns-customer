@@ -6,15 +6,16 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.wokconns.customer.R;
 
@@ -56,18 +57,14 @@ ProgressDialogFragment extends DialogFragment {
         dialog.setCancelable(false);
         // ?????????
         dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode,
-                                 KeyEvent event) {
-                // Disable Back key and Search key
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_BACK:
-                    case KeyEvent.KEYCODE_SEARCH:
-                        return true;
-                    default:
-                        return false;
-                }
+        dialog.setOnKeyListener((dialog1, keyCode, event) -> {
+            // Disable Back key and Search key
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_SEARCH:
+                    return true;
+                default:
+                    return false;
             }
         });
         return dialog;

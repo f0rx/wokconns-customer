@@ -1,14 +1,15 @@
 package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
-import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.viewpager.widget.PagerAdapter;
+
 import com.bumptech.glide.Glide;
-import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.TouchImageView;
 
@@ -18,8 +19,8 @@ import java.util.ArrayList;
  * Created by VARUN on 01/01/19.
  */
 public class ServicePagerAdapter extends PagerAdapter {
-    private Context mContext;
     LayoutInflater mLayoutInflater;
+    private Context mContext;
     private ArrayList<ProductDTO> productDTOList;
 
 

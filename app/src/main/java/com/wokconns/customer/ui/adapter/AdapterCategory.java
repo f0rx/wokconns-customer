@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.wokconns.customer.dto.HomeCategoryDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterCategoryBinding;
+import com.wokconns.customer.dto.HomeCategoryDTO;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -59,20 +59,17 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.MyView
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.cIvImage);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    ((BaseActivity) mContext).ivFilter.setVisibility(View.VISIBLE);
-                    ((BaseActivity) mContext).header.setVisibility(View.VISIBLE);
-                    BaseActivity.navItemIndex = 1;
-                    BaseActivity.CURRENT_TAG = BaseActivity.TAG_MAIN;
-                    ((BaseActivity) mContext).loadHomeFragment(new DiscoverNearBy(), BaseActivity.CURRENT_TAG);
+        holder.itemView.setOnClickListener(v -> {
+            try {
+                ((BaseActivity) mContext).ivFilter.setVisibility(View.VISIBLE);
+                ((BaseActivity) mContext).header.setVisibility(View.VISIBLE);
+                BaseActivity.navItemIndex = 1;
+                BaseActivity.CURRENT_TAG = BaseActivity.TAG_MAIN;
+                ((BaseActivity) mContext).loadHomeFragment(new DiscoverNearBy(), BaseActivity.CURRENT_TAG);
 
-                    sharedPrefrence.setValue(Consts.VALUE, categoryDTOArrayList.get(position).getId());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sharedPrefrence.setValue(Consts.VALUE, categoryDTOArrayList.get(position).getId());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

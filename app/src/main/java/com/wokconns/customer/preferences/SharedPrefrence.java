@@ -24,13 +24,6 @@ public class SharedPrefrence {
 
     }
 
-    public void clearAllPreferences() {
-        prefsEditor = myPrefs.edit();
-        prefsEditor.clear();
-        prefsEditor.commit();
-    }
-
-
     public static SharedPrefrence getInstance(Context ctx) {
         if (myObj == null) {
             myObj = new SharedPrefrence();
@@ -38,6 +31,12 @@ public class SharedPrefrence {
             prefsEditor = myPrefs.edit();
         }
         return myObj;
+    }
+
+    public void clearAllPreferences() {
+        prefsEditor = myPrefs.edit();
+        prefsEditor.clear();
+        prefsEditor.commit();
     }
 
     public void clearPreferences(String key) {
@@ -69,7 +68,6 @@ public class SharedPrefrence {
         prefsEditor.putString(Tag, token);
         prefsEditor.commit();
     }
-
 
 
     public String getValue(String Tag) {

@@ -4,6 +4,7 @@ package com.wokconns.customer.ui.adapter;
  * Created by VARUN on 01/01/19.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.timepicker.TimeFormat;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterCustomerBookingBinding;
 import com.wokconns.customer.databinding.ItemSectionBinding;
@@ -28,6 +30,7 @@ import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.ui.activity.MapActivity;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
@@ -35,6 +38,9 @@ import com.wokconns.customer.ui.activity.ViewInvoice;
 import com.wokconns.customer.ui.fragment.MyBooking;
 import com.wokconns.customer.utils.ProjectUtils;
 
+import org.json.JSONObject;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,8 +49,15 @@ import java.util.Locale;
 
 
 public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private String TAG = AdapterCustomerBooking.class.getSimpleName();
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_SECTION = 0;
     Fragment myBooking;
+    int min;
+    int sec;
+    ItemSectionBinding itemSectionBinding;
+    AdapterCustomerBookingBinding adapterCustomerBookingBinding;
+    String type = "booking";
+    private String TAG = AdapterCustomerBooking.class.getSimpleName();
     private Context mContext;
     private ArrayList<UserBooking> objects = null;
     private ArrayList<UserBooking> userBookingsList;
@@ -52,13 +65,6 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
     private UserDTO userDTO;
     private HashMap<String, String> paramsBookingOp;
     private DialogInterface dialog_book;
-    int min;
-    int sec;
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_SECTION = 0;
-    ItemSectionBinding itemSectionBinding;
-    AdapterCustomerBookingBinding adapterCustomerBookingBinding;
-    String type = "booking";
 
     public AdapterCustomerBooking(Fragment myBooking, Context mContext, ArrayList<UserBooking> objects, UserDTO userDTO, String type) {
         this.myBooking = myBooking;
@@ -83,6 +89,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         return vh;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderMain, final int position) {
         if (holderMain instanceof MyViewHolder) {
@@ -107,7 +114,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     holder.adapterCustomerBookingBinding.ivStatus.setBackground(mContext.getResources().getDrawable(R.drawable.ic_accept));
                 } else if (objects.get(position).getBooking_flag().equalsIgnoreCase("3")) {
                     holder.adapterCustomerBookingBinding.ivMap.setVisibility(View.VISIBLE);
-                    holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.work_inpro));
+                    holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.work_in_progress));
                     holder.adapterCustomerBookingBinding.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_green));
                     holder.adapterCustomerBookingBinding.llTime.setVisibility(View.VISIBLE);
                     holder.adapterCustomerBookingBinding.llCancel.setVisibility(View.GONE);
@@ -147,7 +154,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                             holder.adapterCustomerBookingBinding.llCancel.setVisibility(View.GONE);
                             holder.adapterCustomerBookingBinding.llFinish.setVisibility(View.GONE);
                             holder.adapterCustomerBookingBinding.llPay.setVisibility(View.VISIBLE);
-                            holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.invoice_genrate));
+                            holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.invoice_generate));
                             holder.adapterCustomerBookingBinding.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_green));
                             holder.adapterCustomerBookingBinding.ivStatus.setBackground(mContext.getResources().getDrawable(R.drawable.ic_accept));
                         }
@@ -168,7 +175,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     holder.adapterCustomerBookingBinding.ivStatus.setBackground(mContext.getResources().getDrawable(R.drawable.ic_accept));
                 } else if (objects.get(position).getBooking_flag().equalsIgnoreCase("3")) {
                     holder.adapterCustomerBookingBinding.ivMap.setVisibility(View.VISIBLE);
-                    holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.work_inpro));
+                    holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.work_in_progress));
                     holder.adapterCustomerBookingBinding.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_green));
                     holder.adapterCustomerBookingBinding.llTime.setVisibility(View.VISIBLE);
                     holder.adapterCustomerBookingBinding.llCancel.setVisibility(View.GONE);
@@ -208,7 +215,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                             holder.adapterCustomerBookingBinding.llFinish.setVisibility(View.GONE);
                             holder.adapterCustomerBookingBinding.llPay.setVisibility(View.VISIBLE);
                             holder.adapterCustomerBookingBinding.llViewInvoice.setVisibility(View.VISIBLE);
-                            holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.invoice_genrate));
+                            holder.adapterCustomerBookingBinding.tvStatus.setText(mContext.getResources().getString(R.string.invoice_generate));
                             holder.adapterCustomerBookingBinding.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_green));
                             holder.adapterCustomerBookingBinding.ivStatus.setBackground(mContext.getResources().getDrawable(R.drawable.ic_accept));
                         }
@@ -250,12 +257,11 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             holder.adapterCustomerBookingBinding.tvName.setText(mContext.getResources().getString(R.string.booking_with) + " " + objects.get(position).getArtistName());
 
 
-            holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(v ->
-                    completeDialog(mContext.getResources().getString(R.string.cancel),
-                            mContext.getResources().getString(R.string.booking_cancel_msg) + " " +
-                                    objects.get(position).getArtistName() + "?",
-                            position
-                    )
+            holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(v -> AdapterCustomerBooking.this.completeDialog(mContext.getResources().getString(R.string.cancel),
+                    mContext.getResources().getString(R.string.booking_cancel_msg) + " " +
+                            objects.get(position).getArtistName() + "?",
+                    position
+            )
             );
 
             holder.adapterCustomerBookingBinding.ivMap.setOnClickListener(v -> {
@@ -266,9 +272,9 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
             holder.adapterCustomerBookingBinding.llFinish.setOnClickListener(v -> {
                 if (NetworkManager.isConnectToInternet(mContext)) {
-                    booking("3", position);
+                    AdapterCustomerBooking.this.booking("3", position);
                 } else {
-                    ProjectUtils.showToast(mContext, mContext.getResources().getString(R.string.internet_concation));
+                    ProjectUtils.showToast(mContext, mContext.getResources().getString(R.string.internet_connection));
                 }
             });
             holder.adapterCustomerBookingBinding.llPay.setOnClickListener(v -> {
@@ -309,26 +315,6 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position) {
         return this.objects.get(position).isSection() ? VIEW_SECTION : VIEW_ITEM;
     }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        AdapterCustomerBookingBinding adapterCustomerBookingBinding;
-
-        public MyViewHolder(AdapterCustomerBookingBinding adapterCustomerBookingBinding) {
-            super(adapterCustomerBookingBinding.getRoot());
-            this.adapterCustomerBookingBinding = adapterCustomerBookingBinding;
-
-        }
-    }
-
-    public static class MyViewHolderSection extends RecyclerView.ViewHolder {
-        ItemSectionBinding itemSectionBinding;
-
-        public MyViewHolderSection(ItemSectionBinding itemSectionBinding) {
-            super(itemSectionBinding.getRoot());
-            this.itemSectionBinding = itemSectionBinding;
-        }
-    }
-
 
     public void decline(int pos) {
         paramsDecline = new HashMap<>();
@@ -388,7 +374,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     .setCancelable(false)
                     .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog, which) -> {
                         dialog_book = dialog;
-                        decline(pos);
+                        AdapterCustomerBooking.this.decline(pos);
 
                     })
                     .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
@@ -413,6 +399,25 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
         notifyDataSetChanged();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        AdapterCustomerBookingBinding adapterCustomerBookingBinding;
+
+        public MyViewHolder(AdapterCustomerBookingBinding adapterCustomerBookingBinding) {
+            super(adapterCustomerBookingBinding.getRoot());
+            this.adapterCustomerBookingBinding = adapterCustomerBookingBinding;
+
+        }
+    }
+
+    public static class MyViewHolderSection extends RecyclerView.ViewHolder {
+        ItemSectionBinding itemSectionBinding;
+
+        public MyViewHolderSection(ItemSectionBinding itemSectionBinding) {
+            super(itemSectionBinding.getRoot());
+            this.itemSectionBinding = itemSectionBinding;
+        }
     }
 
 

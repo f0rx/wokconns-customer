@@ -22,18 +22,34 @@ import java.io.IOException;
  */
 public class ImageCompression extends AsyncTask<String, Void, String> {
 
-    private Context context;
     private static final float maxHeight = 1280.0f;
     private static final float maxWidth = 1280.0f;
-
-
-    public ImageCompression(Context context){
-        this.context=context;
-    }
-    public interface AsyncResponse {
-        void processFinish(String imagePath);
-    }
     public AsyncResponse delegate = null;
+    private Context context;
+
+    public ImageCompression(Context context) {
+        this.context = context;
+    }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        final float totalPixels = width * height;
+        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+
+        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++;
+        }
+
+        return inSampleSize;
+    }
 
     public void setOnTaskFinishedEvent(AsyncResponse delegate) {
         if (delegate != null) {
@@ -43,13 +59,13 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        if(strings.length == 0 || strings[0] == null)
+        if (strings.length == 0 || strings[0] == null)
             return null;
 
         return compressImage(strings[0]);
     }
 
-    protected void onPostExecute(String imagePath){
+    protected void onPostExecute(String imagePath) {
         // imagePath is path of new compressed image.
         if (delegate != null)
             this.delegate.processFinish(imagePath);
@@ -116,8 +132,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
         canvas.setMatrix(scaleMatrix);
         canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
 
-        if(bmp!=null)
-        {
+        if (bmp != null) {
             bmp.recycle();
         }
 
@@ -142,7 +157,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
         try {
             out = new FileOutputStream(filepath);
 
-           //write the compressed bitmap at the destination specified by filename.
+            //write the compressed bitmap at the destination specified by filename.
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
 
         } catch (FileNotFoundException e) {
@@ -150,26 +165,6 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
         }
 
         return filepath;
-    }
-
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
-        final float totalPixels = width * height;
-        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
-
-        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-            inSampleSize++;
-        }
-
-        return inSampleSize;
     }
 
     public String getFilename() {
@@ -184,17 +179,22 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
 //                + "/Android/data/"
 //                + context.getApplicationContext().getPackageName()
 //                + "/Files/Compressed");
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()+ File.separator+ Consts.APP_NAME);
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Consts.APP_NAME);
 
         // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
+        if (!mediaStorageDir.exists()) {
             mediaStorageDir.mkdirs();
         }
 
-        String mImageName="IMG_"+ String.valueOf(System.currentTimeMillis()) +".jpg";
-        String uriString = (mediaStorageDir.getAbsolutePath() + "/"+ mImageName);;
+        String mImageName = "IMG_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+        String uriString = (mediaStorageDir.getAbsolutePath() + "/" + mImageName);
+        ;
         return uriString;
 
+    }
+
+    public interface AsyncResponse {
+        void processFinish(String imagePath);
     }
 
 }

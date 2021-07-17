@@ -4,6 +4,7 @@ package com.wokconns.customer.ui.adapter;
  * Created by VARUN on 01/01/19.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -36,10 +37,10 @@ import java.util.Locale;
 
 public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHolder> {
 
+    ArrayList<HistoryDTO> historyDTOList;
     private Context mContext;
     private UnPaidFrag unPaidFrag;
     private ArrayList<HistoryDTO> objects = null;
-    ArrayList<HistoryDTO> historyDTOList;
     private UserDTO userDTO;
     private SharedPrefrence prefrence;
     private LayoutInflater inflater;
@@ -63,6 +64,7 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
         return new MyViewHolder(itemView);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
@@ -104,14 +106,11 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
             mContext.startActivity(in);
         });
 
-        holder.tvView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(mContext, ViewInvoice.class);
-                in.putExtra(Consts.HISTORY_DTO, objects.get(position));
-                mContext.startActivity(in);
+        holder.tvView.setOnClickListener(v -> {
+            Intent in = new Intent(mContext, ViewInvoice.class);
+            in.putExtra(Consts.HISTORY_DTO, objects.get(position));
+            mContext.startActivity(in);
 
-            }
         });
 
         SimpleDateFormat sdf = new SimpleDateFormat("mm.ss");
@@ -132,6 +131,22 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
     public int getItemCount() {
 
         return objects.size();
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        objects.clear();
+        if (charText.length() == 0) {
+            objects.addAll(historyDTOList);
+        } else {
+            for (HistoryDTO historyDTO : historyDTOList) {
+                if (historyDTO.getInvoice_id().toLowerCase(Locale.getDefault())
+                        .contains(charText)) {
+                    objects.add(historyDTO);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -158,22 +173,6 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
 
 
         }
-    }
-
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        objects.clear();
-        if (charText.length() == 0) {
-            objects.addAll(historyDTOList);
-        } else {
-            for (HistoryDTO historyDTO : historyDTOList) {
-                if (historyDTO.getInvoice_id().toLowerCase(Locale.getDefault())
-                        .contains(charText)) {
-                    objects.add(historyDTO);
-                }
-            }
-        }
-        notifyDataSetChanged();
     }
 
 

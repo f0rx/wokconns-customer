@@ -17,8 +17,8 @@ import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.interfacess.OnSpinerItemClick;
 
 import java.util.ArrayList;
@@ -38,16 +38,14 @@ public class SpinnerDialogService {
     int clickpos;
     int style;
     Fragment fragment;
-
-    private int limit = -1;
-    private int selected = 0;
-    private LimitExceedListener limitListener;
     int selectedIndex = -1;
     ListView listView;
     MyAdapterCheck myAdapterCheck;
     int pos;
-
     String name = "", image = "";
+    private int limit = -1;
+    private int selected = 0;
+    private LimitExceedListener limitListener;
 
     public SpinnerDialogService(Activity activity, ArrayList<ProductDTO> items, String dialogTitle) {
         this.items = items;
@@ -106,35 +104,33 @@ public class SpinnerDialogService {
         this.alertDialog.getWindow().getAttributes().windowAnimations = this.style;
         this.alertDialog.setCancelable(false);
 
-        rippleViewClose.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                SpinnerDialogService.this.alertDialog.dismiss();
-            }
-        });
-        Ok.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                StringBuilder allLabels = new StringBuilder();
-                StringBuilder allID = new StringBuilder();
-                for (ProductDTO s : myAdapterCheck.arrayList) {
-                    if (s.isSelected()) {
-                        if (allLabels.length() > 0) {
-                            allLabels.append(", "); // some divider between the different texts
-                            allID.append(", "); // some divider between the different texts
-                        }
-                        allLabels.append(s);
-                        allID.append(s.getId());
-
+        rippleViewClose.setOnClickListener(v12 -> SpinnerDialogService.this.alertDialog.dismiss());
+        Ok.setOnClickListener(v1 -> {
+            StringBuilder allLabels = new StringBuilder();
+            StringBuilder allID = new StringBuilder();
+            for (ProductDTO s : myAdapterCheck.arrayList) {
+                if (s.isSelected()) {
+                    if (allLabels.length() > 0) {
+                        allLabels.append(", "); // some divider between the different texts
+                        allID.append(", "); // some divider between the different texts
                     }
+                    allLabels.append(s);
+                    allID.append(s.getId());
 
                 }
-                SpinnerDialogService.this.onSpinerItemClick.onClick(allLabels.toString(), allID.toString(), clickpos);
 
-                SpinnerDialogService.this.alertDialog.dismiss();
             }
+            SpinnerDialogService.this.onSpinerItemClick.onClick(allLabels.toString(), allID.toString(), clickpos);
+
+            SpinnerDialogService.this.alertDialog.dismiss();
         });
         this.alertDialog.show();
     }
 
+
+    public interface LimitExceedListener {
+        void onLimitListener(ProductDTO data);
+    }
 
     public class MyAdapterCheck extends BaseAdapter implements Filterable {
 
@@ -162,11 +158,6 @@ public class SpinnerDialogService {
             return position;
         }
 
-        private class ViewHolder {
-            CustomTextView text1;
-            CheckBox checkBox1;
-        }
-
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
@@ -187,45 +178,41 @@ public class SpinnerDialogService {
             holder.text1.setTypeface(null, Typeface.NORMAL);
             holder.checkBox1.setChecked(arrayList.get(position).isSelected());
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (arrayList.get(position).isSelected()) { // deselect
-                        selected--;
-                    } else if (selected == limit) { // select with limit
-                        if (limitListener != null)
-                            limitListener.onLimitListener(arrayList.get(position));
-                        return;
-                    } else { // selected
-                        selected++;
-                    }
-
-                    final ViewHolder temp = (ViewHolder) v.getTag();
-                    temp.checkBox1.setChecked(!temp.checkBox1.isChecked());
-
-                    arrayList.get(position).setSelected(!arrayList.get(position).isSelected());
-                    Log.i("TAG", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
-                    notifyDataSetChanged();
+            convertView.setOnClickListener(v -> {
+                if (arrayList.get(position).isSelected()) { // deselect
+                    selected--;
+                } else if (selected == limit) { // select with limit
+                    if (limitListener != null)
+                        limitListener.onLimitListener(arrayList.get(position));
+                    return;
+                } else { // selected
+                    selected++;
                 }
+
+                final ViewHolder temp = (ViewHolder) v.getTag();
+                temp.checkBox1.setChecked(!temp.checkBox1.isChecked());
+
+                arrayList.get(position).setSelected(!arrayList.get(position).isSelected());
+                Log.i("TAG", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
+                notifyDataSetChanged();
             });
-            holder.checkBox1.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (arrayList.get(position).isSelected()) { // deselect
-                        selected--;
-                    } else if (selected == limit) { // select with limit
-                        if (limitListener != null)
-                            limitListener.onLimitListener(arrayList.get(position));
-                        return;
-                    } else { // selected
-                        selected++;
-                    }
-
-                    final ViewHolder temp = (ViewHolder) v.getTag();
-                    temp.checkBox1.setChecked(!temp.checkBox1.isChecked());
-
-                    arrayList.get(position).setSelected(!arrayList.get(position).isSelected());
-                    Log.i("TAG", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
-                    notifyDataSetChanged();
+            holder.checkBox1.setOnClickListener(v -> {
+                if (arrayList.get(position).isSelected()) { // deselect
+                    selected--;
+                } else if (selected == limit) { // select with limit
+                    if (limitListener != null)
+                        limitListener.onLimitListener(arrayList.get(position));
+                    return;
+                } else { // selected
+                    selected++;
                 }
+
+                final ViewHolder temp = (ViewHolder) v.getTag();
+                temp.checkBox1.setChecked(!temp.checkBox1.isChecked());
+
+                arrayList.get(position).setSelected(!arrayList.get(position).isSelected());
+                Log.i("TAG", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
+                notifyDataSetChanged();
             });
 
 
@@ -287,11 +274,11 @@ public class SpinnerDialogService {
                 }
             };
         }
-    }
 
-
-    public interface LimitExceedListener {
-        void onLimitListener(ProductDTO data);
+        private class ViewHolder {
+            CustomTextView text1;
+            CheckBox checkBox1;
+        }
     }
 }
 

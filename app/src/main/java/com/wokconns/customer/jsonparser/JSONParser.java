@@ -15,23 +15,21 @@ import org.jsoup.Jsoup;
  */
 
 public class JSONParser {
-    String jsonObjResponse;
+    public static String PIC_KEY = "profilepic";
+    public static String TAG_SUCCESS = "status";
+    public static String TAG_MESSAGE = "message";
     public String SUCCESS = "";
     public String MESSAGE = "";
     public boolean RESULT = false;
     public Context context;
-    public static String PIC_KEY = "profilepic";
     public JSONObject jObj;
-
-
-    public static String TAG_SUCCESS = "status";
-    public static String TAG_MESSAGE = "message";
+    String jsonObjResponse;
     private SharedPrefrence prefrence;
 
     public JSONParser(Context context, JSONObject response) {
         try {
             this.context = context;
-            jObj  = response;
+            jObj = response;
             SUCCESS = getJsonString(jObj, TAG_SUCCESS);
             MESSAGE = html2text(getJsonString(jObj, TAG_MESSAGE));
             prefrence = SharedPrefrence.getInstance(context);
@@ -41,7 +39,7 @@ public class JSONParser {
             } else if (SUCCESS.equals("3")) {
                 prefrence.clearAllPreferences();
                 Intent intent = new Intent(context, SignInActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
             } else {
                 RESULT = true;
@@ -58,6 +56,7 @@ public class JSONParser {
     public static String html2text(String html) {
         return Jsoup.parse(html).text();
     }
+
     public static boolean getBoolean(String val) {
         if (val.equals("true"))
             return true;

@@ -4,18 +4,19 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import androidx.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,9 +32,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.wokconns.customer.dto.LocationDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityMapBinding;
+import com.wokconns.customer.dto.LocationDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -51,29 +52,55 @@ import java.util.TimerTask;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private Context mContext;
-    private String staffLat = "";
-    private String TAG = MapActivity.class.getSimpleName();
-    private String staffLongi = "";
-
     private static final int REQUEST_LOCATION = 0;
     private static GoogleMap mMap;
-    private int markerCount;
-    private LocationDTO locationDTO;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mCurrentLocation = new Location("test");
-    private Handler handler = new Handler();
     Marker marker;
     Timer timer = new Timer();
     boolean flag = true;
     String ar_id = "";
+    private Context mContext;
+    private String staffLat = "";
+    private String TAG = MapActivity.class.getSimpleName();
+    private String staffLongi = "";
+    private int markerCount;
+    private LocationDTO locationDTO;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mCurrentLocation = new Location("test");
+    Runnable mTask = new Runnable() {
+        @Override
+        public void run() {
+
+
+            ProjectUtils.pauseProgressDialog();
+            if (mGoogleApiClient.isConnected()) {
+                //  startLocationUpdates();
+                if (NetworkManager.isConnectToInternet(mContext)) {
+                    getLocation();
+
+                } else {
+                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
+                }
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (NetworkManager.isConnectToInternet(mContext)) {
+                            getLocation();
+                        }
+                    }
+                }, 0, 4000);
+            } else {
+
+            }
+        }
+    };
+    private Handler handler = new Handler();
     private SharedPrefrence prefrence;
     private ActivityMapBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding= DataBindingUtil.setContentView(this,R.layout.activity_map);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         mContext = MapActivity.this;
         prefrence = SharedPrefrence.getInstance(mContext);
         if (getIntent().hasExtra(Consts.ARTIST_ID)) {
@@ -89,13 +116,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .build();
 
 
-
-        binding.ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.ivBack.setOnClickListener(v -> finish());
     }
 
     @Override
@@ -111,55 +132,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-
-    Runnable mTask = new Runnable() {
-        @Override
-        public void run() {
-
-
-            ProjectUtils.pauseProgressDialog();
-            if (mGoogleApiClient.isConnected()) {
-                //  startLocationUpdates();
-                if (NetworkManager.isConnectToInternet(mContext)) {
-                    getLocation();
-
-                } else {
-                    ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_concation));
-                }
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (NetworkManager.isConnectToInternet(mContext)) {
-                            getLocation();
-                        }
-                    }
-                }, 0, 4000);
-            } else {
-
-            }
-        }
-    };
-
     public void getLocation() {
-        new HttpsRequest(Consts.GET_LOCATION_ARTIST_API, getParmlocation(), mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    try {
-                        locationDTO = new Gson().fromJson(response.getJSONObject("data").toString(), LocationDTO.class);
+        new HttpsRequest(Consts.GET_LOCATION_ARTIST_API, getParmlocation(), mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    locationDTO = new Gson().fromJson(response.getJSONObject("data").toString(), LocationDTO.class);
 
-                        staffLat = locationDTO.getLati();
-                        staffLongi = locationDTO.getLongi();
-                        Log.e("VarunSir", staffLat + " " + staffLongi);
-                        displayLocation();
+                    staffLat = locationDTO.getLati();
+                    staffLongi = locationDTO.getLongi();
+                    Log.e("VarunSir", staffLat + " " + staffLongi);
+                    displayLocation();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
@@ -262,25 +251,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
                 valueAnimator.setDuration(500); // duration 1 second
                 valueAnimator.setInterpolator(new LinearInterpolator());
-                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        try {
-                            float v = animation.getAnimatedFraction();
-                            LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
-                            marker.setPosition(newPosition);
-                            marker.setAnchor(0.5f, 0.5f);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
+                valueAnimator.addUpdateListener(animation -> {
+                    try {
+                        float v = animation.getAnimatedFraction();
+                        LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
+                        marker.setPosition(newPosition);
+                        marker.setAnchor(0.5f, 0.5f);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
 
-                            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                                    .target(newPosition)
-                                    .zoom(18.0f)
-                                    .build()));
+                        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                                .target(newPosition)
+                                .zoom(18.0f)
+                                .build()));
 
-                            marker.setRotation(getBearing(startPosition, endPosition));
-                        } catch (Exception ex) {
-                            // I don't care atm..
-                        }
+                        marker.setRotation(getBearing(startPosition, endPosition));
+                    } catch (Exception ex) {
+                        // I don't care atm..
                     }
                 });
                 valueAnimator.start();
@@ -318,6 +304,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    private float getBearing(LatLng begin, LatLng end) {
+        double lat = Math.abs(begin.latitude - end.latitude);
+        double lng = Math.abs(begin.longitude - end.longitude);
+
+        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)));
+        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
+        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
+        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
+        return -1;
+    }
 
     private interface LatLngInterpolator {
         LatLng interpolate(float fraction, LatLng a, LatLng b);
@@ -335,20 +335,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return new LatLng(lat, lng);
             }
         }
-    }
-
-    private float getBearing(LatLng begin, LatLng end) {
-        double lat = Math.abs(begin.latitude - end.latitude);
-        double lng = Math.abs(begin.longitude - end.longitude);
-
-        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
-            return (float) (Math.toDegrees(Math.atan(lng / lat)));
-        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
-            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
-        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
-            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
-        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
-            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
-        return -1;
     }
 }

@@ -8,14 +8,15 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.isseiaoki.simplecropview.CropImageView;
 import com.isseiaoki.simplecropview.callback.CropCallback;
@@ -40,20 +41,49 @@ public class MainFragment extends FragmentActivity {
     private static final int REQUEST_PICK_IMAGE = 10011;
     private static final int REQUEST_SAF_PICK_IMAGE = 10012;
     private static final String PROGRESS_DIALOG = "ProgressDialog";
+    private final LoadCallback mLoadCallback = new LoadCallback() {
+        @Override
+        public void onSuccess() {
+            dismissProgress();
+            Log.e("", "success");
+        }
 
+        @Override
+        public void onError() {
+            dismissProgress();
+            Log.e("", "error");
+        }
+    };
+    private final CropCallback mCropCallback = new CropCallback() {
+        @Override
+        public void onSuccess(Bitmap cropped) {
+        }
 
+        @Override
+        public void onError() {
+        }
+    };
     Uri myUri;
     int requestCode;
 
-    // Views ///////////////////////////////////////////////////////////////////////////////////////
-    private CropImageView mCropView;
-    private LinearLayout mRootLayout;
-
     // Note: only the system can call this constructor by reflection. 
+    private final SaveCallback mSaveCallback = new SaveCallback() {
+        @Override
+        public void onSuccess(Uri outputUri) {
+            dismissProgress();
+            //addPicture.startResultActivity(outputUri);
 
-    public MainFragment() {
+            Intent i = getIntent();
+            i.putExtra("resultUri", outputUri.toString());
+            setResult(requestCode, i);
+            finish();
+        }
 
-    }
+        @Override
+        public void onError() {
+            dismissProgress();
+        }
+    };
 
 //    public static MainFragment getInstance() {
 //        MainFragment fragment = new MainFragment();
@@ -67,7 +97,83 @@ public class MainFragment extends FragmentActivity {
 //        super.onCreate(savedInstanceState);
 //        setRetainInstance(true);
 //    }
+    // Views ///////////////////////////////////////////////////////////////////////////////////////
+    private CropImageView mCropView;
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        return inflater.inflate(R.layout.fragment_base, null, false);
+//    }
+
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        // bind Views
+//        bindViews(view);
+//        // apply custom font
+//        FontUtils.setFont(mRootLayout);
+////        mCropView.setDebug(true);
+//        // set bitmap to CropImageView
+//        if (mCropView.getImageBitmap() == null) {
+//            mCropView.setImageResource(R.drawable.dog_five);
+//        }
+//    }
+    private final View.OnClickListener btnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.buttonDone:
+                    MainFragmentPermissionsDispatcher.cropImageWithPermissionCheck(MainFragment.this);
+                    break;
+                case R.id.buttonFitImage:
+                    mCropView.setCropMode(CropImageView.CropMode.FIT_IMAGE);
+                    break;
+                case R.id.button1_1:
+                    mCropView.setCropMode(CropImageView.CropMode.SQUARE);
+                    break;
+                case R.id.button3_4:
+                    mCropView.setCropMode(CropImageView.CropMode.RATIO_3_4);
+                    break;
+                case R.id.button4_3:
+                    mCropView.setCropMode(CropImageView.CropMode.RATIO_4_3);
+                    break;
+                case R.id.button9_16:
+                    mCropView.setCropMode(CropImageView.CropMode.RATIO_9_16);
+                    break;
+                case R.id.button16_9:
+                    mCropView.setCropMode(CropImageView.CropMode.RATIO_16_9);
+                    break;
+                case R.id.buttonCustom:
+                    mCropView.setCustomRatio(7, 5);
+                    break;
+                case R.id.buttonFree:
+                    mCropView.setCropMode(CropImageView.CropMode.FREE);
+                    break;
+                case R.id.buttonCircle:
+                    mCropView.setCropMode(CropImageView.CropMode.CIRCLE);
+                    break;
+                case R.id.buttonShowCircleButCropAsSquare:
+                    mCropView.setCropMode(CropImageView.CropMode.CIRCLE_SQUARE);
+                    break;
+                case R.id.buttonRotateLeft:
+                    mCropView.rotateImage(CropImageView.RotateDegrees.ROTATE_M90D);
+                    break;
+                case R.id.buttonRotateRight:
+                    mCropView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
+                    break;
+                case R.id.buttonPickImage:
+                    MainFragmentPermissionsDispatcher.pickImageWithPermissionCheck(MainFragment.this);
+                    break;
+            }
+        }
+    };
+    private LinearLayout mRootLayout;
+
+    // Bind views //////////////////////////////////////////////////////////////////////////////////
+
+    public MainFragment() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,25 +201,6 @@ public class MainFragment extends FragmentActivity {
 
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.fragment_base, null, false);
-//    }
-
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        // bind Views
-//        bindViews(view);
-//        // apply custom font
-//        FontUtils.setFont(mRootLayout);
-////        mCropView.setDebug(true);
-//        // set bitmap to CropImageView
-//        if (mCropView.getImageBitmap() == null) {
-//            mCropView.setImageResource(R.drawable.dog_five);
-//        }
-//    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         super.onActivityResult(requestCode, resultCode, result);
@@ -133,8 +220,6 @@ public class MainFragment extends FragmentActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MainFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
-
-    // Bind views //////////////////////////////////////////////////////////////////////////////////
 
     private void bindViews() {
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
@@ -186,6 +271,8 @@ public class MainFragment extends FragmentActivity {
         showRationaleDialog(R.string.permission_crop_rationale, request);
     }
 
+    // Handle button event /////////////////////////////////////////////////////////////////////////
+
     public void showProgress() {
         ProgressDialogFragment f = ProgressDialogFragment.getInstance();
         getSupportFragmentManager()
@@ -193,6 +280,8 @@ public class MainFragment extends FragmentActivity {
                 .add(f, PROGRESS_DIALOG)
                 .commitAllowingStateLoss();
     }
+
+    // Callbacks ///////////////////////////////////////////////////////////////////////////////////
 
     public void dismissProgress() {
 //        if (!isAdded()) return;
@@ -210,116 +299,10 @@ public class MainFragment extends FragmentActivity {
 
     private void showRationaleDialog(@StringRes int messageResId, final PermissionRequest request) {
         new AlertDialog.Builder(this)
-                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        request.proceed();
-                    }
-                })
-                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
+                .setPositiveButton(R.string.button_allow, (dialog, which) -> request.proceed())
+                .setNegativeButton(R.string.button_deny, (dialog, which) -> request.cancel())
                 .setCancelable(false)
                 .setMessage(messageResId)
                 .show();
     }
-
-    // Handle button event /////////////////////////////////////////////////////////////////////////
-
-    private final View.OnClickListener btnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.buttonDone:
-                    MainFragmentPermissionsDispatcher.cropImageWithPermissionCheck(MainFragment.this);
-                    break;
-                case R.id.buttonFitImage:
-                    mCropView.setCropMode(CropImageView.CropMode.FIT_IMAGE);
-                    break;
-                case R.id.button1_1:
-                    mCropView.setCropMode(CropImageView.CropMode.SQUARE);
-                    break;
-                case R.id.button3_4:
-                    mCropView.setCropMode(CropImageView.CropMode.RATIO_3_4);
-                    break;
-                case R.id.button4_3:
-                    mCropView.setCropMode(CropImageView.CropMode.RATIO_4_3);
-                    break;
-                case R.id.button9_16:
-                    mCropView.setCropMode(CropImageView.CropMode.RATIO_9_16);
-                    break;
-                case R.id.button16_9:
-                    mCropView.setCropMode(CropImageView.CropMode.RATIO_16_9);
-                    break;
-                case R.id.buttonCustom:
-                    mCropView.setCustomRatio(7, 5);
-                    break;
-                case R.id.buttonFree:
-                    mCropView.setCropMode(CropImageView.CropMode.FREE);
-                    break;
-                case R.id.buttonCircle:
-                    mCropView.setCropMode(CropImageView.CropMode.CIRCLE);
-                    break;
-                case R.id.buttonShowCircleButCropAsSquare:
-                    mCropView.setCropMode(CropImageView.CropMode.CIRCLE_SQUARE);
-                    break;
-                case R.id.buttonRotateLeft:
-                    mCropView.rotateImage(CropImageView.RotateDegrees.ROTATE_M90D);
-                    break;
-                case R.id.buttonRotateRight:
-                    mCropView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
-                    break;
-                case R.id.buttonPickImage:
-                    MainFragmentPermissionsDispatcher.pickImageWithPermissionCheck(MainFragment.this);
-                    break;
-            }
-        }
-    };
-
-    // Callbacks ///////////////////////////////////////////////////////////////////////////////////
-
-    private final LoadCallback mLoadCallback = new LoadCallback() {
-        @Override
-        public void onSuccess() {
-            dismissProgress();
-            Log.e("", "success");
-        }
-
-        @Override
-        public void onError() {
-            dismissProgress();
-            Log.e("", "error");
-        }
-    };
-
-    private final CropCallback mCropCallback = new CropCallback() {
-        @Override
-        public void onSuccess(Bitmap cropped) {
-        }
-
-        @Override
-        public void onError() {
-        }
-    };
-
-    private final SaveCallback mSaveCallback = new SaveCallback() {
-        @Override
-        public void onSuccess(Uri outputUri) {
-            dismissProgress();
-            //addPicture.startResultActivity(outputUri);
-
-            Intent i = getIntent();
-            i.putExtra("resultUri", outputUri.toString());
-            setResult(requestCode, i);
-            finish();
-        }
-
-        @Override
-        public void onError() {
-            dismissProgress();
-        }
-    };
 }

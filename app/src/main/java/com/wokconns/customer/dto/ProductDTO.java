@@ -1,4 +1,5 @@
 package com.wokconns.customer.dto;
+
 import java.io.Serializable;
 
 public class ProductDTO implements Serializable {
@@ -11,6 +12,7 @@ public class ProductDTO implements Serializable {
     String updated_at = "";
     String currency_type = "";
     boolean isSelected;
+
     public String getId() {
         return id;
     }

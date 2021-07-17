@@ -2,14 +2,13 @@ package com.wokconns.customer.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentDiscoverNearByBinding;
@@ -17,12 +16,12 @@ import com.wokconns.customer.ui.activity.BaseActivity;
 
 
 public class DiscoverNearBy extends Fragment implements View.OnClickListener {
+    FragmentDiscoverNearByBinding binding;
     private View view;
     private BaseActivity baseActivity;
     private FragmentManager fragmentManager;
     private DiscoverFragment discoverFragment = new DiscoverFragment();
     private NearByFragment nearByFragment = new NearByFragment();
-    FragmentDiscoverNearByBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -5,19 +5,18 @@ package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterChatListBinding;
 import com.wokconns.customer.dto.ChatListDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -66,14 +65,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.IVprofile);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(mContext, OneTwoOneChat.class);
-                in.putExtra(Consts.ARTIST_ID, chatList.get(position).getArtist_id());
-                in.putExtra(Consts.ARTIST_NAME, chatList.get(position).getArtistName());
-                mContext.startActivity(in);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent in = new Intent(mContext, OneTwoOneChat.class);
+            in.putExtra(Consts.ARTIST_ID, chatList.get(position).getArtist_id());
+            in.putExtra(Consts.ARTIST_NAME, chatList.get(position).getArtistName());
+            mContext.startActivity(in);
         });
 
     }

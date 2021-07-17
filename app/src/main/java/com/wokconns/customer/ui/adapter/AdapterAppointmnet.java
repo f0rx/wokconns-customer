@@ -6,20 +6,21 @@ package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppointmentDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -40,12 +41,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.MyViewHolder> {
+    SimpleDateFormat sdf1, timeZone;
     private String TAG = AdapterAppointmnet.class.getSimpleName();
     private AppointmentFrag appointmentFrag;
     private Context mContext;
     private ArrayList<AppointmentDTO> appointmentDTOSList;
     private UserDTO userDTO;
-    SimpleDateFormat sdf1, timeZone;
     private HashMap<String, String> paramBookAppointment = new HashMap<>();
     private HashMap<String, String> paramDeclineAppointment = new HashMap<>();
     private DialogInterface dialog_book;
@@ -108,23 +109,17 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
         }
 
 
-        holder.tvEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paramBookAppointment.put(Consts.USER_ID, userDTO.getUser_id());
-                paramBookAppointment.put(Consts.ARTIST_ID, appointmentDTOSList.get(position).getArtist_id());
-                paramBookAppointment.put(Consts.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
-                clickScheduleDateTime();
-            }
+        holder.tvEdit.setOnClickListener(v -> {
+            paramBookAppointment.put(Consts.USER_ID, userDTO.getUser_id());
+            paramBookAppointment.put(Consts.ARTIST_ID, appointmentDTOSList.get(position).getArtist_id());
+            paramBookAppointment.put(Consts.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
+            clickScheduleDateTime();
         });
-        holder.tvDecline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paramDeclineAppointment.put(Consts.USER_ID, userDTO.getUser_id());
-                paramDeclineAppointment.put(Consts.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
-                paramDeclineAppointment.put(Consts.REQUEST, "4");
-                bookDailog();
-            }
+        holder.tvDecline.setOnClickListener(v -> {
+            paramDeclineAppointment.put(Consts.USER_ID, userDTO.getUser_id());
+            paramDeclineAppointment.put(Consts.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
+            paramDeclineAppointment.put(Consts.REQUEST, "4");
+            bookDailog();
         });
     }
 
@@ -133,6 +128,67 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
     public int getItemCount() {
 
         return appointmentDTOSList.size();
+    }
+
+    public void clickScheduleDateTime() {
+        new SingleDateAndTimePickerDialog.Builder(mContext)
+                .bottomSheet()
+                .curved()
+                .mustBeOnFuture()
+                .listener(date -> {
+                    paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    bookAppointment();
+                })
+                .display();
+    }
+
+    public void bookAppointment() {
+        new HttpsRequest(Consts.EDIT_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                appointmentFrag.getHistroy();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+            }
+
+
+        });
+    }
+
+    public void declineAppointment() {
+
+        new HttpsRequest(Consts.APPOINTMENT_OPERATION_API, paramDeclineAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                ProjectUtils.showToast(mContext, msg);
+                dialog_book.dismiss();
+                appointmentFrag.getHistroy();
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+            }
+
+
+        });
+    }
+
+    public void bookDailog() {
+        try {
+            new AlertDialog.Builder(mContext)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setTitle(mContext.getResources().getString(R.string.decline))
+                    .setMessage(mContext.getResources().getString(R.string.decline_msg))
+                    .setCancelable(false)
+                    .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog, which) -> {
+                        dialog_book = dialog;
+                        declineAppointment();
+
+                    })
+                    .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                    .show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -157,85 +213,6 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
             rlComplete = view.findViewById(R.id.rlComplete);
             tvEmail = view.findViewById(R.id.tvEmail);
             tvMobile = view.findViewById(R.id.tvMobile);
-        }
-    }
-
-    public void clickScheduleDateTime() {
-        new SingleDateAndTimePickerDialog.Builder(mContext)
-                .bottomSheet()
-                .curved()
-                .mustBeOnFuture()
-                .listener(new SingleDateAndTimePickerDialog.Listener() {
-                    @Override
-                    public void onDateSelected(Date date) {
-                        paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                        paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
-                        bookAppointment();
-                    }
-                })
-                .display();
-    }
-
-    public void bookAppointment() {
-        new HttpsRequest(Consts.EDIT_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    appointmentFrag.getHistroy();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
-
-
-            }
-        });
-    }
-
-    public void declineAppointment() {
-
-        new HttpsRequest(Consts.APPOINTMENT_OPERATION_API, paramDeclineAppointment, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    ProjectUtils.showToast(mContext, msg);
-                    dialog_book.dismiss();
-                    appointmentFrag.getHistroy();
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
-                }
-
-
-            }
-        });
-    }
-
-    public void bookDailog() {
-        try {
-            new AlertDialog.Builder(mContext)
-                    .setIcon(R.mipmap.ic_launcher)
-                    .setTitle(mContext.getResources().getString(R.string.decline))
-                    .setMessage(mContext.getResources().getString(R.string.decline_msg))
-                    .setCancelable(false)
-                    .setPositiveButton(mContext.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog_book = dialog;
-                            declineAppointment();
-
-                        }
-                    })
-                    .setNegativeButton(mContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
-                    .show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

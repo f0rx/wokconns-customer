@@ -3,15 +3,9 @@ package com.wokconns.customer.ui.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.databinding.DataBindingUtil;
-
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -22,13 +16,16 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wokconns.customer.dto.CurrencyDTO;
-import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityAddMoneyBinding;
 import com.wokconns.customer.databinding.DailogPaymentOptionBinding;
+import com.wokconns.customer.dto.CurrencyDTO;
+import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -45,11 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AddMoney extends AppCompatActivity implements View.OnClickListener {
-    private String TAG = AddMoney.class.getSimpleName();
-    private Context mContext;
     float rs = 0;
     float rs1 = 0;
     float final_rs = 0;
+    String currencyCode = "";
+    private String TAG = AddMoney.class.getSimpleName();
+    private Context mContext;
     private HashMap<String, String> parmas = new HashMap<>();
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
@@ -58,7 +56,6 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
     private Dialog dialog;
     private ActivityAddMoneyBinding binding;
     private ArrayList<CurrencyDTO> currencyDTOArrayList = new ArrayList<>();
-    String currencyCode ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +70,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
 
     public void setUiAction() {
 
-        binding.ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.ivBack.setOnClickListener(v -> finish());
 
         if (getIntent().hasExtra(Consts.AMOUNT)) {
             amt = getIntent().getStringExtra(Consts.AMOUNT);
@@ -123,22 +115,14 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
         });
 
 
-        binding.etCurrency.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.etCurrency.showDropDown();
-            }
-        });
+        binding.etCurrency.setOnClickListener(v -> binding.etCurrency.showDropDown());
 
-        binding.etCurrency.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                binding.etCurrency.showDropDown();
-                CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
-                Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
+        binding.etCurrency.setOnItemClickListener((parent, view, position, id) -> {
+            binding.etCurrency.showDropDown();
+            CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
+            Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
 
-                currencyCode = currencyDTO.getCode();
-            }
+            currencyCode = currencyDTO.getCode();
         });
     }
 
@@ -179,7 +163,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
 
 
                     } else {
-                        ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_concation));
+                        ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
                     }
                 } else {
                     ProjectUtils.showLong(mContext, getResources().getString(R.string.val_money));
@@ -219,7 +203,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
         new HttpsRequest(Consts.ADD_MONEY_API, parmas, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showLong(mContext, msg);
-                finish();
+                AddMoney.this.finish();
             } else {
                 ProjectUtils.showLong(mContext, msg);
             }
@@ -240,10 +224,10 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
         dialog.setCancelable(false);
         binding1.llCancel.setOnClickListener(v -> dialog.dismiss());
         binding1.paystackButton.setOnClickListener(v -> {
-            String url = Consts.MAKE_PAYMENT_paypal + "user_id=" + userDTO.getUser_id() + "&amount=" + ProjectUtils.getEditTextValue(binding.etAddMoney) + "&currency_code="+currencyCode;
+            String url = Consts.MAKE_PAYMENT_paypal + "user_id=" + userDTO.getUser_id() + "&amount=" + ProjectUtils.getEditTextValue(binding.etAddMoney) + "&currency_code=" + currencyCode;
             Intent in2 = new Intent(mContext, PaymentWeb.class);
             in2.putExtra(Consts.PAYMENT_URL, url);
-            startActivity(in2);
+            AddMoney.this.startActivity(in2);
             dialog.dismiss();
 
         });
@@ -251,7 +235,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
             String url = Consts.MAKE_PAYMENT + userDTO.getUser_id() + "/" + ProjectUtils.getEditTextValue(binding.etAddMoney);
             Intent in2 = new Intent(mContext, PaymentWeb.class);
             in2.putExtra(Consts.PAYMENT_URL, url);
-            startActivity(in2);
+            AddMoney.this.startActivity(in2);
             dialog.dismiss();
 
         });
@@ -260,32 +244,29 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener 
 
     public void getCurrencyValue() {
 
-        new HttpsRequest(Consts.GET_CURRENCY_API, mContext).stringGet(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
+        new HttpsRequest(Consts.GET_CURRENCY_API, mContext).stringGet(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    currencyDTOArrayList = new ArrayList<>();
+                    Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
+                    }.getType();
+                    currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
+
                     try {
-                        currencyDTOArrayList = new ArrayList<>();
-                        Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
-                        }.getType();
-                        currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
-
-                        try {
-                            ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
-                            binding.etCurrency.setAdapter(currencyAdapter);
-                            binding.etCurrency.setCursorVisible(false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        setInitialData(0);
+                        ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
+                        binding.etCurrency.setAdapter(currencyAdapter);
+                        binding.etCurrency.setCursorVisible(false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                    setInitialData(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }

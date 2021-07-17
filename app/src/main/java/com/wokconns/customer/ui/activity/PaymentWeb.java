@@ -1,8 +1,6 @@
 package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,6 +23,7 @@ import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CardValidatorInterface;
@@ -32,6 +31,7 @@ import com.wokconns.customer.utils.NumberMaskInputFormatter;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -45,16 +45,16 @@ import co.paystack.android.model.Charge;
 public class PaymentWeb extends AppCompatActivity implements CardValidatorInterface {
     private static final String successPaypalUrl = Consts.PAYMENT_SUCCESS_paypal;
     private static final String failurePaypalUrl = Consts.PAYMENT_FAIL_Paypal;
-//    private static String surl_stripe_book = Consts.INVOICE_PAYMENT_SUCCESS_Stripe;
+    //    private static String surl_stripe_book = Consts.INVOICE_PAYMENT_SUCCESS_Stripe;
 //    private static String furl_stripe_book = Consts.INVOICE_PAYMENT_FAIL_Stripe;
     private static final String kTAG = PaymentWeb.class.getName();
     private static String coupon;
+    ActivityPaymetWebBinding binding;
     private String url;
     private SharedPrefrence preference;
     private UserDTO userDTO;
     private HistoryDTO historyDTO;
     private ArtistDetailsDTO artistDetailsDTO;
-    ActivityPaymetWebBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +73,15 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
         setupListeners();
 
         binding.IVback.setOnClickListener(view -> {
-            view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.click_event));
-            finish();
+            view.startAnimation(AnimationUtils.loadAnimation(PaymentWeb.this, R.anim.click_event));
+            PaymentWeb.this.finish();
         });
 
         if (NetworkManager.isConnectToInternet(this)) {
             // Get information about Artist to be paid
             getArtist();
         } else {
-            ProjectUtils.showToast(this, getResources().getString(R.string.internet_concation));
+            ProjectUtils.showToast(this, getResources().getString(R.string.internet_connection));
         }
     }
 
@@ -124,7 +124,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
             }
         });
 
-        binding.payNow.setOnClickListener(v -> validateAndChargeCard());
+        binding.payNow.setOnClickListener(v -> PaymentWeb.this.validateAndChargeCard());
     }
 
     private void validateAndChargeCard() {
@@ -159,7 +159,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
                 else // Get information about Artist to be paid
                     getArtist();
             } else {
-                ProjectUtils.showToast(this, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showToast(this, getResources().getString(R.string.internet_connection));
             }
         } catch (JSONException e) {
             e.printStackTrace();

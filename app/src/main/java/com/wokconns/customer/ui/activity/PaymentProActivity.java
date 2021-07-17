@@ -2,6 +2,7 @@ package com.wokconns.customer.ui.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -39,28 +40,27 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PaymentProActivity extends AppCompatActivity implements View.OnClickListener, IPostPayment {
+    //Paypal intent request code to track onActivityResult method
+    public static final int PAYPAL_REQUEST_CODE = 123;
     private final String TAG = PaymentProActivity.class.getSimpleName();
+    private final HashMap<String, String> params = new HashMap<>();
+    private final HashMap<String, String> parmsGetWallet = new HashMap<>();
     private Context mContext;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private HistoryDTO historyDTO;
-
     private CircleImageView ivArtist;
     private CustomTextView tvCategory, tvLocation;
     private CustomTextViewBold tvName, tvApplyCode, tvAmount, tvCancelCode;
     private LinearLayout llPayment, llCash, llWallet;
     private CustomEditText etCode;
     private String merchantKey, salt, userCredentials, invoice_id, user_id, coupon_code = "", final_amount, email;
-    private final HashMap<String, String> params = new HashMap<>();
     private ImageView IVback;
     private Dialog dialog;
-    //Paypal intent request code to track onActivityResult method
-    public static final int PAYPAL_REQUEST_CODE = 123;
     private LinearLayout paystackPay, flutterwavepay, llCancel;
     private String amt1 = "";
     private String discount_amount = "0";
     private String currency = "";
-    private final HashMap<String, String> parmsGetWallet = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,35 +157,32 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
     public void checkCoupon() {
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.CHECK_COUPON_API, params, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        ProjectUtils.showToast(mContext, msg);
-                        String amt = response.getString("final_amount");
-                        discount_amount = response.getString("discount_amount");
-                        final_amount = amt;
-                        tvAmount.setText(historyDTO.getCurrency_type() + amt);
-                        tvApplyCode.setVisibility(View.GONE);
-                        tvCancelCode.setVisibility(View.VISIBLE);
-                        coupon_code = etCode.getText().toString().trim();
-                        etCode.setEnabled(false);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
+        new HttpsRequest(Consts.CHECK_COUPON_API, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
                     ProjectUtils.showToast(mContext, msg);
-                    etCode.setEnabled(true);
-                    coupon_code = "";
+                    String amt = response.getString("final_amount");
+                    discount_amount = response.getString("discount_amount");
+                    final_amount = amt;
+                    tvAmount.setText(historyDTO.getCurrency_type() + amt);
+                    tvApplyCode.setVisibility(View.GONE);
+                    tvCancelCode.setVisibility(View.VISIBLE);
+                    coupon_code = etCode.getText().toString().trim();
+                    etCode.setEnabled(false);
 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+                etCode.setEnabled(true);
+                coupon_code = "";
 
             }
+
+
         });
     }
 
@@ -212,7 +209,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                     .setMessage(msg)
                     .setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.yes), (dialog, which) -> {
-                        sendPayment(this, getParms(type), historyDTO);
+                        PaymentProActivity.this.sendPayment(PaymentProActivity.this, PaymentProActivity.this.getParms(type), historyDTO);
                         dialog.dismiss();
                     })
                     .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
@@ -260,7 +257,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
             in2.putExtra(Consts.HISTORY_DTO, historyDTO);
             in2.putExtra(Consts.COUPON_CODE, coupon_code);
             in2.putExtra(Consts.PAYMENT_URL, url);
-            startActivity(in2);
+            PaymentProActivity.this.startActivity(in2);
             dialog.dismiss();
         });
         flutterwavepay.setOnClickListener(v -> {
@@ -268,28 +265,25 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
             in3.putExtra(Consts.HISTORY_DTO, historyDTO);
             in3.putExtra(Consts.COUPON_CODE, coupon_code);
             in3.putExtra(Consts.PAYMENT_URL, url);
-            startActivity(in3);
+            PaymentProActivity.this.startActivity(in3);
             dialog.dismiss();
         });
 
     }
 
     public void getWallet() {
-        new HttpsRequest(Consts.GET_WALLET_API, parmsGetWallet, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    try {
-                        amt1 = response.getJSONObject("data").getString("amount");
-                        currency = response.getJSONObject("data").getString("currency_type");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-
+        new HttpsRequest(Consts.GET_WALLET_API, parmsGetWallet, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                try {
+                    amt1 = response.getJSONObject("data").getString("amount");
+                    currency = response.getJSONObject("data").getString("currency_type");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+            } else {
+
             }
         });
     }

@@ -1,14 +1,15 @@
 package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.wokconns.customer.dto.WalletHistory;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.WalletHistory;
 import com.wokconns.customer.ui.fragment.Wallet;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
@@ -63,6 +64,11 @@ public class AdapterWalletHistory extends RecyclerView.Adapter<AdapterWalletHist
         return walletHistoryList.size();
     }
 
+    public void updateList(List<WalletHistory> list) {
+        walletHistoryList = (ArrayList<WalletHistory>) list;
+        notifyDataSetChanged();
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private CustomTextViewBold tvAmount, tvPaidReceive;
         private CustomTextView tvDate;
@@ -77,11 +83,6 @@ public class AdapterWalletHistory extends RecyclerView.Adapter<AdapterWalletHist
 
 
         }
-    }
-
-    public void updateList(List<WalletHistory> list) {
-        walletHistoryList = (ArrayList<WalletHistory>) list;
-        notifyDataSetChanged();
     }
 
 }

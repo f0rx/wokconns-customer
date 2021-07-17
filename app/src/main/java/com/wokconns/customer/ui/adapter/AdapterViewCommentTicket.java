@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketCommentDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -66,10 +66,10 @@ public class AdapterViewCommentTicket extends BaseAdapter {
         textViewMessage.setText(ticketCommentDTOSList.get(position).getComment());
         tvName.setText(ticketCommentDTOSList.get(position).getUserName());
 
-        try{
+        try {
             textViewTime.setText(ProjectUtils.convertTimestampDateToTime(ProjectUtils.correctTimestamp(Long.parseLong(ticketCommentDTOSList.get(position).getCreated_at()))));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return view;

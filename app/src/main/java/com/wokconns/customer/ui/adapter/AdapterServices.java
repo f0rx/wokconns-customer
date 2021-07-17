@@ -6,9 +6,6 @@ package com.wokconns.customer.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +14,16 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityViewServicesBinding;
 import com.wokconns.customer.databinding.AdapterServicesBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.ui.activity.ServiceSlider;
 import com.wokconns.customer.ui.activity.ViewServices;
@@ -31,16 +32,16 @@ import java.util.ArrayList;
 
 
 public class AdapterServices extends RecyclerView.Adapter<AdapterServices.MyViewHolder> {
+    public ActivityViewServicesBinding binding;
+    boolean isHide = false;
+    boolean select = true;
+    AdapterServicesBinding servicesBinding;
     private LayoutInflater mLayoutInflater;
     private ViewServices context;
     private ArrayList<ProductDTO> productDTOList;
-    boolean isHide = false;
-    boolean select = true;
     private ArtistDetailsDTO artistDetailsDTO;
-    public ActivityViewServicesBinding binding;
-    AdapterServicesBinding servicesBinding;
 
-    public AdapterServices(ViewServices context, ActivityViewServicesBinding binding, ArrayList<ProductDTO> productDTOList,ArtistDetailsDTO artistDetailsDTO) {
+    public AdapterServices(ViewServices context, ActivityViewServicesBinding binding, ArrayList<ProductDTO> productDTOList, ArtistDetailsDTO artistDetailsDTO) {
         this.context = context;
         this.binding = binding;
         this.productDTOList = productDTOList;
@@ -66,16 +67,13 @@ public class AdapterServices extends RecyclerView.Adapter<AdapterServices.MyView
         holder.servicesBinding.tvProductName.setText(productDTOList.get(position).getProduct_name());
 
 
-        holder.servicesBinding.ivBottomFoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent in = new Intent(context, ServiceSlider.class);
-                in.putExtra(Consts.DTO, productDTOList);
-                in.putExtra(Consts.POSTION, position);
-                in.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
-                in.putExtra(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
-                context.startActivity(in);
-            }
+        holder.servicesBinding.ivBottomFoster.setOnClickListener(v -> {
+            Intent in = new Intent(context, ServiceSlider.class);
+            in.putExtra(Consts.DTO, productDTOList);
+            in.putExtra(Consts.POSTION, position);
+            in.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
+            in.putExtra(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
+            context.startActivity(in);
         });
 
         if (productDTOList.get(position).isSelected()) {
@@ -86,29 +84,27 @@ public class AdapterServices extends RecyclerView.Adapter<AdapterServices.MyView
         }
 
 
-        holder.servicesBinding.cbSelect.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (productDTOList.get(position).isSelected()) {
-                    productDTOList.get(position).setSelected(false);
+        holder.servicesBinding.cbSelect.setOnClickListener(v -> {
+            if (productDTOList.get(position).isSelected()) {
+                productDTOList.get(position).setSelected(false);
 
-                    int quantity = Integer.parseInt(binding.tvPrice.getText().toString());
-                    quantity = quantity - Integer.parseInt(productDTOList.get(position).getPrice());
-                    binding.tvPrice.setText("" + quantity);
+                int quantity = Integer.parseInt(binding.tvPrice.getText().toString());
+                quantity = quantity - Integer.parseInt(productDTOList.get(position).getPrice());
+                binding.tvPrice.setText("" + quantity);
 
+            } else {
+                productDTOList.get(position).setSelected(true);
+                if (select) {
+                    binding.tvPrice.setText(productDTOList.get(position).getPrice());
+                    binding.tvPriceType.setText(productDTOList.get(position).getCurrency_type());
+                    select = false;
                 } else {
-                    productDTOList.get(position).setSelected(true);
-                    if (select) {
-                        binding.tvPrice.setText(productDTOList.get(position).getPrice());
-                        binding.tvPriceType.setText(productDTOList.get(position).getCurrency_type());
-                        select = false;
-                    } else {
-                        int quantity = Integer.parseInt(binding.tvPrice.getText().toString());
-                        quantity = quantity + Integer.parseInt(productDTOList.get(position).getPrice());
-                        binding.tvPrice.setText("" + quantity);
-                    }
+                    int quantity = Integer.parseInt(binding.tvPrice.getText().toString());
+                    quantity = quantity + Integer.parseInt(productDTOList.get(position).getPrice());
+                    binding.tvPrice.setText("" + quantity);
                 }
-                notifyDataSetChanged();
             }
+            notifyDataSetChanged();
         });
 
     }
@@ -116,16 +112,6 @@ public class AdapterServices extends RecyclerView.Adapter<AdapterServices.MyView
     @Override
     public int getItemCount() {
         return productDTOList.size();
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        AdapterServicesBinding servicesBinding;
-
-        public MyViewHolder( AdapterServicesBinding servicesBinding) {
-            super(servicesBinding.getRoot());
-            this.servicesBinding = servicesBinding;
-        }
     }
 
     private void fadeInAndShowView(final RelativeLayout img) {
@@ -166,6 +152,16 @@ public class AdapterServices extends RecyclerView.Adapter<AdapterServices.MyView
         });
 
         img.startAnimation(fadeOut);
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        AdapterServicesBinding servicesBinding;
+
+        public MyViewHolder(AdapterServicesBinding servicesBinding) {
+            super(servicesBinding.getRoot());
+            this.servicesBinding = servicesBinding;
+        }
     }
 
 }

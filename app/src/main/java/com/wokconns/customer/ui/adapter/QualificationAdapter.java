@@ -5,13 +5,14 @@ package com.wokconns.customer.ui.adapter;
  */
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wokconns.customer.dto.QualificationsDTO;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.wokconns.customer.R;
+import com.wokconns.customer.dto.QualificationsDTO;
 import com.wokconns.customer.utils.CustomTextView;
 
 import java.util.ArrayList;

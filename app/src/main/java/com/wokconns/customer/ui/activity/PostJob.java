@@ -13,16 +13,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,11 +31,12 @@ import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePick
 import com.google.android.gms.location.places.Place;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.schibstedspain.leku.LocationPickerActivity;
+import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityPostJobBinding;
 import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfacess.Consts;
 import com.wokconns.customer.interfacess.Helper;
@@ -46,7 +47,6 @@ import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
-import com.schibstedspain.leku.LocationPickerActivity;
 
 import org.json.JSONObject;
 
@@ -64,13 +64,7 @@ import static com.schibstedspain.leku.LocationPickerActivityKt.LATITUDE;
 import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
 
 public class PostJob extends AppCompatActivity implements View.OnClickListener {
-    private String TAG = PostJob.class.getSimpleName();
-    private Context mContext;
-    private SharedPrefrence prefrence;
-    private UserDTO userDTO;
-    private ArrayList<CategoryDTO> categoryDTOS = new ArrayList<>();
-    private HashMap<String, String> parmsadd = new HashMap<>();
-    private HashMap<String, String> parmsCategory = new HashMap<>();
+    public static final int MEDIA_TYPE_VIDEO = 6;
     Uri picUri;
     int PICK_FROM_CAMERA = 1, PICK_FROM_GALLERY = 2;
     int CROP_CAMERA_IMAGE = 3, CROP_GALLERY_IMAGE = 4;
@@ -78,15 +72,21 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
     String pathOfImage = "";
     Bitmap bm;
     ImageCompression imageCompression;
-    private File image;
-    public static final int MEDIA_TYPE_VIDEO = 6;
     HashMap<String, File> parmsFile = new HashMap<>();
-    private Place place;
-    private SpinnerDialog spinnerDialogCate;
     SimpleDateFormat sdf1, timeZone;
     ActivityPostJobBinding binding;
-    private ArrayList<CurrencyDTO> currencyDTOArrayList = new ArrayList<>();
     String currencyId = "";
+    private String TAG = PostJob.class.getSimpleName();
+    private Context mContext;
+    private SharedPrefrence prefrence;
+    private UserDTO userDTO;
+    private ArrayList<CategoryDTO> categoryDTOS = new ArrayList<>();
+    private HashMap<String, String> parmsadd = new HashMap<>();
+    private HashMap<String, String> parmsCategory = new HashMap<>();
+    private File image;
+    private Place place;
+    private SpinnerDialog spinnerDialogCate;
+    private ArrayList<CurrencyDTO> currencyDTOArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,48 +113,14 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
         binding.llPost.setOnClickListener(this);
         builder = new BottomSheet.Builder(PostJob.this).sheet(R.menu.menu_cards);
         builder.title(getResources().getString(R.string.take_image));
-        builder.listener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
+        builder.listener((dialog, which) -> {
+            switch (which) {
 
-                    case R.id.camera_cards:
-                        if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
-                            if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                try {
-                                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                                    File file = getOutputMediaFile(1);
-                                    if (!file.exists()) {
-                                        try {
-                                            file.createNewFile();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                        //Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.asd", newFile);
-                                        picUri = FileProvider.getUriForFile(PostJob.this.getApplicationContext(), PostJob.this.getApplicationContext().getPackageName() + ".fileprovider", file);
-                                    } else {
-                                        picUri = Uri.fromFile(file); // create
-                                    }
-
-
-                                    prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
-                                    startActivityForResult(intent, PICK_FROM_CAMERA);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }
-
-                        break;
-                    case R.id.gallery_cards:
-                        if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
-                            if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                case R.id.camera_cards:
+                    if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
+                        if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            try {
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                                 File file = getOutputMediaFile(1);
                                 if (!file.exists()) {
@@ -164,25 +130,51 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                                         e.printStackTrace();
                                     }
                                 }
-                                picUri = Uri.fromFile(file);
 
-                                Intent intent = new Intent();
-                                intent.setType("image/*");
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    //Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), "com.example.asd", newFile);
+                                    picUri = FileProvider.getUriForFile(PostJob.this.getApplicationContext(), PostJob.this.getApplicationContext().getPackageName() + ".fileprovider", file);
+                                } else {
+                                    picUri = Uri.fromFile(file); // create
+                                }
 
+
+                                prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
+                                startActivityForResult(intent, PICK_FROM_CAMERA);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
-                        break;
-                    case R.id.cancel_cards:
-                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                dialog.dismiss();
+
+                    }
+
+                    break;
+                case R.id.gallery_cards:
+                    if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_CAMERA, Manifest.permission.CAMERA)) {
+                        if (ProjectUtils.hasPermissionInManifest(PostJob.this, PICK_FROM_GALLERY, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                            File file = getOutputMediaFile(1);
+                            if (!file.exists()) {
+                                try {
+                                    file.createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        });
-                        break;
-                }
+                            picUri = Uri.fromFile(file);
+
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_FROM_GALLERY);
+
+                        }
+                    }
+                    break;
+                case R.id.cancel_cards:
+                    builder.setOnDismissListener(dialog1 -> dialog1.dismiss());
+                    break;
             }
         });
 
@@ -205,23 +197,15 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
             }
         });
 
-        binding.etCurrency.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.etCurrency.showDropDown();
-            }
-        });
+        binding.etCurrency.setOnClickListener(v -> binding.etCurrency.showDropDown());
 
-        binding.etCurrency.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                binding.etCurrency.showDropDown();
-                CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
-                Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
+        binding.etCurrency.setOnItemClickListener((parent, view, position, id) -> {
+            binding.etCurrency.showDropDown();
+            CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
+            Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
 
-                currencyId = currencyDTO.getId();
-                parmsadd.put(Consts.CURRENCY_ID, currencyId);
-            }
+            currencyId = currencyDTO.getId();
+            parmsadd.put(Consts.CURRENCY_ID, currencyId);
         });
     }
 
@@ -274,7 +258,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                 addPost();
 
             } else {
-                ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_concation));
+                ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
             }
         }
     }
@@ -285,14 +269,11 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                 .curved()
                 .defaultDate(new Date())
                 .mustBeOnFuture()
-                .listener(new SingleDateAndTimePickerDialog.Listener() {
-                    @Override
-                    public void onDateSelected(Date date) {
-                        parmsadd.put(Consts.JOB_DATE, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                .listener(date -> {
+                    parmsadd.put(Consts.JOB_DATE, String.valueOf(sdf1.format(date).toString().toUpperCase()));
 
 
-                        binding.etDate.setText(String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                    }
+                    binding.etDate.setText(String.valueOf(sdf1.format(date).toString().toUpperCase()));
                 })
                 .display();
     }
@@ -337,19 +318,16 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     pathOfImage = picUri.getPath();
                     imageCompression = new ImageCompression(PostJob.this);
                     imageCompression.execute(pathOfImage);
-                    imageCompression.setOnTaskFinishedEvent(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(String imagePath) {
-                            Glide.with(mContext).load("file://" + imagePath)
-                                    .thumbnail(0.5f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(binding.ivImg);
+                    imageCompression.setOnTaskFinishedEvent(imagePath -> {
+                        Glide.with(mContext).load("file://" + imagePath)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(binding.ivImg);
 
-                            pathOfImage = imagePath;
-                            binding.ivImg.setVisibility(View.VISIBLE);
-                            image = new File(imagePath);
-                            parmsFile.put(Consts.AVTAR, image);
-                        }
+                        pathOfImage = imagePath;
+                        binding.ivImg.setVisibility(View.VISIBLE);
+                        image = new File(imagePath);
+                        parmsFile.put(Consts.AVTAR, image);
                     });
 
 
@@ -370,21 +348,18 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     pathOfImage = picUri.getPath();
                     imageCompression = new ImageCompression(PostJob.this);
                     imageCompression.execute(pathOfImage);
-                    imageCompression.setOnTaskFinishedEvent(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(String imagePath) {
+                    imageCompression.setOnTaskFinishedEvent(imagePath -> {
 
-                            Glide.with(mContext).load("file://" + imagePath)
-                                    .thumbnail(0.5f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(binding.ivImg);
-                            image = new File(imagePath);
+                        Glide.with(mContext).load("file://" + imagePath)
+                                .thumbnail(0.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(binding.ivImg);
+                        image = new File(imagePath);
 
-                            pathOfImage = imagePath;
-                            binding.ivImg.setVisibility(View.VISIBLE);
-                            parmsFile.put(Consts.AVTAR, image);
+                        pathOfImage = imagePath;
+                        binding.ivImg.setVisibility(View.VISIBLE);
+                        parmsFile.put(Consts.AVTAR, image);
 
-                        }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -527,18 +502,14 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
         parmsadd.put(Consts.ADDRESS, ProjectUtils.getEditTextValue(binding.etAddress));
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                ProjectUtils.pauseProgressDialog();
-                if (flag) {
-                    ProjectUtils.showLong(mContext, msg);
-                    finish();
-                } else {
-                    ProjectUtils.showLong(mContext, msg);
-                }
+        new HttpsRequest(Consts.POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+            if (flag) {
+                ProjectUtils.showLong(mContext, msg);
+                finish();
+            } else {
+                ProjectUtils.showLong(mContext, msg);
             }
-
         });
     }
 
@@ -590,38 +561,32 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
             getCategory();
             getCurrencyValue();
         } else {
-            ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_concation));
+            ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
         }
     }
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
-                    try {
-                        categoryDTOS = new ArrayList<>();
-                        Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
-                        }.getType();
-                        categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    categoryDTOS = new ArrayList<>();
+                    Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
+                    }.getType();
+                    categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
-                        spinnerDialogCate = new SpinnerDialog((Activity) mContext, categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
-                        spinnerDialogCate.bindOnSpinerListener(new OnSpinerItemClick() {
-                            @Override
-                            public void onClick(String item, String id, int position) {
-                                binding.tvCategory.setText(item);
-                                parmsadd.put(Consts.CATEGORY_ID, id);
-                            }
-                        });
+                    spinnerDialogCate = new SpinnerDialog((Activity) mContext, categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
+                    spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
+                        binding.tvCategory.setText(item);
+                        parmsadd.put(Consts.CATEGORY_ID, id);
+                    });
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
@@ -629,31 +594,28 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
 
     public void getCurrencyValue() {
 
-        new HttpsRequest(Consts.GET_CURRENCY_API, mContext).stringGet(TAG, new Helper() {
-            @Override
-            public void backResponse(boolean flag, String msg, JSONObject response) {
-                if (flag) {
+        new HttpsRequest(Consts.GET_CURRENCY_API, mContext).stringGet(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    currencyDTOArrayList = new ArrayList<>();
+                    Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
+                    }.getType();
+                    currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
+
                     try {
-                        currencyDTOArrayList = new ArrayList<>();
-                        Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
-                        }.getType();
-                        currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
-
-                        try {
-                            ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
-                            binding.etCurrency.setAdapter(currencyAdapter);
-                            binding.etCurrency.setCursorVisible(false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                        ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
+                        binding.etCurrency.setAdapter(currencyAdapter);
+                        binding.etCurrency.setCursorVisible(false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                } else {
-                    ProjectUtils.showToast(mContext, msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+            } else {
+                ProjectUtils.showToast(mContext, msg);
             }
         });
     }
