@@ -1,9 +1,5 @@
 package com.wokconns.customer.ui.adapter;
 
-/**
- * Created by VARUN on 01/01/19.
- */
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,15 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.timepicker.TimeFormat;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterCustomerBookingBinding;
 import com.wokconns.customer.databinding.ItemSectionBinding;
 import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.ui.activity.MapActivity;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
@@ -38,28 +32,25 @@ import com.wokconns.customer.ui.activity.ViewInvoice;
 import com.wokconns.customer.ui.fragment.MyBooking;
 import com.wokconns.customer.utils.ProjectUtils;
 
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-
 public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_SECTION = 0;
     Fragment myBooking;
-    int min;
-    int sec;
-    ItemSectionBinding itemSectionBinding;
-    AdapterCustomerBookingBinding adapterCustomerBookingBinding;
-    String type = "booking";
+    private int min;
+    private ItemSectionBinding itemSectionBinding;
+    private AdapterCustomerBookingBinding adapterCustomerBookingBinding;
+    private String type = "booking";
     private String TAG = AdapterCustomerBooking.class.getSimpleName();
     private Context mContext;
-    private ArrayList<UserBooking> objects = null;
+    private ArrayList<UserBooking> objects;
     private ArrayList<UserBooking> userBookingsList;
     private HashMap<String, String> paramsDecline;
     private UserDTO userDTO;
@@ -76,8 +67,9 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         userBookingsList.addAll(objects);
     }
 
+    @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             adapterCustomerBookingBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.adapter_customer_booking, parent, false);
@@ -101,6 +93,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.adapterCustomerBookingBinding.ivArtist);
 
+            int sec;
             if (objects.get(position).getBooking_type().equalsIgnoreCase("0") || objects.get(position).getBooking_type().equalsIgnoreCase("3")) {
                 if (objects.get(position).getBooking_flag().equalsIgnoreCase("0")) {
                     holder.adapterCustomerBookingBinding.ivMap.setVisibility(View.GONE);
@@ -230,38 +223,53 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     if (objects.get(position).getBooking_flag().equalsIgnoreCase("3")) {
                         float price_hr = Float.parseFloat(objects.get(position).getPrice()) / 60;
                         float total_price = price_hr * min;
-                        holder.adapterCustomerBookingBinding.tvPrice.setText(objects.get(position).getCurrency_type() + String.format("%.2f", total_price));
+                        holder.adapterCustomerBookingBinding.tvPrice.setText(
+                                String.format("%s%s", objects.get(position).getCurrency_type(),
+                                        String.format(Locale.getDefault(), "%.2f", total_price)));
                     } else {
-                        holder.adapterCustomerBookingBinding.tvPrice.setText(objects.get(position).getCurrency_type() + objects.get(position).getPrice() + mContext.getResources().getString(R.string.hr_add_on));
-
+                        holder.adapterCustomerBookingBinding.tvPrice.setText(
+                                String.format("%s%s%s", objects.get(position).getCurrency_type(),
+                                        objects.get(position).getPrice(),
+                                        mContext.getResources().getString(R.string.hr_add_on)));
                     }
                 } else {
-                    holder.adapterCustomerBookingBinding.tvPrice.setText(objects.get(position).getCurrency_type() + objects.get(position).getPrice());
+                    holder.adapterCustomerBookingBinding.tvPrice.setText(
+                            String.format("%s%s", objects.get(position).getCurrency_type(),
+                                    objects.get(position).getPrice()));
                 }
             } else if (objects.get(position).getBooking_type().equalsIgnoreCase("2")) {
-                holder.adapterCustomerBookingBinding.tvPrice.setText(objects.get(position).getCurrency_type() + objects.get(position).getPrice());
+                holder.adapterCustomerBookingBinding.tvPrice.setText(
+                        String.format("%s%s", objects.get(position).getCurrency_type(),
+                                objects.get(position).getPrice()));
 
             } else if (objects.get(position).getBooking_type().equalsIgnoreCase("3")) {
-                holder.adapterCustomerBookingBinding.tvPrice.setText(objects.get(position).getCurrency_type() + objects.get(position).getPrice());
+                holder.adapterCustomerBookingBinding.tvPrice.setText(
+                        String.format("%s%s", objects.get(position).getCurrency_type(),
+                                objects.get(position).getPrice()));
 
             }
 
 
-            holder.adapterCustomerBookingBinding.tvDate.setText(mContext.getResources().getString(R.string.date) + " " + ProjectUtils.changeDateFormate1(objects.get(position).getBooking_date()) + " " + objects.get(position).getBooking_time());
+            holder.adapterCustomerBookingBinding.tvDate.setText(String.format("%s %s %s",
+                    mContext.getResources().getString(R.string.date),
+                    ProjectUtils.changeDateFormate1(objects.get(position).getBooking_date()),
+                    objects.get(position).getBooking_time()));
             holder.adapterCustomerBookingBinding.tvDescription.setText(objects.get(position).getDescription());
             holder.adapterCustomerBookingBinding.tvWork.setText(objects.get(position).getCategory_name());
             holder.adapterCustomerBookingBinding.tvLocation.setText(objects.get(position).getArtistLocation());
-            holder.adapterCustomerBookingBinding.tvJobComplete.setText(objects.get(position).getJobDone() + " " + mContext.getResources().getString(R.string.jobs_completed));
-            holder.adapterCustomerBookingBinding.tvProfileComplete.setText(objects.get(position).getCompletePercentages() + mContext.getResources().getString(R.string.completion));
+            holder.adapterCustomerBookingBinding.tvJobComplete.setText(String.format("%s %s",
+                    objects.get(position).getJobDone(), mContext.getResources().getString(R.string.jobs_completed)));
+            holder.adapterCustomerBookingBinding.tvProfileComplete.setText(String.format("%s%s",
+                    objects.get(position).getCompletePercentages(), mContext.getResources().getString(R.string.completion)));
 
-            holder.adapterCustomerBookingBinding.tvName.setText(mContext.getResources().getString(R.string.booking_with) + " " + objects.get(position).getArtistName());
+            holder.adapterCustomerBookingBinding.tvName.setText(String.format("%s %s", mContext.getResources().getString(R.string.booking_with), objects.get(position).getArtistName()));
 
 
             holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(v -> AdapterCustomerBooking.this.completeDialog(mContext.getResources().getString(R.string.cancel),
                     mContext.getResources().getString(R.string.booking_cancel_msg) + " " +
                             objects.get(position).getArtistName() + "?",
                     position
-            )
+                    )
             );
 
             holder.adapterCustomerBookingBinding.ivMap.setOnClickListener(v -> {
@@ -338,8 +346,6 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             } else {
                 ProjectUtils.showToast(mContext, msg);
             }
-
-
         });
     }
 
@@ -362,8 +368,6 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             } else {
                 ProjectUtils.showToast(mContext, msg);
             }
-
-
         });
     }
 

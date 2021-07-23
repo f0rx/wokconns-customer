@@ -345,4 +345,9 @@
     <string name="favourite">مفضل</string>
     <string name="phone_number">رقم الهاتف</string>
     <string name="val_phone">الرجاء إدخال رقم الهاتف.</string>
+    <string name="i_understand">أنا أفهم</string>
+    <string name="disclaimer_title">تنصل</string>
+    <string name="disclaimer_message">Wokconns ليست مسؤولة ولا موثوقة عن المعاملات التي تتم في الخارج         هذا التطبيق بدون موافقة فريق Wokconns. \n \n         Wokconns لها الحرية في اتخاذ إجراءات قانونية ضد أي حرفي أو         العميل الذي يتعامل خارج التطبيق.</string>
+    <string name="sort_by_stars">النجوم (DESC)</string>
+    <string name="sort_by_stars_asc">النجوم (ASC)</string>
 </resources>

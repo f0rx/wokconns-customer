@@ -2,7 +2,6 @@ package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,7 @@ import com.ToxicBakery.viewpager.transforms.StackTransformer;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.adapter.ServicePagerAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
 

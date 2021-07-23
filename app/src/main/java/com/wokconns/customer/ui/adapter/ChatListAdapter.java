@@ -6,7 +6,6 @@ package com.wokconns.customer.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
@@ -17,14 +16,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterChatListBinding;
 import com.wokconns.customer.dto.ChatListDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.DisclaimerWarning;
 import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
 
 
-public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> {
+public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> implements DisclaimerWarning {
 
     Context mContext;
     ArrayList<ChatListDTO> chatList;
@@ -58,8 +58,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             e.printStackTrace();
         }
 
-        Glide.with(mContext).
-                load(chatList.get(position).getArtistImage())
+        Glide.with(mContext)
+                .load(chatList.get(position).getArtistImage())
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -69,7 +69,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             Intent in = new Intent(mContext, OneTwoOneChat.class);
             in.putExtra(Consts.ARTIST_ID, chatList.get(position).getArtist_id());
             in.putExtra(Consts.ARTIST_NAME, chatList.get(position).getArtistName());
-            mContext.startActivity(in);
+
+            showDisclaimerDialog(mContext, in);
         });
 
     }

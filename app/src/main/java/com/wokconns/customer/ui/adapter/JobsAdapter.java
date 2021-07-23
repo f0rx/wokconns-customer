@@ -1,9 +1,5 @@
 package com.wokconns.customer.ui.adapter;
 
-/**
- * Created by VARUN on 01/01/19.
- */
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,20 +21,18 @@ import com.wokconns.customer.databinding.ItemSectionBinding;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.EditJob;
 import com.wokconns.customer.ui.fragment.Jobs;
 import com.wokconns.customer.utils.ProjectUtils;
 
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-
 
 public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
@@ -67,8 +61,9 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
+    @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             adapterJobsBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.adapter_jobs, parent, false);
@@ -95,9 +90,10 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.adapterJobsBinding.tvDescription.setText(objects.get(position).getDescription());
             holder.adapterJobsBinding.tvCategory.setText(objects.get(position).getCategory_name());
             holder.adapterJobsBinding.tvAddress.setText(objects.get(position).getAddress());
-            holder.adapterJobsBinding.tvDate.setText(mContext.getResources().getString(R.string.date) + " " + ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()) + " " + objects.get(position).getTime());
-            holder.adapterJobsBinding.tvApplied.setText(mContext.getResources().getString(R.string.applied1) + " " + objects.get(position).getApplied_job());
-            holder.adapterJobsBinding.tvPrice.setText(objects.get(position).getCurrency_symbol() + objects.get(position).getPrice());
+            holder.adapterJobsBinding.tvDate.setText(String.format("%s %s %s", mContext.getResources().getString(R.string.date), ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()), objects.get(position).getTime()));
+            holder.adapterJobsBinding.tvApplied.setText(String.format("%s %s", mContext.getResources().getString(R.string.applied1), objects.get(position).getApplied_job()));
+            holder.adapterJobsBinding.tvPrice.setText(String.format("%s%s",
+                    objects.get(position).getCurrency_symbol(), objects.get(position).getPrice()));
 
             if (objects.get(position).getStatus().equalsIgnoreCase("0")) {
                 holder.adapterJobsBinding.rlComplete.setVisibility(View.VISIBLE);
@@ -140,13 +136,14 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
             });
-            holder.adapterJobsBinding.tvDecline.setOnClickListener(v -> {
-                params = new HashMap<>();
-                params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                params.put(Consts.STATUS, "4");
-
-                JobsAdapter.this.rejectDialog(mContext.getResources().getString(R.string.delete) + " " + objects.get(position).getTitle(), mContext.getResources().getString(R.string.delete_job));
-            });
+//            holder.adapterJobsBinding.tvDecline.setOnClickListener(v -> {
+//                params = new HashMap<>();
+//                params.put(Consts.JOB_ID, objects.get(position).getJob_id());
+//                params.put(Consts.STATUS, "4");
+//
+//                JobsAdapter.this.rejectDialog(mContext.getResources().getString(R.string.delete) + " " +
+//                        objects.get(position).getTitle(), mContext.getResources().getString(R.string.delete_job));
+//            });
             holder.adapterJobsBinding.tvComplete.setOnClickListener(v -> {
                 paramsComplete = new HashMap<>();
                 paramsComplete.put(Consts.JOB_ID, objects.get(position).getJob_id());
@@ -197,8 +194,6 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else {
                 ProjectUtils.showToast(mContext, msg);
             }
-
-
         });
     }
 

@@ -24,7 +24,7 @@ import com.wokconns.customer.databinding.ActivityViewServicesBinding;
 import com.wokconns.customer.databinding.AdapterServicesBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.activity.ServiceSlider;
 import com.wokconns.customer.ui.activity.ViewServices;
 

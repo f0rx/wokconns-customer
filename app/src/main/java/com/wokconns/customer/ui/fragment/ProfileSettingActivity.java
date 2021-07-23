@@ -3,7 +3,6 @@ package com.wokconns.customer.ui.fragment;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -41,8 +40,7 @@ import com.wokconns.customer.databinding.DailogAddressBinding;
 import com.wokconns.customer.databinding.DailogPersonalInfoBinding;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -51,8 +49,6 @@ import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;

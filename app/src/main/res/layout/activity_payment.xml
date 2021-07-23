@@ -262,7 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/llPayment"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center">
 
                     <View
@@ -291,64 +291,11 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/llCash"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_below="@+id/rlOr"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/button_selector3"
-                    android:gravity="center">
-
-                    <com.wokconns.customer.utils.CustomTextViewBold
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="8dp"
-                        android:text="@string/cash_payment1"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rlOr1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/llCash"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/tvOR1"
-                        android:background="@color/gray" />
-
-                    <com.wokconns.customer.utils.CustomTextView
-                        android:id="@+id/tvOR1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="@string/or" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/tvOR1"
-                        android:background="@color/gray" />
-
-                </RelativeLayout>
-
-                <LinearLayout
                     android:id="@+id/llWallet"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_below="@+id/rlOr1"
+                    android:layout_below="@id/rlOr"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/button_selector3"
                     android:gravity="center">
@@ -362,8 +309,6 @@
                         android:textSize="16sp" />
 
                 </LinearLayout>
-
-
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>

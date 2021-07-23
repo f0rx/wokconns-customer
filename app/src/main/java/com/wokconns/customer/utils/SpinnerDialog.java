@@ -7,9 +7,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -17,7 +15,7 @@ import android.widget.TextView;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.CategoryDTO;
-import com.wokconns.customer.interfacess.OnSpinerItemClick;
+import com.wokconns.customer.interfaces.OnSpinerItemClick;
 
 import java.util.ArrayList;
 

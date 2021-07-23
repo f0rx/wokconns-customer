@@ -27,8 +27,7 @@ import com.wokconns.customer.dto.HomeRecomendedDTO;
 import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -39,8 +38,6 @@ import com.wokconns.customer.ui.adapter.AdapterNearByArtist;
 import com.wokconns.customer.ui.adapter.AdapterRecommended;
 import com.wokconns.customer.ui.adapter.HomeBannerPagerAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.activity.CommentOneByOne;
 import com.wokconns.customer.ui.fragment.Tickets;
 import com.wokconns.customer.utils.CustomTextView;

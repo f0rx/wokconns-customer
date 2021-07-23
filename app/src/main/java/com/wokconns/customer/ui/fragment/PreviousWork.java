@@ -12,7 +12,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentPreviousWorkBinding;
 import com.wokconns.customer.dto.ArtistBookingDTO;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.adapter.PreviousworkPagerAdapter;
 
 import java.util.ArrayList;

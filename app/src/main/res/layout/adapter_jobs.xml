@@ -54,15 +54,15 @@
 
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/tvDecline"
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="0.1"
-                        android:gravity="center"
-                        android:src="@drawable/ic_delete"
-                        app:tint="@color/red" />
+<!--                    <ImageView-->
+<!--                        android:id="@+id/tvDecline"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_marginStart="5dp"-->
+<!--                        android:layout_weight="0.1"-->
+<!--                        android:gravity="center"-->
+<!--                        android:src="@drawable/ic_delete"-->
+<!--                        app:tint="@color/red" />-->
 
                 </LinearLayout>
 

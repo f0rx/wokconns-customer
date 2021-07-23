@@ -1,4 +1,4 @@
-package com.wokconns.customer.interfacess;
+package com.wokconns.customer.interfaces;
 
 import org.json.JSONObject;
 

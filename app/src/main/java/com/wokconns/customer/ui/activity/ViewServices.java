@@ -16,7 +16,7 @@ import com.wokconns.customer.databinding.ActivityViewServicesBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AdapterServices;
 import com.wokconns.customer.utils.ProjectUtils;

@@ -6,7 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,15 +21,13 @@ import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

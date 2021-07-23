@@ -10,7 +10,7 @@ import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
 
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 
 import java.io.File;
 import java.io.FileNotFoundException;

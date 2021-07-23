@@ -12,7 +12,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentReviewsBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ReviewsDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.adapter.ReviewAdapter;
 
 import java.util.ArrayList;

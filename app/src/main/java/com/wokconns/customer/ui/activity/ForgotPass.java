@@ -2,7 +2,6 @@ package com.wokconns.customer.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -10,12 +9,9 @@ import androidx.databinding.DataBindingUtil;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityForgotPassBinding;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 

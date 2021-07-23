@@ -24,8 +24,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.ArtistProfile;
@@ -33,8 +32,6 @@ import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;

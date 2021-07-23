@@ -8,14 +8,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppIntro;
 import com.wokconns.customer.ui.activity.BaseActivity;

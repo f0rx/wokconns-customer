@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
 import com.wokconns.customer.ui.activity.ViewInvoice;

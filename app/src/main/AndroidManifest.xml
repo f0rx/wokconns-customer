@@ -222,6 +222,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wokconns.customer.ui.activity.BaseActivity" />
         </activity>
+
+	<!-- <meta-data
+    		android:name="co.paystack.android.PublicKey"
+    		android:value="your public key obtained from: https://dashboard.paystack.co/#/settings/developer"/> -->
     </application>
 
 </manifest>

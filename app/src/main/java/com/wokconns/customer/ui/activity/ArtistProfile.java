@@ -24,8 +24,7 @@ import com.wokconns.customer.databinding.ActivityArtistProfileBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.ImageGallery;
@@ -33,8 +32,6 @@ import com.wokconns.customer.ui.fragment.PersnoalInfo;
 import com.wokconns.customer.ui.fragment.PreviousWork;
 import com.wokconns.customer.ui.fragment.Reviews;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -98,7 +95,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
 
     public void setUiAction() {
         binding.llBack.setOnClickListener(this);
-        binding.tvChat.setOnClickListener(this);
+//        binding.tvChat.setOnClickListener(this);
 
         binding.tvAppointment.setOnClickListener(this);
         binding.tvBookNow.setOnClickListener(this);

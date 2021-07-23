@@ -1,5 +1,7 @@
 package com.wokconns.customer.dto;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class CurrencyDTO implements Serializable {
@@ -58,6 +60,7 @@ public class CurrencyDTO implements Serializable {
         this.created_at = created_at;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "(" + currency_symbol + ")" + currency_name;

@@ -1,5 +1,6 @@
 package com.wokconns.customer.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.databinding.DataBindingUtil;
@@ -23,8 +23,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.dto.WalletCurrencyDTO;
 import com.wokconns.customer.dto.WalletHistory;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AddMoney;
@@ -32,14 +31,14 @@ import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.adapter.AdapterWalletHistory;
 import com.wokconns.customer.utils.ProjectUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Objects;
 
 public class Wallet extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     FragmentWalletBinding binding;
@@ -48,19 +47,19 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     private AdapterWalletHistory adapterWalletHistory;
     private ArrayList<WalletHistory> walletHistoryList;
     private ArrayList<WalletCurrencyDTO> walletCurrencyList;
-    private String TAG = Wallet.class.getSimpleName();
+    private final String TAG = Wallet.class.getSimpleName();
     private LinearLayoutManager mLayoutManager;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private String status = "";
     private HashMap<String, String> parms;
-    private HashMap<String, String> parmsGetWallet = new HashMap<>();
+    private final HashMap<String, String> parmsGetWallet = new HashMap<>();
     private String amt = "";
     private String currency = "";
     private BaseActivity baseActivity;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wallet, container, false);
@@ -72,19 +71,19 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
 
         parms = new HashMap<>();
         parms.put(Consts.USER_ID, userDTO.getUser_id());
+
         setUiAction(view);
         return view;
     }
 
     public void setUiAction(View v) {
-
         binding.tvAll.setOnClickListener(this);
         binding.tvDebit.setOnClickListener(this);
         binding.tvCredit.setOnClickListener(this);
 
         binding.llAddMoney.setOnClickListener(this);
 
-        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        mLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         binding.RVhistorylist.setLayoutManager(mLayoutManager);
 
         binding.swipeRefreshLayout.setOnRefreshListener(this);
@@ -102,6 +101,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -156,22 +156,24 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         }
     }
 
-    public void getHistroy() {
-        ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_USER_WALLET_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+    public void getHistory() {
+        ProjectUtils.showProgressDialog(requireActivity(), true, getResources().getString(R.string.please_wait));
+        new HttpsRequest(Consts.GET_USER_WALLET_API, parms, requireActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             binding.swipeRefreshLayout.setRefreshing(false);
+
             if (flag) {
+                Log.i(TAG, Objects.requireNonNull(response).toString());
+
                 binding.tvNo.setVisibility(View.GONE);
                 binding.RVhistorylist.setVisibility(View.VISIBLE);
                 try {
                     walletCurrencyList = new ArrayList<>();
-                    Type getpetDTO = new TypeToken<List<WalletCurrencyDTO>>() {
-                    }.getType();
-                    walletCurrencyList = (ArrayList<WalletCurrencyDTO>) new Gson().fromJson(response.getJSONObject("data").getJSONArray("currency").toString(), getpetDTO);
+                    Type getpetDTO = new TypeToken<List<WalletCurrencyDTO>>() {}.getType();
+                    walletCurrencyList = new Gson().fromJson(response.getJSONObject("data").getJSONArray("currency").toString(), getpetDTO);
                     if (walletCurrencyList.size() > 0) {
 
-                        ArrayAdapter<WalletCurrencyDTO> currencyAdapter = new ArrayAdapter<WalletCurrencyDTO>(baseActivity, android.R.layout.simple_list_item_1, walletCurrencyList);
+                        ArrayAdapter<WalletCurrencyDTO> currencyAdapter = new ArrayAdapter<>(baseActivity, android.R.layout.simple_list_item_1, walletCurrencyList);
                         binding.etCurrency.setAdapter(currencyAdapter);
                         binding.etCurrency.setCursorVisible(false);
                         binding.etCurrency.setText(binding.etCurrency.getAdapter().getItem(0).toString(), false);
@@ -196,13 +198,15 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     @Override
     public void onResume() {
         super.onResume();
-//        getWallet();
+
+        getWallet();
+
         binding.swipeRefreshLayout.post(() -> {
 
             Log.e("Runnable", "FIRST");
             if (NetworkManager.isConnectToInternet(getActivity())) {
                 binding.swipeRefreshLayout.setRefreshing(true);
-                getHistroy();
+                getHistory();
 
             } else {
                 ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
@@ -219,7 +223,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
                 try {
                     amt = response.getJSONObject("data").getString("amount");
                     currency = response.getJSONObject("data").getString("currency_type");
-                    binding.tvWallet.setText(currency + " " + amt);
+                    binding.tvWallet.setText(String.format("%s %s", currency, amt));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -246,7 +250,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     @Override
     public void onRefresh() {
         Log.e("ONREFREST_Firls", "FIRS");
-        getHistroy();
+        getHistory();
     }
 
     public void setSelected(boolean firstBTN, boolean secondBTN, boolean thirdBTN) {
@@ -275,7 +279,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     }
 
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(@NotNull Context activity) {
         super.onAttach(activity);
         baseActivity = (BaseActivity) activity;
     }
@@ -283,16 +287,16 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     public void setWalletData(int index) {
         amt = walletCurrencyList.get(index).getAmount();
         currency = walletCurrencyList.get(index).getCurrency_type();
-        binding.tvWallet.setText(currency + " " + amt);
+        binding.tvWallet.setText(String.format("%s %s", currency, amt));
         walletHistoryList = walletCurrencyList.get(index).getWallet_history();
     }
 
-    private void filter(WalletCurrencyDTO dto) {
+    private void filter(@NotNull WalletCurrencyDTO dto) {
         ArrayList<WalletHistory> filterdNames = new ArrayList<>(dto.getWallet_history());
         adapterWalletHistory.updateList(filterdNames);
     }
 
-    private void updateAccordingStatus(WalletCurrencyDTO dto, String status) {
+    private void updateAccordingStatus(@NotNull WalletCurrencyDTO dto, String status) {
         ArrayList<WalletHistory> walletHistoryArrayList = new ArrayList<>();
         for (WalletHistory dto1 : dto.getWallet_history()) {
             if (dto1.getStatus().equalsIgnoreCase(status)) {

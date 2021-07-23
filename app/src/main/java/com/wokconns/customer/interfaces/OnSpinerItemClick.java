@@ -1,4 +1,4 @@
-package com.wokconns.customer.interfacess;
+package com.wokconns.customer.interfaces;
 
 /**
  * Created by VARUN on 01/01/19.

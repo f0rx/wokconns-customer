@@ -298,7 +298,6 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
 
-
                 </LinearLayout>
 
                 <RelativeLayout

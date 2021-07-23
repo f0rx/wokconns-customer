@@ -19,7 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterdiscoverBinding;
 import com.wokconns.customer.dto.AllAtristListDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.ArtistProfileNew;
 

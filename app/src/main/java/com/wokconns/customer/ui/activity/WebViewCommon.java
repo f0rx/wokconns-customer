@@ -1,7 +1,6 @@
 package com.wokconns.customer.ui.activity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -10,7 +9,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityWebViewCommonBinding;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 
 public class WebViewCommon extends AppCompatActivity {
     ActivityWebViewCommonBinding binding;

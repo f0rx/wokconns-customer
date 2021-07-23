@@ -26,7 +26,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -40,9 +39,7 @@ import com.wokconns.customer.dto.AllAtristListDTO;
 import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
-import com.wokconns.customer.interfacess.OnSpinerItemClick;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.ArtistProfileNew;
@@ -51,8 +48,6 @@ import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

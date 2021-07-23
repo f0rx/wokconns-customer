@@ -1,8 +1,8 @@
 package com.wokconns.customer.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,17 +22,15 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.IPostPayment;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
-import com.wokconns.customer.utils.IPostPayment;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,7 +89,6 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         tvCancelCode = findViewById(R.id.tvCancelCode);
         tvAmount = findViewById(R.id.tvAmount);
         llPayment = findViewById(R.id.llPayment);
-        llCash = findViewById(R.id.llCash);
         llWallet = findViewById(R.id.llWallet);
         etCode = findViewById(R.id.etCode);
 
@@ -111,11 +108,12 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         tvCategory.setText(historyDTO.getCategoryName());
         tvLocation.setText(historyDTO.getAddress());
         tvName.setText(ProjectUtils.getFirstLetterCapital(historyDTO.getArtistName()));
-        tvAmount.setText(historyDTO.getCurrency_type() + historyDTO.getTotal_amount());
+        tvAmount.setText(String.format("%s%s", historyDTO.getCurrency_type(), historyDTO.getTotal_amount()));
 
         final_amount = historyDTO.getTotal_amount();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -123,15 +121,13 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                 dialogPayment();
                 break;
             case R.id.llWallet:
-//                if (Float.parseFloat(amt1) >= Float.parseFloat(final_amount)) {
-                cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");
-//                } else {
-//                    ProjectUtils.showToast(mContext, "Insufficient balance, please add money to wallet first.");
-//                }
+                Log.i(TAG, "Wallet BALANCE ===> " + amt1);
 
-                break;
-            case R.id.llCash:
-                cashDialog(getResources().getString(R.string.cash_payment), getResources().getString(R.string.cash_msg), "1");
+                if (Float.parseFloat(amt1) >= Float.parseFloat(final_amount)) {
+                    cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");
+                } else {
+                    ProjectUtils.showToast(mContext, "Insufficient balance, please add money to your wallet!");
+                }
                 break;
             case R.id.tvApplyCode:
                 params.put(Consts.INVOICE_ID, historyDTO.getInvoice_id());
@@ -141,7 +137,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.tvCancelCode:
                 etCode.setText("");
-                tvAmount.setText(historyDTO.getCurrency_type() + historyDTO.getTotal_amount());
+                tvAmount.setText(String.format("%s%s", historyDTO.getCurrency_type(), historyDTO.getTotal_amount()));
                 final_amount = historyDTO.getTotal_amount();
                 tvApplyCode.setVisibility(View.VISIBLE);
                 tvCancelCode.setVisibility(View.GONE);
@@ -165,7 +161,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                     String amt = response.getString("final_amount");
                     discount_amount = response.getString("discount_amount");
                     final_amount = amt;
-                    tvAmount.setText(historyDTO.getCurrency_type() + amt);
+                    tvAmount.setText(String.format("%s%s", historyDTO.getCurrency_type(), amt));
                     tvApplyCode.setVisibility(View.GONE);
                     tvCancelCode.setVisibility(View.VISIBLE);
                     coupon_code = etCode.getText().toString().trim();
@@ -199,7 +195,6 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         Log.e("sendPaymentConfirm", params.toString());
         return params;
     }
-
 
     public void cashDialog(String title, String msg, final String type) {
         try {
@@ -250,13 +245,11 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         llCancel.setOnClickListener(v -> dialog.dismiss());
 
         coupon_code = ProjectUtils.getEditTextValue(etCode);
-        String url = Consts.INVOICE__PAYMENT_paypal + "&id=" + historyDTO.getInvoice_id() + "&coupon_code=" + coupon_code;
 
         paystackPay.setOnClickListener(v -> {
             Intent in2 = new Intent(mContext, PaymentWeb.class);
             in2.putExtra(Consts.HISTORY_DTO, historyDTO);
             in2.putExtra(Consts.COUPON_CODE, coupon_code);
-            in2.putExtra(Consts.PAYMENT_URL, url);
             PaymentProActivity.this.startActivity(in2);
             dialog.dismiss();
         });
@@ -264,7 +257,6 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
             Intent in3 = new Intent(mContext, PaymentWeb.class);
             in3.putExtra(Consts.HISTORY_DTO, historyDTO);
             in3.putExtra(Consts.COUPON_CODE, coupon_code);
-            in3.putExtra(Consts.PAYMENT_URL, url);
             PaymentProActivity.this.startActivity(in3);
             dialog.dismiss();
         });

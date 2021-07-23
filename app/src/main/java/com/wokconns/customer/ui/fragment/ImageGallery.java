@@ -13,7 +13,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentImageGalleryBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.GalleryDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.adapter.AdapterGallery;
 
 import java.util.ArrayList;

@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 
 import java.lang.reflect.Type;
 

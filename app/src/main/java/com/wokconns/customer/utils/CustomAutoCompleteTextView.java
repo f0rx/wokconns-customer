@@ -3,13 +3,14 @@ package com.wokconns.customer.utils;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.AutoCompleteTextView;
+
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 /**
  * Created by VARUN on 01/01/19.
  */
 
-public class CustomAutoCompleteTextView extends AutoCompleteTextView {
+public class CustomAutoCompleteTextView extends AppCompatAutoCompleteTextView {
     public CustomAutoCompleteTextView(Context context) {
         super(context);
         applyCustomFont(context);
@@ -25,10 +26,10 @@ public class CustomAutoCompleteTextView extends AutoCompleteTextView {
         applyCustomFont(context);
     }
 
-    public CustomAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        applyCustomFont(context);
-    }
+//    public CustomAutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        super(context, attrs, defStyleAttr, defStyleRes);
+//        applyCustomFont(context);
+//    }
 
     private void applyCustomFont(Context context) {
         Typeface customFont = FontCache.getTypeface("Montserrat-Light.otf", context);

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.interfacess.OnSpinerItemClick;
+import com.wokconns.customer.interfaces.OnSpinerItemClick;
 
 import java.util.ArrayList;
 

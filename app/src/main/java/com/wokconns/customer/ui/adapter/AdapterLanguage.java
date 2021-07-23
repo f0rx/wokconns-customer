@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.LanguageDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppIntro;
 import com.wokconns.customer.ui.activity.BaseActivity;

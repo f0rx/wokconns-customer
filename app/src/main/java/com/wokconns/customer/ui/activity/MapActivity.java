@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -36,13 +35,10 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityMapBinding;
 import com.wokconns.customer.dto.LocationDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

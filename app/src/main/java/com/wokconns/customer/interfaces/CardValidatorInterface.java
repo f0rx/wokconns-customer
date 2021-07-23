@@ -1,4 +1,4 @@
-package com.wokconns.customer.utils;
+package com.wokconns.customer.interfaces;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -22,8 +22,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -31,8 +30,6 @@ import com.wokconns.customer.ui.activity.PostJob;
 import com.wokconns.customer.ui.adapter.JobsAdapter;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

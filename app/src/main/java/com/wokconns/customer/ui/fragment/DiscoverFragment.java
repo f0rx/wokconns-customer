@@ -3,7 +3,6 @@ package com.wokconns.customer.ui.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.Nullable;
@@ -32,9 +30,7 @@ import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
-import com.wokconns.customer.interfacess.OnSpinerItemClick;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -43,12 +39,11 @@ import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
 
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +54,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     AlertDialog alertDialog1;
     CharSequence[] values;
     DailogFilterJobBinding dailogFilterJobBinding;
-    private String TAG = DiscoverFragment.class.getSimpleName();
+    private final String TAG = DiscoverFragment.class.getSimpleName();
     private View view;
     private RecyclerView rvDiscover;
     private DiscoverAdapter discoverAdapter;
@@ -71,11 +66,11 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomTextViewBold tvFilter, tvNotFound;
     private ArrayList<CategoryDTO> categoryDTOS = new ArrayList<>();
-    private HashMap<String, String> parmsCategory = new HashMap<>();
+    private final HashMap<String, String> parmsCategory = new HashMap<>();
     private SpinnerDialog spinnerDialogCate;
     private ArrayList<AllAtristListDTO> tempList;
     private BaseActivity baseActivity;
-    private HashMap<String, String> params = new HashMap<>();
+    private final HashMap<String, String> params = new HashMap<>();
     private Dialog dialogFilterJob;
     private ArrayList<CurrencyDTO> currencyDTOArrayList = new ArrayList<>();
 
@@ -94,16 +89,23 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     }
 
     public void setUiAction() {
-        values = new CharSequence[]{getString(R.string.low_to_high), getString(R.string.dis_jobs_done), getString(R.string.featured), getString(R.string.favourite)};
+        values = new CharSequence[]{
+                getString(R.string.low_to_high),
+                getString(R.string.dis_jobs_done),
+                getString(R.string.featured),
+                getString(R.string.favourite),
+                getString(R.string.sort_by_stars),
+                getString(R.string.sort_by_stars_asc)
+        };
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         tvNotFound = view.findViewById(R.id.tvNotFound);
         tvFilter = view.findViewById(R.id.tvFilter);
         baseActivity.ivFilter.setOnClickListener(this);
         tvFilter.setOnClickListener(this);
 
         rvDiscover = view.findViewById(R.id.rvDiscover);
-        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        mLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         rvDiscover.setLayoutManager(mLayoutManager);
 
         discoverAdapter = new DiscoverAdapter(getActivity(), allAtristListDTOList, myInflater);
@@ -161,7 +163,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                     allAtristListDTOList = new ArrayList<>();
                     Type getpetDTO = new TypeToken<List<AllAtristListDTO>>() {
                     }.getType();
-                    allAtristListDTOList = (ArrayList<AllAtristListDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    allAtristListDTOList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
                     showData();
 
                 } catch (Exception e) {
@@ -204,9 +206,9 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                     categoryDTOS = new ArrayList<>();
                     Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
                     }.getType();
-                    categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    categoryDTOS = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
-                    spinnerDialogCate = new SpinnerDialog((Activity) getActivity(), categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
+                    spinnerDialogCate = new SpinnerDialog(getActivity(), categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
                     spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
                         try {
                             tvFilter.setText(item);
@@ -246,7 +248,6 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
             int az = Integer.parseInt(obj1.getJobDone());
             int za = Integer.parseInt(obj2.getJobDone());
             return (az > za) ? -1 : (az > za) ? 1 : 0;
-
         });
     }
 
@@ -265,13 +266,28 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
             int za = Integer.parseInt(obj2.getFav_status());
 
             return (az > za) ? -1 : (az > za) ? 1 : 0;
+        });
+    }
 
+    private void sortByStarsDesc() {
+        Collections.sort(allAtristListDTOList, (obj1, obj2) -> {
+            int az = (int) Math.round(Double.parseDouble(obj1.getAva_rating()));
+            int za = (int) Math.round(Double.parseDouble(obj2.getAva_rating()));
+            return az > za ? -1 : 0;
+        });
+    }
+
+    private void sortByStarsAsc() {
+        Collections.sort(allAtristListDTOList, (obj1, obj2) -> {
+            int az = (int) Math.round(Double.parseDouble(obj1.getAva_rating()));
+            int za = (int) Math.round(Double.parseDouble(obj2.getAva_rating()));
+            return az < za ? -1 : 0;
         });
     }
 
 
     public void CreateAlertDialogWithRadioButtonGroup() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         builder.setTitle("Sort by");
 
@@ -294,6 +310,14 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                     shortFavourite();
                     discoverAdapter.notifyDataSetChanged();
                     break;
+                case 4:
+                    sortByStarsDesc();
+                    discoverAdapter.notifyDataSetChanged();
+                    break;
+                case 5:
+                    sortByStarsAsc();
+                    discoverAdapter.notifyDataSetChanged();
+                    break;
             }
             alertDialog1.dismiss();
         });
@@ -303,7 +327,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(@NotNull Context activity) {
         super.onAttach(activity);
         baseActivity = (BaseActivity) activity;
     }
@@ -371,7 +395,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                     allAtristListDTOList = new ArrayList<>();
                     Type getpetDTO = new TypeToken<List<AllAtristListDTO>>() {
                     }.getType();
-                    allAtristListDTOList = (ArrayList<AllAtristListDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    allAtristListDTOList = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
                     showData();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -390,7 +414,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                     currencyDTOArrayList = new ArrayList<>();
                     Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
                     }.getType();
-                    currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
+                    currencyDTOArrayList = new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -22,18 +22,14 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppointmentDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.fragment.AppointmentFrag;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 

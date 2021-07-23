@@ -1,4 +1,4 @@
-package com.wokconns.customer.utils;
+package com.wokconns.customer.interfaces;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,12 +6,9 @@ import android.content.Intent;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.WriteReview;
-
-import org.json.JSONObject;
+import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.Map;
 
@@ -21,16 +18,10 @@ public interface IPostPayment {
     default void updatePaymentStatus(Activity activity,
                                      SharedPrefrence prefrence, Map<String, String> params,
                                      HistoryDTO history) {
-        if (prefrence.getValue(Consts.SURL).equalsIgnoreCase(Consts.INVOICE_PAYMENT_SUCCESS_Stripe)) {
+        if (prefrence.getValue(Consts.SURL).equalsIgnoreCase(Consts.PAYMENT_SUCCESS)) {
             prefrence.clearPreferences(Consts.SURL);
             sendPayment(activity, params, history);
-        } else if (prefrence.getValue(Consts.FURL).equalsIgnoreCase(Consts.INVOICE_PAYMENT_FAIL_Stripe)) {
-            prefrence.clearPreferences(Consts.FURL);
-            activity.finish();
-        } else if (prefrence.getValue(Consts.SURL).equalsIgnoreCase(Consts.PAYMENT_SUCCESS_paypal)) {
-            prefrence.clearPreferences(Consts.SURL);
-            sendPayment(activity, params, history);
-        } else if (prefrence.getValue(Consts.FURL).equalsIgnoreCase(Consts.PAYMENT_FAIL_Paypal)) {
+        } else if (prefrence.getValue(Consts.FURL).equalsIgnoreCase(Consts.PAYMENT_FAIL)) {
             prefrence.clearPreferences(Consts.FURL);
             activity.finish();
         }

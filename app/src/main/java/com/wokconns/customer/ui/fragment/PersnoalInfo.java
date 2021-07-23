@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.QualificationsDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.ui.adapter.QualificationAdapter;
 import com.wokconns.customer.utils.CustomTextView;
 

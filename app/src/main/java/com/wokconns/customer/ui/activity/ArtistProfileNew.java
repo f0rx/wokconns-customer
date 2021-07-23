@@ -1,11 +1,16 @@
 package com.wokconns.customer.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -19,12 +24,13 @@ import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePick
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.gson.Gson;
 import com.wokconns.customer.R;
+import com.wokconns.customer.databinding.DialogDisclaimerBindingImpl;
 import com.wokconns.customer.databinding.FragmentArtistProfileNewBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.DisclaimerWarning;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.ImageGallery;
@@ -33,8 +39,6 @@ import com.wokconns.customer.ui.fragment.PreviousWork;
 import com.wokconns.customer.ui.fragment.Reviews;
 import com.wokconns.customer.utils.ProjectUtils;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,31 +46,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ArtistProfileNew extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
+public class ArtistProfileNew extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, DisclaimerWarning {
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     public static String name = "", email = "";
     SimpleDateFormat sdf1, timeZone;
     int flag = 0;
-    private String TAG = ArtistProfile.class.getSimpleName();
+    private final String TAG = ArtistProfile.class.getSimpleName();
     private Context mContext;
     private String artist_id = "";
     private ArtistDetailsDTO artistDetailsDTO;
-    private HashMap<String, String> parms = new HashMap<>();
+    private final HashMap<String, String> parms = new HashMap<>();
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
-    private HashMap<String, String> paramsFav = new HashMap<>();
+    private final HashMap<String, String> paramsFav = new HashMap<>();
     private ArrayList<String> list;
-    private PersnoalInfo persnoalInfo = new PersnoalInfo();
-    private ImageGallery imageGallery = new ImageGallery();
-    private PreviousWork previousWork = new PreviousWork();
-    private Reviews reviews = new Reviews();
+    private final PersnoalInfo persnoalInfo = new PersnoalInfo();
+    private final ImageGallery imageGallery = new ImageGallery();
+    private final PreviousWork previousWork = new PreviousWork();
+    private final Reviews reviews = new Reviews();
     private Bundle bundle;
     private boolean mIsAvatarShown = true;
     private int mMaxScrollSize;
     private DialogInterface dialog_book;
-    private HashMap<String, String> paramsBookingOp = new HashMap<>();
-    private Date date;
-    private HashMap<String, String> paramBookAppointment = new HashMap<>();
+    private final HashMap<String, String> paramsBookingOp = new HashMap<>();
+    private final HashMap<String, String> paramBookAppointment = new HashMap<>();
     private FragmentArtistProfileNewBinding binding;
 
     @Override
@@ -78,7 +81,7 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
         prefrence = SharedPrefrence.getInstance(mContext);
         sdf1 = new SimpleDateFormat(Consts.DATE_FORMATE_SERVER, Locale.ENGLISH);
         timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
-        date = new Date();
+        Date date = new Date();
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
         if (getIntent().hasExtra(Consts.ARTIST_ID)) {
             if (getIntent().hasExtra(Consts.FLAG)) {
@@ -121,6 +124,7 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -155,7 +159,7 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.ivFav:
                 if (NetworkManager.isConnectToInternet(mContext)) {
-                    if (artistDetailsDTO.getFav_status().equalsIgnoreCase("1")) {
+                    if (artistDetailsDTO != null && artistDetailsDTO.getFav_status().equalsIgnoreCase("1")) {
                         removeFav();
                     } else {
                         addFav();
@@ -170,7 +174,8 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
                     Intent in = new Intent(mContext, OneTwoOneChat.class);
                     in.putExtra(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
                     in.putExtra(Consts.ARTIST_NAME, artistDetailsDTO.getName());
-                    mContext.startActivity(in);
+
+                    showDisclaimerDialog(mContext, in);
                 } else {
                     ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
                 }
@@ -205,7 +210,6 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
                 intent4.putExtras(bundle);
                 mContext.startActivity(intent4);
                 break;
-
         }
     }
 
@@ -328,8 +332,8 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
                 .mustBeOnFuture()
                 .defaultDate(new Date())
                 .listener(date -> {
-                    paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                    paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    paramBookAppointment.put(Consts.DATE_STRING, sdf1.format(date).toUpperCase());
+                    paramBookAppointment.put(Consts.TIMEZONE, timeZone.format(date));
                     bookAppointment();
                 })
                 .display();

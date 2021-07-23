@@ -18,14 +18,11 @@ import com.wokconns.customer.databinding.ActivityAppliedJobBinding;
 import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AppliedJobAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

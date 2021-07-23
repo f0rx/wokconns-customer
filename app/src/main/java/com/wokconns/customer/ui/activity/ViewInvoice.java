@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityViewInvoiceBinding;
 import com.wokconns.customer.dto.HistoryDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.utils.ProjectUtils;
 

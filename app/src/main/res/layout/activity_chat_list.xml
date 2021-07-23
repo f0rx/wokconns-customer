@@ -15,7 +15,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvChatList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent" />
 
         <com.wokconns.customer.utils.CustomTextViewBold
             android:id="@+id/tvNo"

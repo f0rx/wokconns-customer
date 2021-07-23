@@ -1,4 +1,4 @@
-package com.wokconns.customer.interfacess;
+package com.wokconns.customer.interfaces;
 
 /**
  * Created by VARUN on 01/01/19.
@@ -9,19 +9,8 @@ public interface Consts {
 
     String BASE_URL = "https://wms.wokconns.com/Webservice/";
 
-    String PAYMENT_FAIL_Paypal = "https://wms.wokconns.com/corePaypal/fail.php?status=failure";
-    String PAYMENT_SUCCESS_paypal = "https://wms.wokconns.com/corePaypal/payment-status.php?id=";
-    String MAKE_PAYMENT_paypal = "https://wms.wokconns.com/corePaypal/wallet_checkout.php?";
-
-    String INVOICE__PAYMENT_paypal = "https://wms.wokconns.com/corePaypal/checkout.php?";
-
-    String PAYMENT_FAIL = "http://wms.wokconns.com/Stripe/Payment/fail";
-    String PAYMENT_SUCCESS = "http://wms.wokconns.com/Stripe/Payment/success";
-    String MAKE_PAYMENT = "http://wms.wokconns.com/Stripe/Payment/make_payment/";
-
-    String INVOICE_PAYMENT_FAIL_Stripe = "http://wms.wokconns.com/Stripe/BookingPayement/fail";
-    String INVOICE_PAYMENT_SUCCESS_Stripe = "http://wms.wokconns.com/Stripe/BookingPayement/success";
-    String INVOICE_PAYMENT_Stripe = "http://wms.wokconns.com/Stripe/BookingPayement/make_payment/";
+    String PAYMENT_FAIL = "payment_failed";
+    String PAYMENT_SUCCESS = "payment_success";
 
     String PRIVACY_URL = "privacyPolicy";
     String FAQ_URL = "faq";

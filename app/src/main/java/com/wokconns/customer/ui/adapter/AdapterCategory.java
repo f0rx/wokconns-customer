@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterCategoryBinding;
 import com.wokconns.customer.dto.HomeCategoryDTO;
-import com.wokconns.customer.interfacess.Consts;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.fragment.DiscoverNearBy;

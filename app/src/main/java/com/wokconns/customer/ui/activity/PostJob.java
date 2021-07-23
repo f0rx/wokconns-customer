@@ -3,7 +3,6 @@ package com.wokconns.customer.ui.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -17,7 +16,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,17 +36,13 @@ import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
-import com.wokconns.customer.interfacess.OnSpinerItemClick;
+import com.wokconns.customer.interfaces.Consts;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.schibstedspain.leku.LocationPickerActivityKt.LATITUDE;
 import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
@@ -76,13 +71,13 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
     SimpleDateFormat sdf1, timeZone;
     ActivityPostJobBinding binding;
     String currencyId = "";
-    private String TAG = PostJob.class.getSimpleName();
+    private final String TAG = PostJob.class.getSimpleName();
     private Context mContext;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private ArrayList<CategoryDTO> categoryDTOS = new ArrayList<>();
-    private HashMap<String, String> parmsadd = new HashMap<>();
-    private HashMap<String, String> parmsCategory = new HashMap<>();
+    private final HashMap<String, String> parmsadd = new HashMap<>();
+    private final HashMap<String, String> parmsCategory = new HashMap<>();
     private File image;
     private Place place;
     private SpinnerDialog spinnerDialogCate;
@@ -270,10 +265,10 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                 .defaultDate(new Date())
                 .mustBeOnFuture()
                 .listener(date -> {
-                    parmsadd.put(Consts.JOB_DATE, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    parmsadd.put(Consts.JOB_DATE, sdf1.format(date).toUpperCase());
 
 
-                    binding.etDate.setText(String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    binding.etDate.setText(sdf1.format(date).toUpperCase());
                 })
                 .display();
     }
@@ -572,7 +567,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     categoryDTOS = new ArrayList<>();
                     Type getpetDTO = new TypeToken<List<CategoryDTO>>() {
                     }.getType();
-                    categoryDTOS = (ArrayList<CategoryDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    categoryDTOS = new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
 
                     spinnerDialogCate = new SpinnerDialog((Activity) mContext, categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
                     spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
@@ -598,13 +593,22 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
             if (flag) {
                 try {
                     currencyDTOArrayList = new ArrayList<>();
-                    Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
+                    final Type getCurrencyDTO = new TypeToken<List<CurrencyDTO>>() {
                     }.getType();
-                    currencyDTOArrayList = (ArrayList<CurrencyDTO>) new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
+                    currencyDTOArrayList = new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
 
                     try {
-                        ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
+                        ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
                         binding.etCurrency.setAdapter(currencyAdapter);
+                        binding.etCurrency.postDelayed(() -> {
+                            // Initalize value with a default
+                            CurrencyDTO naira = null;
+                            // Loop thru then find Naira (NGN)
+                            for (CurrencyDTO el : currencyDTOArrayList)
+                                if (Objects.equals(el.getCode(), "NGN")) naira = el;
+                            if (naira != null)
+                                binding.etCurrency.setText(naira.toString(), false);
+                        }, 200);
                         binding.etCurrency.setCursorVisible(false);
                     } catch (Exception e) {
                         e.printStackTrace();

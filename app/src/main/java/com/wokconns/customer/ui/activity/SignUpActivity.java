@@ -18,8 +18,8 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivitySignUpBinding;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfacess.Consts;
-import com.wokconns.customer.interfacess.Helper;
+import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Helper;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -217,30 +217,27 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (prefrence.getValue(Consts.LANGUAGE_SELECTION).equalsIgnoreCase("")) {
             prefrence.setValue(Consts.LANGUAGE_SELECTION, "en");
         }
-//        new HttpsRequest(baseURL, mContext).stringGet(TAG, new Helper() {
-//            @Override
-//            public void backResponse(boolean flag, String msg, JSONObject response) {
-//                if (flag) {
-//                    try {
-//                        if (baseURL.equalsIgnoreCase(Consts.PRIVACY_URL)) {
-//                            Intent intent1 = new Intent(mContext, WebViewCommon.class);
-//                            intent1.putExtra(Consts.URL, msg);
-//                            intent1.putExtra(Consts.HEADER, getResources().getString(R.string.privacy_policy));
-//                            startActivity(intent1);
-//                        } else if (baseURL.equalsIgnoreCase(Consts.TERMS_URL)) {
-//                            Intent intent3 = new Intent(mContext, WebViewCommon.class);
-//                            intent3.putExtra(Consts.URL, msg);
-//                            intent3.putExtra(Consts.HEADER, getResources().getString(R.string.terms_of_use));
-//                            startActivity(intent3);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                    ProjectUtils.showToast(mContext, msg);
-//                }
-//            }
-//        });
+        new HttpsRequest(baseURL, mContext).stringGet(TAG, (flag, msg, response) -> {
+            if (flag) {
+                try {
+                    if (baseURL.equalsIgnoreCase(Consts.PRIVACY_URL)) {
+                        Intent intent1 = new Intent(mContext, WebViewCommon.class);
+                        intent1.putExtra(Consts.URL, msg);
+                        intent1.putExtra(Consts.HEADER, getResources().getString(R.string.privacy_policy));
+                        startActivity(intent1);
+                    } else if (baseURL.equalsIgnoreCase(Consts.TERMS_URL)) {
+                        Intent intent3 = new Intent(mContext, WebViewCommon.class);
+                        intent3.putExtra(Consts.URL, msg);
+                        intent3.putExtra(Consts.HEADER, getResources().getString(R.string.terms_of_use));
+                        startActivity(intent3);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+            }
+        });
     }
 
     @Override
