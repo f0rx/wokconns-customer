@@ -24,6 +24,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -49,6 +52,8 @@ import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,11 +92,11 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
     private RelativeLayout RRsncbar;
     private SharedPrefrence prefrence;
     private UserDTO userDTO;
-    private String TAG = ProfileSettingActivity.class.getSimpleName();
-    private HashMap<String, File> paramsFile = new HashMap<>();
+    private final String TAG = ProfileSettingActivity.class.getSimpleName();
+    private final HashMap<String, File> paramsFile = new HashMap<>();
     private View view;
     private BaseActivity baseActivity;
-    private HashMap<String, String> paramsDeleteImg = new HashMap<>();
+    private final HashMap<String, String> paramsDeleteImg = new HashMap<>();
     private double lats = 0.0;
     private double longs = 0.0;
 
@@ -214,7 +219,7 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
                     imageCompression = new ImageCompression(getActivity());
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
-                        Glide.with(getActivity()).load("file://" + imagePath)
+                        Glide.with(requireActivity()).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivProfile);
@@ -243,12 +248,13 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
             if (data != null) {
                 picUri = Uri.parse(data.getExtras().getString("resultUri"));
                 try {
-                    bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), picUri);
+                    bm = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), picUri);
                     pathOfImage = picUri.getPath();
+
                     imageCompression = new ImageCompression(getActivity());
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
-                        Glide.with(getActivity()).load("file://" + imagePath)
+                        Glide.with(requireActivity()).load(imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivProfile);
@@ -300,9 +306,11 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
         if (requestCode == 101) {
             if (resultCode == RESULT_OK) {
                 try {
-                    getAddress(data.getDoubleExtra(LATITUDE, 0.0), data.getDoubleExtra(LONGITUDE, 0.0));
-
-
+                    assert data != null;
+                    getAddress(
+                            data.getDoubleExtra(LATITUDE, 0.0),
+                            data.getDoubleExtra(LONGITUDE, 0.0)
+                    );
                 } catch (Exception e) {
 
                 }
@@ -311,7 +319,7 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
 
     }
 
-    public void startCropping(Uri uri, int requestCode) {
+    public void startCropping(@NotNull Uri uri, int requestCode) {
         Intent intent = new Intent(getActivity(), MainFragment.class);
         intent.putExtra("imageUri", uri.toString());
         intent.putExtra("requestCode", requestCode);
@@ -320,7 +328,7 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
 
     public void showData() {
         userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        Glide.with(getActivity()).
+        Glide.with(requireActivity()).
                 load(userDTO.getImage())
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
@@ -381,11 +389,11 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
         rb_gender_male = dialog_profile.findViewById(R.id.rb_gender_male);
         rb_gender_female = dialog_profile.findViewById(R.id.rb_gender_female);
 
-        etNameD = (CustomEditText) dialog_profile.findViewById(R.id.etNameD);
-        etEmailD = (CustomEditText) dialog_profile.findViewById(R.id.etEmailD);
-        etMobileD = (CustomEditText) dialog_profile.findViewById(R.id.etMobileD);
+        etNameD = dialog_profile.findViewById(R.id.etNameD);
+        etEmailD = dialog_profile.findViewById(R.id.etEmailD);
+        etMobileD = dialog_profile.findViewById(R.id.etMobileD);
 
-        ivCloseInfo = (ImageView) dialog_profile.findViewById(R.id.iv_close);
+        ivCloseInfo = dialog_profile.findViewById(R.id.iv_close);
 
         etNameD.setText(userDTO.getName());
         etEmailD.setText(userDTO.getEmail_id());
@@ -402,7 +410,7 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
             rb_gender_male.setChecked(false);
         }
 
-        tvYes = (CustomTextViewBold) dialog_profile.findViewById(R.id.tvYes);
+        tvYes = dialog_profile.findViewById(R.id.tvYes);
 
         dialog_profile.show();
         dialog_profile.setCancelable(false);
@@ -437,18 +445,18 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
 
         dialog_address.setContentView(R.layout.dailog_address);
 
-        ivCloseAddress = (ImageView) dialog_address.findViewById(R.id.iv_close);
+        ivCloseAddress = dialog_address.findViewById(R.id.iv_close);
 
-        etAddressD = (CustomEditText) dialog_address.findViewById(R.id.etAddressD);
-        etCityD = (CustomEditText) dialog_address.findViewById(R.id.etCityD);
-        etCountryD = (CustomEditText) dialog_address.findViewById(R.id.etCountryD);
+        etAddressD = dialog_address.findViewById(R.id.etAddressD);
+        etCityD = dialog_address.findViewById(R.id.etCityD);
+        etCountryD = dialog_address.findViewById(R.id.etCountryD);
 
         etAddressD.setText(userDTO.getAddress());
         etCityD.setText(userDTO.getCity());
         etCountryD.setText(userDTO.getCountry());
         etCountryD.setText(userDTO.getCountry());
 
-        tvYesAddress = (CustomTextViewBold) dialog_address.findViewById(R.id.tvYesAddress);
+        tvYesAddress = dialog_address.findViewById(R.id.tvYesAddress);
 
         dialog_address.show();
         dialog_address.setCancelable(false);
@@ -482,12 +490,13 @@ public class ProfileSettingActivity extends Fragment implements View.OnClickList
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
-                    ProjectUtils.showToast(getActivity(), msg);
+                    ProjectUtils.showToast(requireActivity(), msg);
 
                     userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
                     prefrence.setParentUser(userDTO, Consts.USER_DTO);
-                    baseActivity.showImage();
-                    showData();
+                    Log.e(TAG, "User image ===> " + userDTO.getImage());
+//                    baseActivity.showImage();
+//                    showData();
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -119,10 +119,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     ProjectUtils.showToast(mContext, msg);
 
-                    SignUpActivity.this.finish();
+                    ProjectUtils.showToast(mContext, String.format("%s %s!",
+                            getResources().getString(R.string.registration_success_msg),
+                            ProjectUtils.getEditTextValue(binding.CETfirstname)));
 
-                    SignUpActivity.this.startActivity(new Intent(mContext, SignInActivity.class));
-                    SignUpActivity.this.overridePendingTransition(R.anim.anim_slide_in_left,
+                    Intent in = new Intent(mContext, OTPVerificationActivity.class);
+                    in.putExtra(Consts.EMAIL, binding.CETemailadd.getText().toString());
+                    in.putExtra(Consts.MOBILE, binding.phoneNumber.getText().toString());
+
+                    startActivity(in);
+                    finish();
+
+                    overridePendingTransition(R.anim.anim_slide_in_left,
                             R.anim.anim_slide_out_left);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -174,6 +182,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return true;
         } else {
             showSickbar(getResources().getString(R.string.terms_acc));
+            ProjectUtils.showLong(mContext, getResources().getString(R.string.terms_acc));
             return false;
         }
     }
@@ -184,13 +193,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         parms.put(Consts.EMAIL_ID, ProjectUtils.getEditTextValue(binding.CETemailadd));
         parms.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(binding.CETenterpassword));
         parms.put(Consts.MOBILE, ProjectUtils.getEditTextValue(binding.phoneNumber));
-        parms.put(Consts.MOBILE_NUMBER, ProjectUtils.getEditTextValue(binding.phoneNumber));
         parms.put(Consts.ROLE, "2");
         parms.put(Consts.DEVICE_TYPE, "ANDROID");
         parms.put(Consts.DEVICE_TOKEN, firebase.getString(Consts.DEVICE_TOKEN, ""));
         parms.put(Consts.DEVICE_ID, "12345");
         parms.put(Consts.REFERRAL_CODE, ProjectUtils.getEditTextValue(binding.etReferal));
-        Log.e(TAG, parms.toString());
         return parms;
     }
 

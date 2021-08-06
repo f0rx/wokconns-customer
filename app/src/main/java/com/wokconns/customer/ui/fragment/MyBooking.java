@@ -39,7 +39,7 @@ import java.util.List;
 
 public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     IntentFilter intentFilter = new IntentFilter();
-    private String TAG = NotificationActivity.class.getSimpleName();
+    private final String TAG = NotificationActivity.class.getSimpleName();
     private RecyclerView rvBooking;
     private AdapterCustomerBooking adapterCustomerBooking;
     private ArrayList<UserBooking> userBookingList;
@@ -85,7 +85,7 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
         tvNo = v.findViewById(R.id.tvNo);
         rvBooking = v.findViewById(R.id.rvBooking);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        mLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         rvBooking.setLayoutManager(mLayoutManager);
 
         svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -99,7 +99,7 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.length() > 0) {
-                    adapterCustomerBooking.filter(newText.toString());
+                    adapterCustomerBooking.filter(newText);
 
                 } else {
 
@@ -113,7 +113,8 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
         intentFilter.addAction(Consts.START_BOOKING_ARTIST_NOTIFICATION);
         intentFilter.addAction(Consts.END_BOOKING_ARTIST_NOTIFICATION);
         intentFilter.addAction(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(requireActivity())
+                .registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -216,7 +217,6 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
             userBookingListSection.addAll(has.get(key));
 
         }
-
 
         showData();
 

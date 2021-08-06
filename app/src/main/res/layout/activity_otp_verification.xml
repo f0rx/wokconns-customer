@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootOTPScreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.OTPVerificationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo" />
+
+        <com.wokconns.customer.utils.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:gravity="center"
+            android:text="@string/otp_verification_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.wokconns.customer.utils.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:gravity="center"
+            android:text="@string/otp_verification_msg_1"
+            android:textSize="16sp" />
+
+        <com.wokconns.customer.utils.CustomTextView
+            android:id="@+id/CTVMobileNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/codeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:orientation="horizontal">
+
+            <com.wokconns.customer.utils.CustomEditText
+                android:id="@+id/digit1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:imeOptions="actionDone"
+                android:inputType="text|textNoSuggestions"
+                android:maxLength="2"
+                android:maxLines="1"
+                android:textAlignment="center" />
+
+            <com.wokconns.customer.utils.CustomEditText
+                android:id="@+id/digit2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:imeOptions="actionDone"
+                android:inputType="text|textNoSuggestions"
+                android:maxLength="2"
+                android:maxLines="1"
+                android:textAlignment="center" />
+
+            <com.wokconns.customer.utils.CustomEditText
+                android:id="@+id/digit3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:imeOptions="actionDone"
+                android:inputType="text|textNoSuggestions"
+                android:maxLength="2"
+                android:maxLines="1"
+                android:textAlignment="center" />
+
+            <com.wokconns.customer.utils.CustomEditText
+                android:id="@+id/digit4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:imeOptions="actionDone"
+                android:inputType="text|textNoSuggestions"
+                android:maxLength="2"
+                android:maxLines="1"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <com.wokconns.customer.utils.CustomButton
+            android:id="@+id/CBVerifyMobile"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:background="@drawable/button_selector2"
+            android:text="@string/btn_verify_txt"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</ScrollView>

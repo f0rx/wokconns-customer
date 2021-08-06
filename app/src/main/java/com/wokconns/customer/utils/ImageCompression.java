@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import com.wokconns.customer.interfaces.Consts;
 
@@ -62,6 +63,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
         if (strings.length == 0 || strings[0] == null)
             return null;
 
+//        Log.i("Compressor", "Image path --->>> " + strings[0]);
         return compressImage(strings[0]);
     }
 

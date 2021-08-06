@@ -5,7 +5,7 @@ package com.wokconns.customer.interfaces;
  */
 
 public interface Consts {
-    String APP_NAME = "Customer";
+    String APP_NAME = "Wokconns";
 
     String BASE_URL = "https://wms.wokconns.com/Webservice/";
 
@@ -49,6 +49,7 @@ public interface Consts {
     String POST_JOB_API = "post_job_new";
     String GET_APPLIED_JOB_BY_ID_API = "get_applied_job_by_id";
     String JOB_STATUS_USER_API = "job_status_user";
+    String VERIFY_PHONE = "verifyMobile";
     String EDIT_POST_JOB_API = "edit_post_job";
     String DELETE_JOB_API = "deletejob";
     String ADD_FAVORITES_API = "add_favorites";
@@ -65,6 +66,7 @@ public interface Consts {
     String CUSTOMER_HOME_DATA = "customerHomeData";
     String GET_CURRENCY_API = "getCurrency";
     String GET_ALL_ARTIST_FILTER = "getAllArtistsFilter";
+    String RECORD_JOB_CANCELLATION = "recordJobCancellation";
 
     /*app data*/
     static String INTROAPP = "INTROAPP";
@@ -119,7 +121,9 @@ public interface Consts {
 
     /*Login Parameter*/
     String NAME = "name";
+    String EMAIL = "email";
     String EMAIL_ID = "email_id";
+    String OTP_CODE = "otp";
     String PASSWORD = "password";
     String DEVICE_TYPE = "device_type";
     String DEVICE_TOKEN = "device_token";

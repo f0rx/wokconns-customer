@@ -57,7 +57,8 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
     private HashMap<String, String> paramsBookingOp;
     private DialogInterface dialog_book;
 
-    public AdapterCustomerBooking(Fragment myBooking, Context mContext, ArrayList<UserBooking> objects, UserDTO userDTO, String type) {
+    public AdapterCustomerBooking(Fragment myBooking, Context mContext, ArrayList<UserBooking> objects,
+                                  UserDTO userDTO, String type) {
         this.myBooking = myBooking;
         this.mContext = mContext;
         this.objects = objects;
@@ -264,12 +265,12 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
             holder.adapterCustomerBookingBinding.tvName.setText(String.format("%s %s", mContext.getResources().getString(R.string.booking_with), objects.get(position).getArtistName()));
 
-
-            holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(v -> AdapterCustomerBooking.this.completeDialog(mContext.getResources().getString(R.string.cancel),
-                    mContext.getResources().getString(R.string.booking_cancel_msg) + " " +
-                            objects.get(position).getArtistName() + "?",
-                    position
-                    )
+            holder.adapterCustomerBookingBinding.llCancel.setOnClickListener(v ->
+                    AdapterCustomerBooking.this.cancelDialog(
+                            mContext.getResources().getString(R.string.warning_title),
+                            mContext.getResources().getString(R.string.booking_cancel_warning) + " " +
+                                    mContext.getResources().getString(R.string.booking_cancel_warning_contd),
+                            position)
             );
 
             holder.adapterCustomerBookingBinding.ivMap.setOnClickListener(v -> {
@@ -330,7 +331,9 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         paramsDecline.put(Consts.BOOKING_ID, objects.get(pos).getId());
         paramsDecline.put(Consts.DECLINE_BY, "2");
         paramsDecline.put(Consts.DECLINE_REASON, "Busy");
+
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
+
         new HttpsRequest(Consts.DECLINE_BOOKING_API, paramsDecline, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             dialog_book.dismiss();
@@ -371,22 +374,58 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         });
     }
 
-    public void completeDialog(String title, String msg, final int pos) {
+    public void cancelDialog(String title, String msg, final int pos) {
         try {
             new AlertDialog.Builder(mContext)
+                    .setTitle(title)
                     .setMessage(msg)
                     .setCancelable(false)
-                    .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog, which) -> {
+                    .setPositiveButton(mContext.getResources().getString(R.string.i_understand), (dialog, which) -> {
                         dialog_book = dialog;
-                        AdapterCustomerBooking.this.decline(pos);
 
+                        dialog.dismiss();
+
+                        new AlertDialog.Builder(mContext)
+                                .setTitle(mContext.getResources().getString(R.string.cancel))
+                                .setMessage(mContext.getResources().getString(R.string.booking_cancel_msg) + " " +
+                                        objects.get(pos).getArtistName() + "?")
+                                .setCancelable(false)
+                                .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog1, which1) -> {
+                                    dialog_book = dialog1;
+                                    recordJobCancellation(successful -> {
+                                        if (successful)
+                                            AdapterCustomerBooking.this.decline(pos);
+                                    });
+                                })
+                                .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog1, which1) -> dialog1.dismiss())
+                                .show();
                     })
-                    .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(mContext.getResources().getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void recordJobCancellation(NetworkRequestCallback callback) {
+        paramsDecline = new HashMap<>();
+        paramsDecline.put(Consts.USER_ID, userDTO.getUser_id());
+
+        ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
+
+        new HttpsRequest(Consts.RECORD_JOB_CANCELLATION, paramsDecline, mContext)
+                .stringPost(TAG, (flag, msg, response) -> {
+                    ProjectUtils.pauseProgressDialog();
+
+                    if (flag) {
+                        callback.onDone(true);
+                    } else {
+                        callback.onDone(false);
+
+                        ProjectUtils.showToast(mContext, msg);
+                    }
+                });
     }
 
     public void filter(String charText) {
@@ -424,5 +463,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-
+    public interface NetworkRequestCallback {
+        void onDone(boolean successful);
+    }
 }

@@ -351,7 +351,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
 
         try {
             if (currencyDTOArrayList.size() > 0) {
-                ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(baseActivity, android.R.layout.simple_list_item_1, currencyDTOArrayList);
+                ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<>(baseActivity, android.R.layout.simple_list_item_1, currencyDTOArrayList);
                 dailogFilterJobBinding.etCurrencyD.setAdapter(currencyAdapter);
                 dailogFilterJobBinding.etCurrencyD.setCursorVisible(false);
             }

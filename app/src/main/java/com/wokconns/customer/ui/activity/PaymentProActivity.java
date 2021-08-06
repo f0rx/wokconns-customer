@@ -50,7 +50,8 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     private CircleImageView ivArtist;
     private CustomTextView tvCategory, tvLocation;
     private CustomTextViewBold tvName, tvApplyCode, tvAmount, tvCancelCode;
-    private LinearLayout llPayment, llCash, llWallet;
+    private LinearLayout llPayment;
+//    private LinearLayout llWallet;
     private CustomEditText etCode;
     private String merchantKey, salt, userCredentials, invoice_id, user_id, coupon_code = "", final_amount, email;
     private ImageView IVback;
@@ -89,14 +90,13 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         tvCancelCode = findViewById(R.id.tvCancelCode);
         tvAmount = findViewById(R.id.tvAmount);
         llPayment = findViewById(R.id.llPayment);
-        llWallet = findViewById(R.id.llWallet);
+//        llWallet = findViewById(R.id.llWallet);
         etCode = findViewById(R.id.etCode);
 
         llPayment.setOnClickListener(this);
-        llCash.setOnClickListener(this);
         tvApplyCode.setOnClickListener(this);
         tvCancelCode.setOnClickListener(this);
-        llWallet.setOnClickListener(this);
+//        llWallet.setOnClickListener(this);
 
         Glide.with(mContext).
                 load(historyDTO.getArtistImage())
@@ -120,15 +120,15 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
             case R.id.llPayment:
                 dialogPayment();
                 break;
-            case R.id.llWallet:
-                Log.i(TAG, "Wallet BALANCE ===> " + amt1);
-
-                if (Float.parseFloat(amt1) >= Float.parseFloat(final_amount)) {
-                    cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");
-                } else {
-                    ProjectUtils.showToast(mContext, "Insufficient balance, please add money to your wallet!");
-                }
-                break;
+//            case R.id.llWallet:
+//                Log.i(TAG, "Wallet BALANCE ===> " + amt1);
+//
+//                if (Float.parseFloat(amt1) >= Float.parseFloat(final_amount)) {
+//                    cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");
+//                } else {
+//                    ProjectUtils.showToast(mContext, "Insufficient balance, please add money to your wallet!");
+//                }
+//                break;
             case R.id.tvApplyCode:
                 params.put(Consts.INVOICE_ID, historyDTO.getInvoice_id());
                 params.put(Consts.COUPON_CODE, ProjectUtils.getEditTextValue(etCode));

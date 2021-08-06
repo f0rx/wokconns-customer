@@ -68,7 +68,15 @@
     <string name="invoice_paid">Invoice Paid</string>
     <string name="work_in_progress">Your work in progress</string>
     <string name="booking_with">Booking With</string>
-    <string name="booking_cancel_msg">Are you sure to cancel booking with</string>
+    <string name="booking_cancel_msg">Do you really want to cancel the booking with</string>
+    <string name="warning_title">Warning!</string>
+    <string name="booking_cancel_warning">
+        Cancelling/Deleting jobs is against the Policies of Wokconns.
+    </string>
+    <string name="booking_cancel_warning_contd">
+<!--        fewer chances to cancel jobs after which you will be charged for every cancellation.-->
+        \n\nAfter three (3) Job cancellations, you will be charged N400 any other job you cancel.
+    </string>
     <string name="date">Date:</string>
     <string name="applied">Applied</string>
     <string name="applied1">Applied:</string>
@@ -367,4 +375,14 @@
     <string name="sort_by_stars_asc"> Stars (ASC) </string>
     <string name="featured"> Featured </string>
     <string name="favourite"> Favourite </string>
+
+    <string name="mobile_no_not">Mobile number not available</string>
+    <string name="valid_mobile_number">Please enter a valid mobile number</string>
+    <string name="invalid_otp_str">"Please enter a valid OTP!"</string>
+    <string name="otp_verification_title">OTP Verification</string>
+    <string name="otp_verification_msg_1">Enter the OTP Code sent to</string>
+    <string name="btn_verify_txt">Verify Phone Number</string>
+    <string name="valid_otp_msg">Please enter a valid OTP Code</string>
+    <string name="verification_done">Phone number verification successful!</string>
+    <string name="registration_success_msg">Welcome</string>
 </resources>

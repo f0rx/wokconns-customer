@@ -243,7 +243,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
                     currencyDTOArrayList = new Gson().fromJson(response.getJSONArray("data").toString(), getCurrencyDTO);
 
                     try {
-                        ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<CurrencyDTO>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
+                        ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
                         binding.etCurrency.setAdapter(currencyAdapter);
                         binding.etCurrency.setCursorVisible(false);
                     } catch (Exception e) {

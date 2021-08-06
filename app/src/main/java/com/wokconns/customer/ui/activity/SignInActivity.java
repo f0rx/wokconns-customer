@@ -1,5 +1,6 @@
 package com.wokconns.customer.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,6 +56,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -100,6 +102,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     prefrence.setParentUser(userDTO, Consts.USER_DTO);
 
                     prefrence.setBooleanValue(Consts.IS_REGISTERED, true);
+
                     ProjectUtils.showToast(mContext, msg);
 
                     finish();
@@ -121,10 +124,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void clickForSubmit() {
-        if (!ProjectUtils.isEmailValid(binding.CETemailadd.getText().toString().trim())) {
-            showSickbar(getResources().getString(R.string.val_email));
+        if (!ProjectUtils.isPhoneNumberValid(binding.CETMobileNumber.getText().toString().trim())) {
+            showSnackbar(getResources().getString(R.string.valid_mobile_number));
         } else if (!ProjectUtils.isPasswordValid(binding.CETenterpassword.getText().toString().trim())) {
-            showSickbar(getResources().getString(R.string.val_pass));
+            showSnackbar(getResources().getString(R.string.val_pass));
         } else {
             if (NetworkManager.isConnectToInternet(mContext)) {
                 login();
@@ -138,17 +141,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.EMAIL_ID, ProjectUtils.getEditTextValue(binding.CETemailadd));
+        parms.put(Consts.MOBILE, ProjectUtils.getEditTextValue(binding.CETMobileNumber));
         parms.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(binding.CETenterpassword));
         parms.put(Consts.DEVICE_TYPE, "ANDROID");
         parms.put(Consts.DEVICE_TOKEN, firebase.getString(Consts.DEVICE_TOKEN, ""));
         parms.put(Consts.DEVICE_ID, "12345");
         parms.put(Consts.ROLE, "2");
-        Log.e(TAG + " Login", parms.toString());
         return parms;
     }
 
-    public void showSickbar(String msg) {
+    public void showSnackbar(String msg) {
         Snackbar snackbar = Snackbar.make(binding.RRsncbar, msg, Snackbar.LENGTH_LONG);
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));

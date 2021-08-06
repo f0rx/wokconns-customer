@@ -350,4 +350,17 @@
     <string name="disclaimer_message">Wokconns ليست مسؤولة ولا موثوقة عن المعاملات التي تتم في الخارج         هذا التطبيق بدون موافقة فريق Wokconns. \n \n         Wokconns لها الحرية في اتخاذ إجراءات قانونية ضد أي حرفي أو         العميل الذي يتعامل خارج التطبيق.</string>
     <string name="sort_by_stars">النجوم (DESC)</string>
     <string name="sort_by_stars_asc">النجوم (ASC)</string>
+    <string name="warning_title">تحذير!</string>
+    <string name="booking_cancel_warning">يعد إلغاء / حذف المهام مخالفًا لسياسات Wokconns. \\ n \\ n ومع ذلك ، إذا تابعت هذا ، فسيكون لديك</string>
+    <string name="booking_cancel_warning_contd">الفرص المتبقية لإلغاء الوظائف وبعد ذلك سيتم محاسبتك على كل إلغاء.</string>
+
+    <string name="mobile_no_not">Mobile number not available</string>
+    <string name="valid_mobile_number">الرجاء إدخال رقم جوال صحيح</string>
+    <string name="otp_verification_title">التحقق من OTP</string>
+    <string name="otp_verification_msg_1">أدخل رمز OTP المرسل إلى</string>
+    <string name="btn_verify_txt">تحقق من رقم الهاتف</string>
+    <string name="valid_otp_msg">الرجاء إدخال رمز OTP صالح</string>
+    <string name="invalid_otp_str">الرجاء إدخال OTP صالح!</string>
+    <string name="verification_done">تم التحقق من رقم الهاتف بنجاح!</string>
+    <string name="registration_success_msg">تم التسجيل بنجاح!</string>
 </resources>

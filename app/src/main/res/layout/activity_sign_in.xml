@@ -30,16 +30,16 @@
 
 
             <com.wokconns.customer.utils.CustomEditText
-                android:id="@+id/CETemailadd"
+                android:id="@+id/CETMobileNumber"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/edittext_background"
-                android:hint="@string/email_address1"
-                android:inputType="textEmailAddress"
-                android:paddingStart="20dp"
+                android:hint="@string/mobile_number"
+                android:inputType="phone"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_15sdp"
                 android:singleLine="true"
-                android:text=""
                 android:textColor="@color/black"
                 android:textColorHint="@color/editketext" />
 
@@ -58,7 +58,8 @@
                     android:background="@android:color/transparent"
                     android:hint="@string/enter_password"
                     android:inputType="textPassword"
-                    android:paddingStart="20dp"
+                    android:paddingStart="@dimen/_20sdp"
+                    android:paddingEnd="@dimen/_20sdp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/editketext" />
@@ -90,7 +91,6 @@
                 android:id="@+id/CTVBforgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/LLsign"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:text="@string/forgotten_password"
@@ -126,7 +126,6 @@
             android:id="@+id/RRsncbar"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:layout_alignParentBottom="true"></RelativeLayout>
-
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 </layout>

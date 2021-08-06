@@ -20,6 +20,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -314,6 +315,17 @@ public class ProjectUtils {
         }
     }
 
+    public static void log(String msg) {
+        log(msg, null);
+    }
+
+    public static void log(String msg, Throwable tr) {
+        log(TAG, msg, tr);
+    }
+
+    public static void log(String tag, String msg, Throwable tr) {
+        Log.wtf(tag, msg, tr);
+    }
 
     /**
      * Static method to cancel the Dialog.
