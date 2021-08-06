@@ -115,11 +115,11 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     holder.adapterCustomerBookingBinding.llFinish.setVisibility(View.GONE);
                     holder.adapterCustomerBookingBinding.ivStatus.setBackground(mContext.getResources().getDrawable(R.drawable.ic_inprogress));
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("mm.ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("mm.ss", Locale.getDefault());
 
                     try {
                         Date dt = sdf.parse(objects.get(position).getWorking_min());
-                        sdf = new SimpleDateFormat("HH:mm:ss");
+                        sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
                         Log.e("time", sdf.format(dt) + "");
                         min = dt.getHours() * 60 + dt.getMinutes();
                         sec = dt.getSeconds();
@@ -175,11 +175,11 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                     holder.adapterCustomerBookingBinding.llCancel.setVisibility(View.GONE);
                     holder.adapterCustomerBookingBinding.llFinish.setVisibility(View.VISIBLE);
                     holder.adapterCustomerBookingBinding.ivStatus.setBackground(mContext.getResources().getDrawable(R.drawable.ic_inprogress));
-                    SimpleDateFormat sdf = new SimpleDateFormat("mm.ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("mm.ss", Locale.getDefault());
 
                     try {
                         Date dt = sdf.parse(objects.get(position).getWorking_min());
-                        sdf = new SimpleDateFormat("HH:mm:ss");
+                        sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
                         System.out.println(sdf.format(dt));
                         min = dt.getHours() * 60 + dt.getMinutes();
                         sec = dt.getSeconds();

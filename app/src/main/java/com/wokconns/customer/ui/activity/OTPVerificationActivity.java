@@ -43,6 +43,7 @@ public class OTPVerificationActivity extends AppCompatActivity implements TextWa
         final CustomTextView CTVPhoneNumber = findViewById(R.id.CTVMobileNumber);
         final LinearLayout codeLayout = findViewById(R.id.codeLayout);
         final Button verifyBtn = findViewById(R.id.CBVerifyMobile);
+        final CustomTextView resendVerificationBtn = findViewById(R.id.resendVerificationBtn);
         final View root = findViewById(R.id.rootOTPScreen);
 
         if (getIntent().hasExtra(Consts.MOBILE)) {
@@ -74,6 +75,8 @@ public class OTPVerificationActivity extends AppCompatActivity implements TextWa
         }
 
         CETArrayList.get(0).requestFocus();
+
+        resendVerificationBtn.setOnClickListener(v -> resendOTP());
 
         verifyBtn.setOnClickListener(v -> {
             if (!isValidPinFields()) {
@@ -163,6 +166,23 @@ public class OTPVerificationActivity extends AppCompatActivity implements TextWa
                 finish();
                 overridePendingTransition(R.anim.anim_slide_in_left,
                         R.anim.anim_slide_out_left);
+            } else {
+                ProjectUtils.showToast(mContext, msg);
+            }
+        });
+    }
+
+    private void resendOTP() {
+        ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Consts.EMAIL, emailAddress);
+
+        new HttpsRequest(Consts.RESEND_VERIFY_OTP_CODE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+            ProjectUtils.pauseProgressDialog();
+
+            if (flag) {
+                ProjectUtils.showToast(mContext, getResources().getString(R.string.verification_resent));
             } else {
                 ProjectUtils.showToast(mContext, msg);
             }

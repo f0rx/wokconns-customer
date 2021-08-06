@@ -50,6 +50,7 @@ public interface Consts {
     String GET_APPLIED_JOB_BY_ID_API = "get_applied_job_by_id";
     String JOB_STATUS_USER_API = "job_status_user";
     String VERIFY_PHONE = "verifyMobile";
+    String RESEND_VERIFY_OTP_CODE = "resendMobileOtp";
     String EDIT_POST_JOB_API = "edit_post_job";
     String DELETE_JOB_API = "deletejob";
     String ADD_FAVORITES_API = "add_favorites";

@@ -117,8 +117,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             if (flag) {
                 try {
-                    ProjectUtils.showToast(mContext, msg);
-
                     ProjectUtils.showToast(mContext, String.format("%s %s!",
                             getResources().getString(R.string.registration_success_msg),
                             ProjectUtils.getEditTextValue(binding.CETfirstname)));

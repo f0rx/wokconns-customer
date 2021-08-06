@@ -75,7 +75,7 @@
     </string>
     <string name="booking_cancel_warning_contd">
 <!--        fewer chances to cancel jobs after which you will be charged for every cancellation.-->
-        \n\nAfter three (3) Job cancellations, you will be charged N400 any other job you cancel.
+        \n\nYou have just TWO (2) FREE cancellations, after which you will be charged 2% of the booking price.
     </string>
     <string name="date">Date:</string>
     <string name="applied">Applied</string>
@@ -381,8 +381,11 @@
     <string name="invalid_otp_str">"Please enter a valid OTP!"</string>
     <string name="otp_verification_title">OTP Verification</string>
     <string name="otp_verification_msg_1">Enter the OTP Code sent to</string>
-    <string name="btn_verify_txt">Verify Phone Number</string>
+    <string name="btn_verify_txt">Verify Phone</string>
     <string name="valid_otp_msg">Please enter a valid OTP Code</string>
     <string name="verification_done">Phone number verification successful!</string>
     <string name="registration_success_msg">Welcome</string>
+    <string name="verification_resent">A new OTP code was sent to your mobile number!</string>
+    <string name="resend_otp_txt_1">Did not receive an OTP code? &#160;</string>
+    <string name="resend_otp_txt_2">Resend it!</string>
 </resources>

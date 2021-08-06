@@ -363,4 +363,7 @@
     <string name="invalid_otp_str">الرجاء إدخال OTP صالح!</string>
     <string name="verification_done">تم التحقق من رقم الهاتف بنجاح!</string>
     <string name="registration_success_msg">تم التسجيل بنجاح!</string>
+    <string name="verification_resent">تم إعادة إرسال رمز OTP إلى رقم هاتفك!</string>
+    <string name="resend_otp_txt_2">اعد ارسالها!</string>
+    <string name="resend_otp_txt_1">لم تستلم رمز OTP؟</string>
 </resources>
