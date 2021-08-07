@@ -1,223 +1,215 @@
-package com.wokconns.customer.ui.fragment;
+package com.wokconns.customer.ui.fragment
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.wokconns.customer.R
+import com.wokconns.customer.dto.UserBooking
+import com.wokconns.customer.dto.UserDTO
+import com.wokconns.customer.https.HttpsRequest
+import com.wokconns.customer.interfaces.Consts
+import com.wokconns.customer.network.NetworkManager
+import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.ui.activity.BaseActivity
+import com.wokconns.customer.ui.adapter.AdapterCustomerBooking
+import com.wokconns.customer.utils.CustomTextViewBold
+import com.wokconns.customer.utils.ProjectUtils
+import org.json.JSONObject
+import java.util.*
 
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.wokconns.customer.R;
-import com.wokconns.customer.dto.UserBooking;
-import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
-import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
-import com.wokconns.customer.ui.activity.BaseActivity;
-import com.wokconns.customer.ui.adapter.AdapterCustomerBooking;
-import com.wokconns.customer.utils.CustomTextViewBold;
-import com.wokconns.customer.utils.ProjectUtils;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    IntentFilter intentFilter = new IntentFilter();
-    private final String TAG = NotificationActivity.class.getSimpleName();
-    private RecyclerView rvBooking;
-    private AdapterCustomerBooking adapterCustomerBooking;
-    private ArrayList<UserBooking> userBookingList;
-    private ArrayList<UserBooking> userBookingListSection;
-    private ArrayList<UserBooking> userBookingListSection1;
-    private LinearLayoutManager mLayoutManager;
-    private UserDTO userDTO;
-    private CustomTextViewBold tvNo;
-    private View view;
-    private BaseActivity baseActivity;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private SearchView svSearch;
-    private RelativeLayout rlSearch;
-    BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)
-                    || intent.getAction().equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)
-                    || intent.getAction().equalsIgnoreCase(Consts.END_BOOKING_ARTIST_NOTIFICATION)
-                    || intent.getAction().equalsIgnoreCase(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
-                getBooking();
-                Log.e("BROADCAST", "BROADCAST");
+class MyBooking : Fragment(), OnRefreshListener {
+    var intentFilter = IntentFilter()
+    private val TAG = NotificationActivity::class.java.simpleName
+    private lateinit var rvBooking: RecyclerView
+    private var adapterCustomerBooking: AdapterCustomerBooking? = null
+    private lateinit var userBookingList: ArrayList<UserBooking>
+    private lateinit var userBookingListSection: ArrayList<UserBooking>
+    private var userBookingListSection1: ArrayList<UserBooking>? = null
+    private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var userDTO: UserDTO
+    private lateinit var tvNo: CustomTextViewBold
+    private lateinit var mLayout: View
+    private lateinit var baseActivity: BaseActivity
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var svSearch: SearchView
+    private lateinit var rlSearch: RelativeLayout
+    private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action.equals(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
+                || intent.action.equals(Consts.START_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
+                || intent.action.equals(Consts.END_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
+                || intent.action.equals(
+                    Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION,
+                    ignoreCase = true
+                )
+            ) {
+                getBooking()
+                Log.e("BROADCAST", "BROADCAST")
             }
         }
-    };
+    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.activity_my_booking, container, false);
-        SharedPrefrence preference = SharedPrefrence.getInstance(getActivity());
-        baseActivity.headerNameTV.setText(getResources().getString(R.string.my_bookings));
-        userDTO = preference.getParentUser(Consts.USER_DTO);
-        setUiAction(view);
-        return view;
+        mLayout = inflater.inflate(R.layout.activity_my_booking, container, false)
+        val preference = SharedPrefrence.getInstance(activity)
+        baseActivity.headerNameTV.text = resources.getString(R.string.my_bookings)
+        userDTO = preference.getParentUser(Consts.USER_DTO)
+        setUiAction(mLayout)
+        return mLayout
     }
 
-    public void setUiAction(View v) {
-        rlSearch = v.findViewById(R.id.rlSearch);
-        svSearch = v.findViewById(R.id.svSearch);
-        tvNo = v.findViewById(R.id.tvNo);
-        rvBooking = v.findViewById(R.id.rvBooking);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
-        rvBooking.setLayoutManager(mLayoutManager);
-
-        svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                return false;
+    fun setUiAction(v: View?) {
+        rlSearch = v!!.findViewById(R.id.rlSearch)
+        svSearch = v.findViewById(R.id.svSearch)
+        tvNo = v.findViewById(R.id.tvNo)
+        rvBooking = v.findViewById(R.id.rvBooking)
+        swipeRefreshLayout = v.findViewById<View>(R.id.swipe_refresh_layout) as SwipeRefreshLayout
+        mLayoutManager = LinearLayoutManager(requireActivity().applicationContext)
+        rvBooking.layoutManager = mLayoutManager
+        svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (newText.length() > 0) {
-                    adapterCustomerBooking.filter(newText);
-
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText.length > 0) {
+                    adapterCustomerBooking?.filter(newText)
                 } else {
-
-
                 }
-                return false;
+                return false
             }
-        });
-
-        intentFilter.addAction(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION);
-        intentFilter.addAction(Consts.START_BOOKING_ARTIST_NOTIFICATION);
-        intentFilter.addAction(Consts.END_BOOKING_ARTIST_NOTIFICATION);
-        intentFilter.addAction(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION);
+        })
+        intentFilter.addAction(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Consts.START_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Consts.END_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)
         LocalBroadcastManager.getInstance(requireActivity())
-                .registerReceiver(mBroadcastReceiver, intentFilter);
+            .registerReceiver(mBroadcastReceiver, intentFilter)
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(() -> {
-                    Log.e("Runnable", "FIRST");
-                    if (NetworkManager.isConnectToInternet(MyBooking.this.getActivity())) {
-                        swipeRefreshLayout.setRefreshing(true);
-
-                        MyBooking.this.getBooking();
-
-                    } else {
-                        ProjectUtils.showToast(MyBooking.this.getActivity(), MyBooking.this.getResources().getString(R.string.internet_connection));
-                    }
-                }
-        );
+    override fun onResume() {
+        super.onResume()
+        swipeRefreshLayout.setOnRefreshListener(this)
+        swipeRefreshLayout.post {
+            Log.e("Runnable", "FIRST")
+            if (NetworkManager.isConnectToInternet(this@MyBooking.activity)) {
+                swipeRefreshLayout.isRefreshing = true
+                getBooking()
+            } else {
+                ProjectUtils.showToast(
+                    this@MyBooking.activity,
+                    this@MyBooking.resources.getString(R.string.internet_connection)
+                )
+            }
+        }
     }
+    // setSection();
+    //   ProjectUtils.pauseProgressDialog();
 
-    public void getBooking() {
+    // ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
+
+    fun getBooking() {
         // ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.CURRENT_BOOKING_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        HttpsRequest(
+            Consts.CURRENT_BOOKING_API,
+            getParam(),
+            activity
+        ).stringPost(TAG) { flag: Boolean, msg: String?, response: JSONObject ->
             //   ProjectUtils.pauseProgressDialog();
-            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.isRefreshing = false
             if (flag) {
-                tvNo.setVisibility(View.GONE);
-                swipeRefreshLayout.setVisibility(View.VISIBLE);
-                rlSearch.setVisibility(View.VISIBLE);
-
+                tvNo.visibility = View.GONE
+                swipeRefreshLayout.visibility = View.VISIBLE
+                rlSearch.visibility = View.VISIBLE
                 try {
-                    userBookingList = new ArrayList<>();
-                    Type getpetDTO = new TypeToken<List<UserBooking>>() {
-                    }.getType();
-                    userBookingList = (ArrayList<UserBooking>) new Gson().fromJson(response.getJSONArray("data").toString(), getpetDTO);
+                    userBookingList = ArrayList()
+                    val getpetDTO = object : TypeToken<List<UserBooking?>?>() {}.type
+                    userBookingList = Gson().fromJson<Any>(
+                        response.getJSONArray("data").toString(),
+                        getpetDTO
+                    ) as ArrayList<UserBooking>
                     // setSection();
-                    showData();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    showData()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-
-
             } else {
-                tvNo.setVisibility(View.VISIBLE);
-                swipeRefreshLayout.setVisibility(View.GONE);
-                rlSearch.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    public HashMap<String, String> getparm() {
-        HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
-        return parms;
-    }
-
-    public void showData() {
-        adapterCustomerBooking = new AdapterCustomerBooking(MyBooking.this, baseActivity, userBookingList, userDTO, "booking");
-        rvBooking.setAdapter(adapterCustomerBooking);
-    }
-
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        baseActivity = (BaseActivity) activity;
-    }
-
-    @Override
-    public void onRefresh() {
-        getBooking();
-    }
-
-    public void setSection() {
-        HashMap<String, ArrayList<UserBooking>> has = new HashMap<>();
-        userBookingListSection = new ArrayList<>();
-        for (int i = 0; i < userBookingList.size(); i++) {
-
-
-            if (has.containsKey(ProjectUtils.changeDateFormate1(userBookingList.get(i).getBooking_date()))) {
-                userBookingListSection1 = new ArrayList<>();
-                userBookingListSection1 = has.get(ProjectUtils.changeDateFormate1(userBookingList.get(i).getBooking_date()));
-                userBookingListSection1.add(userBookingList.get(i));
-                has.put(ProjectUtils.changeDateFormate1(userBookingList.get(i).getBooking_date()), userBookingListSection1);
-
-
-            } else {
-                userBookingListSection1 = new ArrayList<>();
-                userBookingListSection1.add(userBookingList.get(i));
-                has.put(ProjectUtils.changeDateFormate1(userBookingList.get(i).getBooking_date()), userBookingListSection1);
+                tvNo.visibility = View.VISIBLE
+                swipeRefreshLayout.visibility = View.GONE
+                rlSearch.visibility = View.GONE
             }
         }
-
-        for (String key : has.keySet()) {
-            UserBooking userBooking = new UserBooking();
-            userBooking.setSection(true);
-            userBooking.setSection_name(key);
-            userBookingListSection.add(userBooking);
-            if (key != null)
-                userBookingListSection.addAll(has.get(key));
-        }
-
-        showData();
-
     }
 
+    fun getParam(): HashMap<String, String> {
+        val parms = HashMap<String, String>()
+        parms[Consts.USER_ID] = userDTO.user_id
+        return parms
+    }
+
+    fun showData() {
+        adapterCustomerBooking = AdapterCustomerBooking(
+            this@MyBooking,
+            baseActivity,
+            userBookingList,
+            userDTO,
+            "booking"
+        )
+        rvBooking.adapter = adapterCustomerBooking
+    }
+
+    override fun onAttach(activity: Context) {
+        super.onAttach(activity)
+        baseActivity = activity as BaseActivity
+    }
+
+    override fun onRefresh() = getBooking()
+
+    fun setSection() {
+        val has = HashMap<String, ArrayList<UserBooking>>()
+        userBookingListSection = ArrayList()
+        for (i in userBookingList.indices) {
+            if (has.containsKey(ProjectUtils.changeDateFormate1(userBookingList[i].booking_date))) {
+                userBookingListSection1 = ArrayList()
+                userBookingListSection1 =
+                    has[ProjectUtils.changeDateFormate1(userBookingList[i].booking_date)]
+                userBookingListSection1?.add(userBookingList[i])
+                has[ProjectUtils.changeDateFormate1(userBookingList[i].booking_date)] =
+                    userBookingListSection1!!
+            } else {
+                userBookingListSection1 = ArrayList()
+                userBookingListSection1?.add(userBookingList[i])
+                has[ProjectUtils.changeDateFormate1(userBookingList[i].booking_date)] =
+                    userBookingListSection1!!
+            }
+        }
+        has.keys.forEach { key ->
+            val userBooking = UserBooking()
+            userBooking.isSection = true
+            userBooking.section_name = key
+            userBookingListSection.add(userBooking)
+            has[key]?.let { userBookingListSection.addAll(it) }
+        }
+        showData()
+    }
 }
