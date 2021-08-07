@@ -328,6 +328,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
     public void decline(int pos) {
         paramsDecline = new HashMap<>();
         paramsDecline.put(Consts.USER_ID, userDTO.getUser_id());
+        paramsDecline.put(Consts.JOB_PRICE, objects.get(pos).getPrice());
         paramsDecline.put(Consts.BOOKING_ID, objects.get(pos).getId());
         paramsDecline.put(Consts.DECLINE_BY, "2");
         paramsDecline.put(Consts.DECLINE_REASON, "Busy");
@@ -393,9 +394,8 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
                                 .setPositiveButton(mContext.getResources().getString(R.string.yes), (dialog1, which1) -> {
                                     dialog_book = dialog1;
                                     recordJobCancellation(successful -> {
-                                        if (successful)
-                                            AdapterCustomerBooking.this.decline(pos);
-                                    });
+                                        if (successful) AdapterCustomerBooking.this.decline(pos);
+                                    }, objects.get(pos));
                                 })
                                 .setNegativeButton(mContext.getResources().getString(R.string.no), (dialog1, which1) -> dialog1.dismiss())
                                 .show();
@@ -408,9 +408,10 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    private void recordJobCancellation(NetworkRequestCallback callback) {
+    private void recordJobCancellation(NetworkRequestCallback callback, @NotNull UserBooking booking) {
         paramsDecline = new HashMap<>();
         paramsDecline.put(Consts.USER_ID, userDTO.getUser_id());
+        paramsDecline.put(Consts.JOB_PRICE, booking.getPrice());
 
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
 

@@ -33,12 +33,15 @@ import androidx.core.content.ContextCompat;
 
 import com.wokconns.customer.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -384,14 +387,7 @@ public class ProjectUtils {
      * False if number is not valid.
      */
     public static boolean isPhoneNumberValid(String number) {
-
-
-        if (number.length() < 10 || number.length() > 11) {
-            //	Log.d("tag", "Number is not valid");
-            return false;
-        }
-
-        return true;
+        return number.length() == 11;
     }
 
 
@@ -665,14 +661,24 @@ public class ProjectUtils {
         return Double.valueOf(twoDForm.format(d));
     }*/
 
+    @NotNull
+    public static String convertStringToTimestamp(String timestamp) {
+        Timestamp tStamp = Timestamp.valueOf(timestamp);
+        SimpleDateFormat simpleDateFormat;
+
+        simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        return simpleDateFormat.format(tStamp);
+    }
+
+    @NotNull
     public static String convertTimestampToTime(long timestamp) {
         Timestamp tStamp = new Timestamp(timestamp);
         SimpleDateFormat simpleDateFormat;
         if (DateUtils.isToday(timestamp)) {
-            simpleDateFormat = new SimpleDateFormat("hh:mm a");
+            simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
             return simpleDateFormat.format(tStamp);
         } else {
-            simpleDateFormat = new SimpleDateFormat("hh:mm a");
+            simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
             return simpleDateFormat.format(tStamp);
         }
     }
@@ -680,14 +686,14 @@ public class ProjectUtils {
     public static String convertTimestampDateToTime(long timestamp) {
         Timestamp tStamp = new Timestamp(timestamp);
         SimpleDateFormat simpleDateFormat;
-        simpleDateFormat = new SimpleDateFormat("dd MMM, yyyy hh:mm a");
+        simpleDateFormat = new SimpleDateFormat("dd MMM, yyyy hh:mm a", Locale.getDefault());
         return simpleDateFormat.format(tStamp);
     }
 
     public static String convertTimestampDate(long timestamp) {
         Timestamp tStamp = new Timestamp(timestamp);
         SimpleDateFormat simpleDateFormat;
-        simpleDateFormat = new SimpleDateFormat("MMM dd");
+        simpleDateFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
         return simpleDateFormat.format(tStamp);
     }
 
@@ -704,15 +710,16 @@ public class ProjectUtils {
     public static String getAppointmentDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy hh:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy hh:mm a", Locale.getDefault());
         return sdf.format(cal.getTime());
     }
 
-    public static String changeDateFormate(String time) {//2019-05-15 19:36:22
+    public static String changeDateFormate(String time) {
+        //2019-05-15 19:36:22
         String inputPattern = "yyyy-MM-dd HH:mm:ss";
         String outputPattern = "dd MMM, yyyy";
-        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
 
         Date date = null;
         String str = null;
@@ -729,8 +736,8 @@ public class ProjectUtils {
     public static String changeDateFormate1(String time) {//2019-05-15 19:36:22
         String inputPattern = "yyyy-MM-dd";
         String outputPattern = "dd MMM, yyyy";
-        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
 
         Date date = null;
         String str = null;

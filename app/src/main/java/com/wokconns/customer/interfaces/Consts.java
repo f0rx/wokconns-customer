@@ -79,6 +79,7 @@ public interface Consts {
     String CORAS_LOC = "coras_loc";
     String CALL_PHONE = "call_phone";
     String PAYMENT_URL = "payment_url";
+    String JOB_PRICE = "job_price";
     String SURL = "surl";
     String FURL = "furl";
     String SCREEN_TAG = "screen_tag";

@@ -15,12 +15,11 @@ import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by VARUN on 01/01/19.
- */
 public class AdapterWalletHistory extends RecyclerView.Adapter<AdapterWalletHistory.MyViewHolder> {
 
     private Wallet wallet;
@@ -33,6 +32,7 @@ public class AdapterWalletHistory extends RecyclerView.Adapter<AdapterWalletHist
         this.walletHistoryList = walletHistoryList;
     }
 
+    @NotNull
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -42,25 +42,33 @@ public class AdapterWalletHistory extends RecyclerView.Adapter<AdapterWalletHist
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        if (walletHistoryList.get(position).getStatus().equalsIgnoreCase("0")) {
-            holder.tvAmount.setText("+" + walletHistoryList.get(position).getCurrency_type() + " " + walletHistoryList.get(position).getAmount());
+    public void onBindViewHolder(@NotNull MyViewHolder holder, int position) {
+        if (walletHistoryList.get(position).getStatus().equalsIgnoreCase("1")) {
+            holder.tvAmount.setText(String.format("+%s %s", walletHistoryList.get(position).getCurrency_type(),
+                    walletHistoryList.get(position).getAmount()));
             holder.tvAmount.setTextColor(mContext.getResources().getColor(R.color.green));
             holder.ivImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.credit));
         } else {
-            holder.tvAmount.setText("-" + walletHistoryList.get(position).getCurrency_type() + " " + walletHistoryList.get(position).getAmount());
-            holder.tvAmount.setTextColor(mContext.getResources().getColor(R.color.black));
+            holder.tvAmount.setText(String.format("-%s %s", walletHistoryList.get(position).getCurrency_type(),
+                    walletHistoryList.get(position).getAmount()));
+            holder.tvAmount.setTextColor(mContext.getResources().getColor(R.color.red));
             holder.ivImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.debit));
         }
-        holder.tvDate.setText(ProjectUtils.convertTimestampDateToTime(ProjectUtils.correctTimestamp(Long.parseLong(walletHistoryList.get(position).getCreated_at()))));
+
+        try {
+            holder.tvDate.setText(ProjectUtils.convertTimestampDateToTime(
+                    ProjectUtils.correctTimestamp(
+                            Long.parseLong(walletHistoryList.get(position).getCreated_at()))));
+        } catch (Exception ignored) {
+            holder.tvDate.setText(
+                    ProjectUtils.convertStringToTimestamp(walletHistoryList.get(position).getCreated_at()));
+        }
+
         holder.tvPaidReceive.setText(walletHistoryList.get(position).getDescription());
-
     }
-
 
     @Override
     public int getItemCount() {
-
         return walletHistoryList.size();
     }
 
@@ -80,8 +88,6 @@ public class AdapterWalletHistory extends RecyclerView.Adapter<AdapterWalletHist
             tvPaidReceive = view.findViewById(R.id.tvPaidReceive);
             tvDate = view.findViewById(R.id.tvDate);
             ivImage = view.findViewById(R.id.ivImage);
-
-
         }
     }
 

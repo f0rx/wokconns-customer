@@ -46,7 +46,6 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private ArrayList<UserBooking> userBookingListSection;
     private ArrayList<UserBooking> userBookingListSection1;
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
     private UserDTO userDTO;
     private CustomTextViewBold tvNo;
     private View view;
@@ -72,9 +71,9 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.activity_my_booking, container, false);
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        SharedPrefrence preference = SharedPrefrence.getInstance(getActivity());
         baseActivity.headerNameTV.setText(getResources().getString(R.string.my_bookings));
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = preference.getParentUser(Consts.USER_DTO);
         setUiAction(view);
         return view;
     }
@@ -122,16 +121,16 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
         super.onResume();
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(() -> {
-            Log.e("Runnable", "FIRST");
-            if (NetworkManager.isConnectToInternet(MyBooking.this.getActivity())) {
-                swipeRefreshLayout.setRefreshing(true);
+                    Log.e("Runnable", "FIRST");
+                    if (NetworkManager.isConnectToInternet(MyBooking.this.getActivity())) {
+                        swipeRefreshLayout.setRefreshing(true);
 
-                MyBooking.this.getBooking();
+                        MyBooking.this.getBooking();
 
-            } else {
-                ProjectUtils.showToast(MyBooking.this.getActivity(), MyBooking.this.getResources().getString(R.string.internet_connection));
-            }
-        }
+                    } else {
+                        ProjectUtils.showToast(MyBooking.this.getActivity(), MyBooking.this.getResources().getString(R.string.internet_connection));
+                    }
+                }
         );
     }
 
@@ -185,7 +184,6 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
     @Override
     public void onRefresh() {
-        Log.e("ONREFREST_Firls", "FIRS");
         getBooking();
     }
 
@@ -214,8 +212,8 @@ public class MyBooking extends Fragment implements SwipeRefreshLayout.OnRefreshL
             userBooking.setSection(true);
             userBooking.setSection_name(key);
             userBookingListSection.add(userBooking);
-            userBookingListSection.addAll(has.get(key));
-
+            if (key != null)
+                userBookingListSection.addAll(has.get(key));
         }
 
         showData();
