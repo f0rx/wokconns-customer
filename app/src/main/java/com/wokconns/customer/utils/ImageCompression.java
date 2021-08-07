@@ -180,7 +180,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
 //                + "/Android/data/"
 //                + context.getApplicationContext().getPackageName()
 //                + "/Files/Compressed");
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Const.APP_NAME);
+        File mediaStorageDir = new File(context.getExternalCacheDir().getPath() + File.separator + Const.APP_NAME);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
