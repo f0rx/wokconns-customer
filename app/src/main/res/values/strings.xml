@@ -388,4 +388,6 @@
     <string name="verification_resent">A new OTP code was sent to your mobile number!</string>
     <string name="resend_otp_txt_1">Did not receive an OTP code? &#160;</string>
     <string name="resend_otp_txt_2">Resend it!</string>
+    <string name="forgot_pass_success_msg">A new password has been sent to </string>
+    <string name="welcome_text">Welcome</string>
 </resources>

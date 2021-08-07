@@ -537,8 +537,6 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
                             preference?.setParentUser(userDTO, Const.USER_DTO)
 
                             baseActivity.showImage()
-
-//                            showData()
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }

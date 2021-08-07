@@ -1,76 +1,85 @@
-package com.wokconns.customer.ui.activity;
+package com.wokconns.customer.ui.activity
 
-import android.content.Context;
-import android.os.Bundle;
+import android.content.Context
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.wokconns.customer.R
+import com.wokconns.customer.databinding.ActivityForgotPassBinding
+import com.wokconns.customer.https.HttpsRequest
+import com.wokconns.customer.interfaces.Const
+import com.wokconns.customer.interfaces.Helper
+import com.wokconns.customer.network.NetworkManager
+import com.wokconns.customer.utils.ProjectUtils.getEditTextValue
+import com.wokconns.customer.utils.ProjectUtils.isPhoneNumberValid
+import com.wokconns.customer.utils.ProjectUtils.pauseProgressDialog
+import com.wokconns.customer.utils.ProjectUtils.showProgressDialog
+import com.wokconns.customer.utils.ProjectUtils.showToast
+import org.json.JSONObject
+import java.util.*
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+class ForgotPass : AppCompatActivity() {
+    private lateinit var mContext: Context
+    private val parms = HashMap<String, String>()
+    private val TAG = ForgotPass::class.java.simpleName
+    private lateinit var binding: ActivityForgotPassBinding
 
-import com.wokconns.customer.R;
-import com.wokconns.customer.databinding.ActivityForgotPassBinding;
-import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.utils.ProjectUtils;
-
-import java.util.HashMap;
-
-public class ForgotPass extends AppCompatActivity {
-    private Context mContext;
-    private HashMap<String, String> parms = new HashMap<>();
-    private String TAG = ForgotPass.class.getSimpleName();
-    private ActivityForgotPassBinding binding;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_forgot_pass);
-        mContext = ForgotPass.this;
-        setUiAction();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_forgot_pass)
+        mContext = this@ForgotPass
+        setUiAction()
     }
 
-    public void setUiAction() {
-        binding.btnSubmit.setOnClickListener(v -> ForgotPass.this.submitForm());
-        binding.llBack.setOnClickListener(v -> ForgotPass.this.finish());
+    fun setUiAction() {
+        binding.btnSubmit.setOnClickListener { v: View? -> submitForm() }
+        binding.llBack.setOnClickListener { v: View? -> finish() }
     }
 
-    public void submitForm() {
-        if (!ValidateEmail()) {
-            return;
+    fun submitForm() {
+        if (!isPhoneNumberValid(getEditTextValue(binding.etMobile))) {
+            binding.etMobile.error = resources.getString(R.string.valid_mobile_number)
+            binding.etMobile.requestFocus()
         } else {
             if (NetworkManager.isConnectToInternet(mContext)) {
-                updatepass();
-
+                updatePassword()
             } else {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
+                showToast(mContext, resources.getString(R.string.internet_connection))
             }
         }
     }
 
+    fun updatePassword() {
+        parms[Const.MOBILE] = getEditTextValue(binding.etMobile)
 
-    public boolean ValidateEmail() {
-        if (!ProjectUtils.isEmailValid(binding.etEmail.getText().toString().trim())) {
-            binding.etEmail.setError(getResources().getString(R.string.val_email));
-            binding.etEmail.requestFocus();
-            return false;
-        }
-        return true;
+        showProgressDialog(mContext, false, resources.getString(R.string.please_wait))
+
+        HttpsRequest(Const.FORGET_PASSWORD_API, parms, mContext).stringPost(
+            TAG,
+            object : Helper {
+                override fun backResponse(flag: Boolean, msg: String?, response: JSONObject?) {
+                    pauseProgressDialog()
+                    if (flag) {
+                        showToast(
+                            mContext,
+                            msg?.ifEmpty {
+                                String.format(
+                                    "%s %s",
+                                    resources.getString(R.string.forgot_pass_success_msg),
+                                    getEditTextValue(binding.etMobile)
+                                )
+                            }
+                        )
+                        finish()
+                        overridePendingTransition(
+                            R.anim.anim_slide_in_left,
+                            R.anim.anim_slide_out_left
+                        )
+                    } else {
+                        showToast(mContext, msg)
+                    }
+                }
+            })
     }
-
-    public void updatepass() {
-        parms.put(Const.EMAIL_ID, ProjectUtils.getEditTextValue(binding.etEmail));
-        ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Const.FORGET_PASSWORD_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
-            ProjectUtils.pauseProgressDialog();
-            if (flag) {
-                ProjectUtils.showToast(mContext, msg);
-                ForgotPass.this.finish();
-                ForgotPass.this.overridePendingTransition(R.anim.anim_slide_in_left,
-                        R.anim.anim_slide_out_left);
-            } else {
-                ProjectUtils.showToast(mContext, msg);
-            }
-        });
-    }
-
 }

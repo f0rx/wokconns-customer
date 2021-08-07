@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.SpannableString;
@@ -182,10 +183,16 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         tvEnglish.setOnClickListener(v -> BaseActivity.this.language("en"));
         tvOther.setOnClickListener(v -> BaseActivity.this.language("ar"));
-        Glide.with(mContext).
-                load(userDTO.getImage())
+
+        final Uri uri = Uri.parse(userDTO.getImage().contains(Const.DOMAIN_URL + Const.DOMAIN_URL)
+                ? userDTO.getImage().replace(Const.DOMAIN_URL, "")
+                : !userDTO.getImage().contains(Const.DOMAIN_URL)
+                    ? Const.DOMAIN_URL + userDTO.getImage() : userDTO.getImage());
+
+        Glide.with(mContext)
+                .load(uri)
                 .placeholder(R.drawable.dummyuser_image)
-                .dontAnimate()
+                .useAnimationPool(true)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(img_profile);
         tvEmail.setText(userDTO.getEmail_id());
@@ -331,10 +338,15 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     public void showImage() {
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
-        Glide.with(mContext).
-                load(userDTO.getImage())
+        final Uri uri = Uri.parse(userDTO.getImage().contains(Const.DOMAIN_URL + Const.DOMAIN_URL)
+                ? userDTO.getImage().replace(Const.DOMAIN_URL, "")
+                : !userDTO.getImage().contains(Const.DOMAIN_URL)
+                    ? Const.DOMAIN_URL + userDTO.getImage() : userDTO.getImage());
+
+        Glide.with(mContext)
+                .load(uri)
                 .placeholder(R.drawable.dummyuser_image)
-                .dontAnimate()
+                .useAnimationPool(true)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(img_profile);
 

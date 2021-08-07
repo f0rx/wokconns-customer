@@ -366,4 +366,6 @@
     <string name="verification_resent">تم إعادة إرسال رمز OTP إلى رقم هاتفك!</string>
     <string name="resend_otp_txt_2">اعد ارسالها!</string>
     <string name="resend_otp_txt_1">لم تستلم رمز OTP؟</string>
+    <string name="forgot_pass_success_msg">تم إرسال كلمة مرور جديدة إلى</string>
+    <string name="welcome_text">أهلا بك</string>
 </resources>

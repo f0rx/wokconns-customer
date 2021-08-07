@@ -9,9 +9,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ViewpagerHomeBannerBinding;
 import com.wokconns.customer.dto.HomeBannerDTO;
+import com.wokconns.customer.dto.UserDTO;
+import com.wokconns.customer.interfaces.Const;
+import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.Home;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,12 +28,16 @@ public class HomeBannerPagerAdapter extends PagerAdapter {
     private final Context mContext;
     LayoutInflater mLayoutInflater;
     ArrayList<HomeBannerDTO> bannerDTOArrayList;
+    private SharedPrefrence preference;
+    private UserDTO userDTO;
     Home homeFragment;
     ViewpagerHomeBannerBinding binding;
 
     public HomeBannerPagerAdapter(Home homeFragment, Context mContext, ArrayList<HomeBannerDTO> bannerDTOArrayList) {
         this.mContext = mContext;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        preference = SharedPrefrence.getInstance(mContext);
+        this.userDTO = preference.getParentUser(Const.USER_DTO);
         this.bannerDTOArrayList = bannerDTOArrayList;
         this.homeFragment = homeFragment;
     }
@@ -41,18 +49,15 @@ public class HomeBannerPagerAdapter extends PagerAdapter {
         binding = DataBindingUtil.inflate(mLayoutInflater, R.layout.viewpager_home_banner, container, false);
         View itemView = binding.getRoot();
 
-        binding.tvTitle.setText(bannerDTOArrayList.get(position).getTitle());
+        binding.tvTitle.setText(String.format("%s %s!",
+                mContext.getResources().getString(R.string.welcome_text), userDTO.getName()));
         binding.tvDescription.setText(bannerDTOArrayList.get(position).getDescription());
-
-//        Glide.with(mContext)
-//                .load(bannerDTOArrayList.get(position).getImage())
-//                .apply(new RequestOptions())
-//                .placeholder(R.drawable.dummyuser_image)
-//                .into(binding.ivImage);
 
         Glide.with(mContext)
                 .load(R.drawable.home_banner)
-                .centerCrop()
+//                .load(bannerDTOArrayList.get(position).getImage())
+                .apply(new RequestOptions())
+                .placeholder(R.drawable.dummyuser_image)
                 .into(binding.ivImage);
 
         container.addView(itemView);
