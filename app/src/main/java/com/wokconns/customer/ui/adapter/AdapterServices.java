@@ -24,7 +24,7 @@ import com.wokconns.customer.databinding.ActivityViewServicesBinding;
 import com.wokconns.customer.databinding.AdapterServicesBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.activity.ServiceSlider;
 import com.wokconns.customer.ui.activity.ViewServices;
 
@@ -69,10 +69,10 @@ public class AdapterServices extends RecyclerView.Adapter<AdapterServices.MyView
 
         holder.servicesBinding.ivBottomFoster.setOnClickListener(v -> {
             Intent in = new Intent(context, ServiceSlider.class);
-            in.putExtra(Consts.DTO, productDTOList);
-            in.putExtra(Consts.POSTION, position);
-            in.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
-            in.putExtra(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
+            in.putExtra(Const.DTO, productDTOList);
+            in.putExtra(Const.POSTION, position);
+            in.putExtra(Const.ARTIST_DTO, artistDetailsDTO);
+            in.putExtra(Const.ARTIST_ID, artistDetailsDTO.getUser_id());
             context.startActivity(in);
         });
 

@@ -21,7 +21,7 @@ import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -62,25 +62,25 @@ public class Booking extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_booking);
         mContext = Booking.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        sdf1 = new SimpleDateFormat(Consts.DATE_FORMATE_SERVER, Locale.ENGLISH);
-        timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        sdf1 = new SimpleDateFormat(Const.DATE_FORMATE_SERVER, Locale.ENGLISH);
+        timeZone = new SimpleDateFormat(Const.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
         date = new Date();
 
-        paramsBookingOp.put(Consts.DATE_STRING, sdf1.format(date).toString().toUpperCase());
-        paramsBookingOp.put(Consts.TIMEZONE, timeZone.format(date));
+        paramsBookingOp.put(Const.DATE_STRING, sdf1.format(date).toString().toUpperCase());
+        paramsBookingOp.put(Const.TIMEZONE, timeZone.format(date));
 
 
-        if (getIntent().hasExtra(Consts.ARTIST_DTO)) {
-            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Consts.ARTIST_DTO);
-            artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
-            screen_tag = getIntent().getIntExtra(Consts.SCREEN_TAG, 0);
+        if (getIntent().hasExtra(Const.ARTIST_DTO)) {
+            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Const.ARTIST_DTO);
+            artist_id = getIntent().getStringExtra(Const.ARTIST_ID);
+            screen_tag = getIntent().getIntExtra(Const.SCREEN_TAG, 0);
 
 
             if (screen_tag == 2) {
-                servicesId = getIntent().getStringExtra(Consts.SERVICE_ARRAY);
-                serviceList = (ArrayList<ProductDTO>) getIntent().getSerializableExtra(Consts.SERVICE_NAME_ARRAY);
-                price = getIntent().getStringExtra(Consts.PRICE);
+                servicesId = getIntent().getStringExtra(Const.SERVICE_ARRAY);
+                serviceList = (ArrayList<ProductDTO>) getIntent().getSerializableExtra(Const.SERVICE_NAME_ARRAY);
+                price = getIntent().getStringExtra(Const.PRICE);
 
 
                 Log.e(TAG, "onCreate:servicesId " + servicesId);
@@ -126,9 +126,9 @@ public class Booking extends AppCompatActivity {
         }
 
         if (!userDTO.getOffice_address().equalsIgnoreCase("")) {
-            paramsBookingOp.put(Consts.ADDRESS, userDTO.getOffice_address());
-            paramsBookingOp.put(Consts.LATITUDE, userDTO.getLive_lat());
-            paramsBookingOp.put(Consts.LONGITUDE, userDTO.getLive_long());
+            paramsBookingOp.put(Const.ADDRESS, userDTO.getOffice_address());
+            paramsBookingOp.put(Const.LATITUDE, userDTO.getLive_lat());
+            paramsBookingOp.put(Const.LONGITUDE, userDTO.getLive_long());
         }
         binding.tvAddress.setOnClickListener(v -> {
             if (NetworkManager.isConnectToInternet(mContext)) {
@@ -141,8 +141,8 @@ public class Booking extends AppCompatActivity {
         binding.btnConfirm.setOnClickListener(v -> {
             if (binding.tvAddress.getText().toString().trim().length() > 0) {
                 if (screen_tag == 1) {
-                    paramsBookingOp.put(Consts.PRICE, artistDetailsDTO.getPrice());
-                    paramsBookingOp.put(Consts.TITLE, "Direct Booking");
+                    paramsBookingOp.put(Const.PRICE, artistDetailsDTO.getPrice());
+                    paramsBookingOp.put(Const.TITLE, "Direct Booking");
                     submit();
                 } else if ((screen_tag == 2)) {
                     bookForService();
@@ -158,8 +158,8 @@ public class Booking extends AppCompatActivity {
             String strTitle = serviceList.toString().replace("[", "")
                     .replace("]", "").replace(", ", ",");
             ;
-            paramsBookingOp.put(Consts.SERVICE_ID, array.toString());
-            paramsBookingOp.put(Consts.TITLE, strTitle);
+            paramsBookingOp.put(Const.SERVICE_ID, array.toString());
+            paramsBookingOp.put(Const.TITLE, strTitle);
             submit();
         } else {
             ProjectUtils.showLong(mContext, mContext.getResources().getString(R.string.select_any_service));
@@ -168,13 +168,13 @@ public class Booking extends AppCompatActivity {
 
 
     public void bookArtist() {
-        paramsBookingOp.put(Consts.USER_ID, userDTO.getUser_id());
-        paramsBookingOp.put(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
+        paramsBookingOp.put(Const.USER_ID, userDTO.getUser_id());
+        paramsBookingOp.put(Const.ARTIST_ID, artistDetailsDTO.getUser_id());
 
         Log.e(TAG, "bookArtist: " + paramsBookingOp.toString());
 
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.BOOK_ARTIST_API, paramsBookingOp, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.BOOK_ARTIST_API, paramsBookingOp, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
@@ -218,9 +218,9 @@ public class Booking extends AppCompatActivity {
 
             binding.tvAddress.setText(obj.getAddressLine(0));
 
-            paramsBookingOp.put(Consts.ADDRESS, obj.getAddressLine(0));
-            paramsBookingOp.put(Consts.LATITUDE, String.valueOf(lat));
-            paramsBookingOp.put(Consts.LONGITUDE, String.valueOf(lng));
+            paramsBookingOp.put(Const.ADDRESS, obj.getAddressLine(0));
+            paramsBookingOp.put(Const.LATITUDE, String.valueOf(lat));
+            paramsBookingOp.put(Const.LONGITUDE, String.valueOf(lng));
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -259,8 +259,8 @@ public class Booking extends AppCompatActivity {
                 .mustBeOnFuture()
                 .defaultDate(new Date())
                 .listener(date -> {
-                    paramsBookingOp.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                    paramsBookingOp.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    paramsBookingOp.put(Const.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    paramsBookingOp.put(Const.TIMEZONE, String.valueOf(timeZone.format(date)));
                     binding.tvBookingDate.setText(sdf1.format(date).toString().toUpperCase());
                 })
                 .display();

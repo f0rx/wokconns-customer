@@ -39,7 +39,7 @@ import com.wokconns.customer.dto.AllAtristListDTO;
 import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.ArtistProfileNew;
@@ -80,9 +80,9 @@ public class NearByFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_near_by, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
-        parmsCategory.put(Consts.USER_ID, userDTO.getUser_id());
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        parms.put(Const.USER_ID, userDTO.getUser_id());
+        parmsCategory.put(Const.USER_ID, userDTO.getUser_id());
 
         mMapView = (MapView) view.findViewById(R.id.mapView);
 
@@ -95,7 +95,7 @@ public class NearByFragment extends Fragment {
             googleMap.setMyLocationEnabled(false);
 
             // For dropping a marker at a point on the Map
-            LatLng sydney = new LatLng(Double.parseDouble(prefrence.getValue(Consts.LATITUDE)), Double.parseDouble(prefrence.getValue(Consts.LONGITUDE)));
+            LatLng sydney = new LatLng(Double.parseDouble(prefrence.getValue(Const.LATITUDE)), Double.parseDouble(prefrence.getValue(Const.LONGITUDE)));
             googleMap.addMarker(new MarkerOptions().position(sydney).title(userDTO.getName()).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_current_pin)).snippet("Your Location"));
 
             // For zooming automatically to the location of the marker
@@ -129,10 +129,10 @@ public class NearByFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        categoryValue = baseActivity.prefrence.getValue(Consts.VALUE);
+        categoryValue = baseActivity.prefrence.getValue(Const.VALUE);
         getCategory();
         if (NetworkManager.isConnectToInternet(getActivity())) {
-            parms.put(Consts.CATEGORY_ID, "" + categoryValue);
+            parms.put(Const.CATEGORY_ID, "" + categoryValue);
             getArtist();
         } else {
             ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
@@ -158,10 +158,10 @@ public class NearByFragment extends Fragment {
     }
 
     public void getArtist() {
-        parms.put(Consts.LATITUDE, prefrence.getValue(Consts.LATITUDE));
-        parms.put(Consts.LONGITUDE, prefrence.getValue(Consts.LONGITUDE));
+        parms.put(Const.LATITUDE, prefrence.getValue(Const.LATITUDE));
+        parms.put(Const.LONGITUDE, prefrence.getValue(Const.LONGITUDE));
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_ALL_ARTISTS_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_ARTISTS_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
@@ -225,7 +225,7 @@ public class NearByFragment extends Fragment {
 
                         googleMap.setOnInfoWindowClickListener(arg0 -> {
                             Intent intent = new Intent(getActivity().getBaseContext(), ArtistProfileNew.class);
-                            intent.putExtra(Consts.ARTIST_ID, arg0.getSnippet());
+                            intent.putExtra(Const.ARTIST_ID, arg0.getSnippet());
                             // Starting the Place Details Activity
                             startActivity(intent);
                         });
@@ -240,7 +240,7 @@ public class NearByFragment extends Fragment {
                 googleMap.clear();
             }
 
-            prefrence.setValue(Consts.VALUE, "");
+            prefrence.setValue(Const.VALUE, "");
         });
     }
 
@@ -251,7 +251,7 @@ public class NearByFragment extends Fragment {
     }
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_CATEGORY_API, parmsCategory, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     categoryDTOS = new ArrayList<>();
@@ -261,7 +261,7 @@ public class NearByFragment extends Fragment {
 
                     spinnerDialogCate = new SpinnerDialog((Activity) getActivity(), categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
                     spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
-                        parms.put(Consts.CATEGORY_ID, id);
+                        parms.put(Const.CATEGORY_ID, id);
                         getArtist();
 
                     });

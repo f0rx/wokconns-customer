@@ -33,7 +33,7 @@ import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ImageCompression;
@@ -83,13 +83,13 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_job);
         mContext = EditJob.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        parmsadd.put(Consts.USER_ID, userDTO.getUser_id());
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        parmsadd.put(Const.USER_ID, userDTO.getUser_id());
 
-        parmsCategory.put(Consts.USER_ID, userDTO.getUser_id());
+        parmsCategory.put(Const.USER_ID, userDTO.getUser_id());
 
-        if (getIntent().hasExtra(Consts.POST_JOB_DTO)) {
-            postedJobDTO = (PostedJobDTO) getIntent().getSerializableExtra(Consts.POST_JOB_DTO);
+        if (getIntent().hasExtra(Const.POST_JOB_DTO)) {
+            postedJobDTO = (PostedJobDTO) getIntent().getSerializableExtra(Const.POST_JOB_DTO);
         }
         setUiAction();
     }
@@ -130,7 +130,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                                 }
 
 
-                                prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
+                                prefrence.setValue(Const.IMAGE_URI_CAMERA, picUri.toString());
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
                                 EditJob.this.startActivityForResult(intent, PICK_FROM_CAMERA);
                             } catch (Exception e) {
@@ -175,7 +175,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
             ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
         }
 
-        parmsadd.put(Consts.CURRENCY_ID, postedJobDTO.getCurrency_id());
+        parmsadd.put(Const.CURRENCY_ID, postedJobDTO.getCurrency_id());
     }
 
     @Override
@@ -224,7 +224,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
     private File getOutputMediaFile(int type) {
         String root = Environment.getExternalStorageDirectory().toString();
 
-        File mediaStorageDir = new File(root, Consts.APP_NAME);
+        File mediaStorageDir = new File(root, Const.APP_NAME);
 
         /**Create the storage directory if it does not exist*/
         if (!mediaStorageDir.exists()) {
@@ -236,7 +236,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         File mediaFile;
         if (type == 1) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    Consts.APP_NAME + timeStamp + ".png");
+                    Const.APP_NAME + timeStamp + ".png");
 
         } else {
             return null;
@@ -268,7 +268,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
 
                         pathOfImage = imagePath;
                         image = new File(imagePath);
-                        parmsFile.put(Consts.AVTAR, image);
+                        parmsFile.put(Const.AVTAR, image);
                     });
 
 
@@ -298,7 +298,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                         image = new File(imagePath);
 
                         pathOfImage = imagePath;
-                        parmsFile.put(Consts.AVTAR, image);
+                        parmsFile.put(Const.AVTAR, image);
 
                     });
                 } catch (Exception e) {
@@ -311,11 +311,11 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         if (requestCode == PICK_FROM_CAMERA && resultCode == RESULT_OK) {
             if (picUri != null) {
 
-                picUri = Uri.parse(prefrence.getValue(Consts.IMAGE_URI_CAMERA));
+                picUri = Uri.parse(prefrence.getValue(Const.IMAGE_URI_CAMERA));
                 // image = new File(ConvertUriToFilePath.getPathFromURI(PostJob.this, picUri));
                 startCropping(picUri, CROP_CAMERA_IMAGE);
             } else {
-                picUri = Uri.parse(prefrence.getValue(Consts.IMAGE_URI_CAMERA));
+                picUri = Uri.parse(prefrence.getValue(Const.IMAGE_URI_CAMERA));
                 // image = new File(ConvertUriToFilePath.getPathFromURI(PostJob.this, picUri));
 
                 startCropping(picUri, CROP_CAMERA_IMAGE);
@@ -396,13 +396,13 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
 
 
     public void addPost() {
-        parmsadd.put(Consts.JOB_ID, postedJobDTO.getJob_id());
-        parmsadd.put(Consts.TITLE, ProjectUtils.getEditTextValue(binding.etTitle));
-        parmsadd.put(Consts.DESCRIPTION, ProjectUtils.getEditTextValue(binding.etCommet));
-        parmsadd.put(Consts.ADDRESS, ProjectUtils.getEditTextValue(binding.etAddress));
+        parmsadd.put(Const.JOB_ID, postedJobDTO.getJob_id());
+        parmsadd.put(Const.TITLE, ProjectUtils.getEditTextValue(binding.etTitle));
+        parmsadd.put(Const.DESCRIPTION, ProjectUtils.getEditTextValue(binding.etCommet));
+        parmsadd.put(Const.ADDRESS, ProjectUtils.getEditTextValue(binding.etAddress));
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.EDIT_POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.EDIT_POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showLong(mContext, msg);
@@ -450,8 +450,8 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
 
             binding.etAddress.setText(obj.getAddressLine(0));
 
-            parmsadd.put(Consts.LATI, String.valueOf(lat));
-            parmsadd.put(Consts.LONGI, String.valueOf(lng));
+            parmsadd.put(Const.LATI, String.valueOf(lat));
+            parmsadd.put(Const.LONGI, String.valueOf(lng));
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -461,7 +461,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
 
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     categoryDTOS = new ArrayList<>();
@@ -497,7 +497,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         spinnerDialogCate = new SpinnerDialog((Activity) mContext, categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
         spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
             binding.tvCategory.setText(item);
-            parmsadd.put(Consts.CATEGORY_ID, id);
+            parmsadd.put(Const.CATEGORY_ID, id);
         });
 
         Glide.with(mContext).load(postedJobDTO.getAvtar())

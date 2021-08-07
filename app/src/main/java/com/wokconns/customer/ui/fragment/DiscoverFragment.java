@@ -1,6 +1,5 @@
 package com.wokconns.customer.ui.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -30,7 +29,7 @@ import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -79,9 +78,9 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_discover, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
-        parmsCategory.put(Consts.USER_ID, userDTO.getUser_id());
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        parms.put(Const.USER_ID, userDTO.getUser_id());
+        parmsCategory.put(Const.USER_ID, userDTO.getUser_id());
         myInflater = LayoutInflater.from(getActivity());
         getCategory();
         setUiAction();
@@ -116,14 +115,14 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        categoryValue = baseActivity.prefrence.getValue(Consts.VALUE);
+        categoryValue = baseActivity.prefrence.getValue(Const.VALUE);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(() -> {
 
             Log.e("Runnable", "FIRST");
             if (NetworkManager.isConnectToInternet(getActivity())) {
                 swipeRefreshLayout.setRefreshing(true);
-                parms.put(Consts.CATEGORY_ID, "" + categoryValue);
+                parms.put(Const.CATEGORY_ID, "" + categoryValue);
                 getArtist();
 
             } else {
@@ -154,9 +153,9 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
 
 
     public void getArtist() {
-        parms.put(Consts.LATITUDE, prefrence.getValue(Consts.LATITUDE));
-        parms.put(Consts.LONGITUDE, prefrence.getValue(Consts.LONGITUDE));
-        new HttpsRequest(Consts.GET_ALL_ARTISTS_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        parms.put(Const.LATITUDE, prefrence.getValue(Const.LATITUDE));
+        parms.put(Const.LONGITUDE, prefrence.getValue(Const.LONGITUDE));
+        new HttpsRequest(Const.GET_ALL_ARTISTS_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             swipeRefreshLayout.setRefreshing(false);
             if (flag) {
                 try {
@@ -178,7 +177,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                 baseActivity.ivFilter.setVisibility(View.GONE);
             }
 
-            prefrence.setValue(Consts.VALUE, "");
+            prefrence.setValue(Const.VALUE, "");
         });
     }
 
@@ -194,13 +193,13 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onRefresh() {
         Log.e("ONREFREST_Firls", "FIRS");
-        parms.put(Consts.CATEGORY_ID, "" + categoryValue);
+        parms.put(Const.CATEGORY_ID, "" + categoryValue);
         tvFilter.setText(getResources().getString(R.string.all_category));
         getArtist();
     }
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_CATEGORY_API, parmsCategory, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     categoryDTOS = new ArrayList<>();
@@ -212,7 +211,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                     spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
                         try {
                             tvFilter.setText(item);
-                            parms.put(Consts.CATEGORY_ID, id);
+                            parms.put(Const.CATEGORY_ID, id);
 //                                    getArtist();
 
                         } catch (Exception e) {
@@ -220,7 +219,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
                         }
 
                         dailogFilterJobBinding.etCategoryD.setText(item);
-                        params.put(Consts.CATEGORY_ID, id);
+                        params.put(Const.CATEGORY_ID, id);
                     });
 
                 } catch (Exception e) {
@@ -365,7 +364,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
             dailogFilterJobBinding.etCurrencyD.showDropDown();
             CurrencyDTO currencyDTO = (CurrencyDTO) parent.getItemAtPosition(position);
             Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
-            params.put(Consts.CURRENCY, currencyDTO.getCurrency_symbol());
+            params.put(Const.CURRENCY, currencyDTO.getCurrency_symbol());
         });
 
         dialogFilterJob.show();
@@ -381,13 +380,13 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
 
 
     public void filteredList() {
-        params.put(Consts.USER_ID, userDTO.getUser_id());
-        params.put(Consts.PRICE, "" + dailogFilterJobBinding.seekBar.getProgress());
-        params.put(Consts.DISTANCE, "50");
-        params.put(Consts.LATITUDE, prefrence.getValue(Consts.LATITUDE));
-        params.put(Consts.LONGITUDE, prefrence.getValue(Consts.LONGITUDE));
+        params.put(Const.USER_ID, userDTO.getUser_id());
+        params.put(Const.PRICE, "" + dailogFilterJobBinding.seekBar.getProgress());
+        params.put(Const.DISTANCE, "50");
+        params.put(Const.LATITUDE, prefrence.getValue(Const.LATITUDE));
+        params.put(Const.LONGITUDE, prefrence.getValue(Const.LONGITUDE));
 
-        new HttpsRequest(Consts.GET_ALL_ARTIST_FILTER, params, baseActivity).imagePost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_ARTIST_FILTER, params, baseActivity).imagePost(TAG, (flag, msg, response) -> {
             dialogFilterJob.dismiss();
             if (flag) {
 
@@ -408,7 +407,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
 
     public void getCurrencyValue() {
 
-        new HttpsRequest(Consts.GET_CURRENCY_API, baseActivity).stringGet(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_CURRENCY_API, baseActivity).stringGet(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     currencyDTOArrayList = new ArrayList<>();

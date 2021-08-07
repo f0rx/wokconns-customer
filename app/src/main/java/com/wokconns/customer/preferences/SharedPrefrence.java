@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 
 import java.lang.reflect.Type;
 
@@ -71,9 +71,9 @@ public class SharedPrefrence {
 
 
     public String getValue(String Tag) {
-        if (Tag.equalsIgnoreCase(Consts.LATITUDE))
+        if (Tag.equalsIgnoreCase(Const.LATITUDE))
             return myPrefs.getString(Tag, "22.7497853");
-        else if (Tag.equalsIgnoreCase(Consts.LONGITUDE))
+        else if (Tag.equalsIgnoreCase(Const.LONGITUDE))
             return myPrefs.getString(Tag, "75.8989044");
         return myPrefs.getString(Tag, "");
     }

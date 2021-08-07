@@ -17,7 +17,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.DiscountDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -51,9 +51,9 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
 
         prefrence = SharedPrefrence.getInstance(getActivity());
 
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
         myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
+        parms.put(Const.USER_ID, userDTO.getUser_id());
         baseActivity.headerNameTV.setText(getResources().getString(R.string.get_discount));
 
         setUiAction(view);
@@ -103,7 +103,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
 
     public void getCode() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_REFERRAL_CODE_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_REFERRAL_CODE_API, parms, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {

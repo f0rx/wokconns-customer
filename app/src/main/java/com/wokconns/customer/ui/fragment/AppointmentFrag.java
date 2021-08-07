@@ -18,7 +18,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppointmentDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -52,7 +52,7 @@ public class AppointmentFrag extends Fragment implements SwipeRefreshLayout.OnRe
         view = inflater.inflate(R.layout.fragment_appointment, container, false);
         baseActivity.headerNameTV.setText(R.string.future_bookings);
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         setUiAction(view);
         return view;
@@ -87,7 +87,7 @@ public class AppointmentFrag extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void getHistroy() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_APPOINTMENT_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_APPOINTMENT_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             swipeRefreshLayout.setRefreshing(false);
             if (flag) {
@@ -114,8 +114,8 @@ public class AppointmentFrag extends Fragment implements SwipeRefreshLayout.OnRe
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
-        parms.put(Consts.ROLE, "2");
+        parms.put(Const.USER_ID, userDTO.getUser_id());
+        parms.put(Const.ROLE, "2");
         return parms;
     }
 

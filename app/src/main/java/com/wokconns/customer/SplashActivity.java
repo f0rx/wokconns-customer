@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppIntro;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
     Runnable mTask = new Runnable() {
         @Override
         public void run() {
-            if (prefference.getBooleanValue(Consts.IS_REGISTERED)) {
+            if (prefference.getBooleanValue(Const.IS_REGISTERED)) {
                 Intent in = new Intent(mContext, BaseActivity.class);
                 startActivity(in);
                 finish();
@@ -73,7 +73,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mContext = SplashActivity.this;
         prefference = SharedPrefrence.getInstance(SplashActivity.this);
-        FirebaseMessaging.getInstance().subscribeToTopic(Consts.TOPIC_CUSTOMER)
+        FirebaseMessaging.getInstance().subscribeToTopic(Const.TOPIC_CUSTOMER)
                 .addOnCompleteListener(task -> {
 
                 });
@@ -100,19 +100,19 @@ public class SplashActivity extends AppCompatActivity {
                 try {
 
                     cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    prefference.setBooleanValue(Consts.CAMERA_ACCEPTED, cameraAccepted);
+                    prefference.setBooleanValue(Const.CAMERA_ACCEPTED, cameraAccepted);
 
                     storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    prefference.setBooleanValue(Consts.STORAGE_ACCEPTED, storageAccepted);
+                    prefference.setBooleanValue(Const.STORAGE_ACCEPTED, storageAccepted);
 
                     accessNetState = grantResults[2] == PackageManager.PERMISSION_GRANTED;
-                    prefference.setBooleanValue(Consts.MODIFY_AUDIO_ACCEPTED, accessNetState);
+                    prefference.setBooleanValue(Const.MODIFY_AUDIO_ACCEPTED, accessNetState);
 
                     fineLoc = grantResults[3] == PackageManager.PERMISSION_GRANTED;
-                    prefference.setBooleanValue(Consts.FINE_LOC, fineLoc);
+                    prefference.setBooleanValue(Const.FINE_LOC, fineLoc);
 
                     corasLoc = grantResults[4] == PackageManager.PERMISSION_GRANTED;
-                    prefference.setBooleanValue(Consts.CORAS_LOC, corasLoc);
+                    prefference.setBooleanValue(Const.CORAS_LOC, corasLoc);
                     handler.postDelayed(mTask, 3000);
 
                 } catch (Exception e) {

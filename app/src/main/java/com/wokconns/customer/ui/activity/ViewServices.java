@@ -16,7 +16,7 @@ import com.wokconns.customer.databinding.ActivityViewServicesBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AdapterServices;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -44,10 +44,10 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
         mContext = ViewServices.this;
         prefrence = SharedPrefrence.getInstance(mContext);
 
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        if (getIntent().hasExtra(Consts.ARTIST_DTO)) {
-            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Consts.ARTIST_DTO);
-            artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        if (getIntent().hasExtra(Const.ARTIST_DTO)) {
+            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Const.ARTIST_DTO);
+            artist_id = getIntent().getStringExtra(Const.ARTIST_ID);
         }
         showUiAction();
     }
@@ -89,12 +89,12 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
                 updateList();
                 if ((array.size() > 0)) {
                     Intent in = new Intent(mContext, Booking.class);
-                    in.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
-                    in.putExtra(Consts.ARTIST_ID, artist_id);
-                    in.putExtra(Consts.SERVICE_ARRAY, array.toString());
-                    in.putExtra(Consts.SERVICE_NAME_ARRAY, serviceList);
-                    in.putExtra(Consts.SCREEN_TAG, 2);
-                    in.putExtra(Consts.PRICE, binding.tvPrice.getText().toString().trim());
+                    in.putExtra(Const.ARTIST_DTO, artistDetailsDTO);
+                    in.putExtra(Const.ARTIST_ID, artist_id);
+                    in.putExtra(Const.SERVICE_ARRAY, array.toString());
+                    in.putExtra(Const.SERVICE_NAME_ARRAY, serviceList);
+                    in.putExtra(Const.SCREEN_TAG, 2);
+                    in.putExtra(Const.PRICE, binding.tvPrice.getText().toString().trim());
                     startActivity(in);
                     //finish();
                 } else {

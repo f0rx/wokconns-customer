@@ -23,7 +23,7 @@ import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.CardValidatorInterface;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.NumberMaskInputFormatter;
@@ -44,8 +44,8 @@ import co.paystack.android.model.Card;
 import co.paystack.android.model.Charge;
 
 public class PaymentWeb extends AppCompatActivity implements CardValidatorInterface {
-    private static final String successKey = Consts.PAYMENT_SUCCESS;
-    private static final String failureKey = Consts.PAYMENT_FAIL;
+    private static final String successKey = Const.PAYMENT_SUCCESS;
+    private static final String failureKey = Const.PAYMENT_FAIL;
     private static final String kTAG = PaymentWeb.class.getName();
     private final Context mContext = PaymentWeb.this;
     private static String coupon;
@@ -62,30 +62,30 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_paymet_web);
         preference = SharedPrefrence.getInstance(this);
-        userDTO = preference.getParentUser(Consts.USER_DTO);
+        userDTO = preference.getParentUser(Const.USER_DTO);
         if (getIntent().getExtras() != null) {
-            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Consts.HISTORY_DTO);
+            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Const.HISTORY_DTO);
 
             try {
-                amount = getIntent().getIntExtra(Consts.AMOUNT, 0);
+                amount = getIntent().getIntExtra(Const.AMOUNT, 0);
             } catch (Exception ignored) {
             }
 
             try {
                 if (amount == 0)
-                    amount = Float.parseFloat(getIntent().getExtras().getString(Consts.AMOUNT));
+                    amount = Float.parseFloat(getIntent().getExtras().getString(Const.AMOUNT));
             } catch (Exception ignored) {
             }
 
             if (historyDTO != null)
                 amount = Integer.parseInt(historyDTO.getFinal_amount());
 
-            final UserDTO user = (UserDTO) getIntent().getSerializableExtra(Consts.USER_DTO);
+            final UserDTO user = (UserDTO) getIntent().getSerializableExtra(Const.USER_DTO);
             if (user != null) userDTO = user;
 
-            coupon = getIntent().getStringExtra(Consts.COUPON_CODE);
+            coupon = getIntent().getStringExtra(Const.COUPON_CODE);
 
-            currencyCode = getIntent().getStringExtra(Consts.CURRENCY);
+            currencyCode = getIntent().getStringExtra(Const.CURRENCY);
         }
 
         initializePaystack();
@@ -219,7 +219,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
             @Override
             public void onSuccess(Transaction transaction) {
                 toggleLoading(false);
-                preference.setValue(Consts.SURL, successKey);
+                preference.setValue(Const.SURL, successKey);
                 parseResponse(transaction.getReference());
             }
 
@@ -232,7 +232,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
             public void onError(Throwable error, Transaction transaction) {
                 toggleLoading(false);
 
-                preference.setValue(Consts.FURL, failureKey);
+                preference.setValue(Const.FURL, failureKey);
 
                 // If an access code has expired, simply ask your server for a new one
                 // and restart the charge instead of displaying error
@@ -308,11 +308,11 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
 
     private void getArtist() {
         HashMap<String, String> params = new HashMap<>();
-        params.put(Consts.ARTIST_ID, historyDTO.getArtist_id());
-        params.put(Consts.USER_ID, userDTO.getUser_id());
+        params.put(Const.ARTIST_ID, historyDTO.getArtist_id());
+        params.put(Const.USER_ID, userDTO.getUser_id());
 
         ProjectUtils.showProgressDialog(this, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_ARTIST_BY_ID_API, params, this).stringPost(kTAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ARTIST_BY_ID_API, params, this).stringPost(kTAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {

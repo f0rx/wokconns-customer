@@ -27,7 +27,7 @@ import com.wokconns.customer.dto.HomeRecomendedDTO;
 import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -78,7 +78,7 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
         view = binding.getRoot();
         baseActivity.headerNameTV.setText(getResources().getString(R.string.app_name));
         preference = SharedPrefrence.getInstance(getActivity());
-        userDTO = preference.getParentUser(Consts.USER_DTO);
+        userDTO = preference.getParentUser(Const.USER_DTO);
 
         setUiAction();
         return view;
@@ -110,10 +110,10 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
         binding.tvSeeAll3.setOnClickListener(this);
         binding.tvSeeAll6.setOnClickListener(this);
 
-        params.put(Consts.USER_ID, userDTO.getUser_id());
-        params.put(Consts.LATITUDE, "" + preference.getValue(Consts.LATITUDE));
-        params.put(Consts.LONGITUDE, "" + preference.getValue(Consts.LONGITUDE));
-        params.put(Consts.DISTANCE, "50");
+        params.put(Const.USER_ID, userDTO.getUser_id());
+        params.put(Const.LATITUDE, "" + preference.getValue(Const.LATITUDE));
+        params.put(Const.LONGITUDE, "" + preference.getValue(Const.LONGITUDE));
+        params.put(Const.DISTANCE, "50");
     }
 
     @Override
@@ -179,7 +179,7 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
 
     public void getHomeData() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.CUSTOMER_HOME_DATA, params, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.CUSTOMER_HOME_DATA, params, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             binding.swipeRefreshLayout.setRefreshing(false);
             if (flag) {

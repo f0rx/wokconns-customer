@@ -14,7 +14,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CustomButton;
@@ -45,13 +45,13 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_write_review);
         mContext = WriteReview.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        if (getIntent().hasExtra(Consts.HISTORY_DTO)) {
-            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Consts.HISTORY_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        if (getIntent().hasExtra(Const.HISTORY_DTO)) {
+            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Const.HISTORY_DTO);
         }
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
-        parms.put(Consts.ARTIST_ID, historyDTO.getArtist_id());
-        parms.put(Consts.BOOKING_ID, historyDTO.getBooking_id());
+        parms.put(Const.USER_ID, userDTO.getUser_id());
+        parms.put(Const.ARTIST_ID, historyDTO.getArtist_id());
+        parms.put(Const.BOOKING_ID, historyDTO.getBooking_id());
         init();
     }
 
@@ -143,9 +143,9 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
      */
 
     public void sendReview() {
-        parms.put(Consts.RATING, String.valueOf(myrating));
-        parms.put(Consts.COMMENT, ProjectUtils.getEditTextValue(yourReviewET));
-        new HttpsRequest(Consts.ADD_RATING_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+        parms.put(Const.RATING, String.valueOf(myrating));
+        parms.put(Const.COMMENT, ProjectUtils.getEditTextValue(yourReviewET));
+        new HttpsRequest(Const.ADD_RATING_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showLong(mContext, msg);
                 finish();

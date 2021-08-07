@@ -23,7 +23,8 @@ import com.wokconns.customer.R
 import com.wokconns.customer.dto.UserBooking
 import com.wokconns.customer.dto.UserDTO
 import com.wokconns.customer.https.HttpsRequest
-import com.wokconns.customer.interfaces.Consts
+import com.wokconns.customer.interfaces.Const
+import com.wokconns.customer.interfaces.Helper
 import com.wokconns.customer.network.NetworkManager
 import com.wokconns.customer.preferences.SharedPrefrence
 import com.wokconns.customer.ui.activity.BaseActivity
@@ -51,11 +52,11 @@ class MyBooking : Fragment(), OnRefreshListener {
     private lateinit var rlSearch: RelativeLayout
     private var mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action.equals(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
-                || intent.action.equals(Consts.START_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
-                || intent.action.equals(Consts.END_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
+            if (intent.action.equals(Const.DECLINE_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
+                || intent.action.equals(Const.START_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
+                || intent.action.equals(Const.END_BOOKING_ARTIST_NOTIFICATION, ignoreCase = true)
                 || intent.action.equals(
-                    Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION,
+                    Const.ACCEPT_BOOKING_ARTIST_NOTIFICATION,
                     ignoreCase = true
                 )
             ) {
@@ -73,7 +74,7 @@ class MyBooking : Fragment(), OnRefreshListener {
         mLayout = inflater.inflate(R.layout.activity_my_booking, container, false)
         val preference = SharedPrefrence.getInstance(activity)
         baseActivity.headerNameTV.text = resources.getString(R.string.my_bookings)
-        userDTO = preference.getParentUser(Consts.USER_DTO)
+        userDTO = preference.getParentUser(Const.USER_DTO)
         setUiAction(mLayout)
         return mLayout
     }
@@ -99,10 +100,10 @@ class MyBooking : Fragment(), OnRefreshListener {
                 return false
             }
         })
-        intentFilter.addAction(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)
-        intentFilter.addAction(Consts.START_BOOKING_ARTIST_NOTIFICATION)
-        intentFilter.addAction(Consts.END_BOOKING_ARTIST_NOTIFICATION)
-        intentFilter.addAction(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Const.DECLINE_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Const.START_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Const.END_BOOKING_ARTIST_NOTIFICATION)
+        intentFilter.addAction(Const.ACCEPT_BOOKING_ARTIST_NOTIFICATION)
         LocalBroadcastManager.getInstance(requireActivity())
             .registerReceiver(mBroadcastReceiver, intentFilter)
     }
@@ -131,39 +132,40 @@ class MyBooking : Fragment(), OnRefreshListener {
     fun getBooking() {
         // ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
         HttpsRequest(
-            Consts.CURRENT_BOOKING_API,
+            Const.CURRENT_BOOKING_API,
             getParam(),
-            activity
-        ).stringPost(TAG) { flag: Boolean, msg: String?, response: JSONObject ->
-            //   ProjectUtils.pauseProgressDialog();
-            swipeRefreshLayout.isRefreshing = false
-            if (flag) {
-                tvNo.visibility = View.GONE
-                swipeRefreshLayout.visibility = View.VISIBLE
-                rlSearch.visibility = View.VISIBLE
-                try {
-                    userBookingList = ArrayList()
-                    val getpetDTO = object : TypeToken<List<UserBooking?>?>() {}.type
-                    userBookingList = Gson().fromJson<Any>(
-                        response.getJSONArray("data").toString(),
-                        getpetDTO
-                    ) as ArrayList<UserBooking>
-                    // setSection();
-                    showData()
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            requireContext()
+        ).stringPost(TAG, object : Helper {
+            override fun backResponse(flag: Boolean, msg: String?, response: JSONObject?) {
+                swipeRefreshLayout.isRefreshing = false
+                if (flag) {
+                    tvNo.visibility = View.GONE
+                    swipeRefreshLayout.visibility = View.VISIBLE
+                    rlSearch.visibility = View.VISIBLE
+                    try {
+                        userBookingList = ArrayList()
+                        val getpetDTO = object : TypeToken<List<UserBooking?>?>() {}.type
+                        userBookingList = Gson().fromJson<Any>(
+                            response?.getJSONArray("data").toString(),
+                            getpetDTO
+                        ) as ArrayList<UserBooking>
+                        // setSection();
+                        showData()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    tvNo.visibility = View.VISIBLE
+                    swipeRefreshLayout.visibility = View.GONE
+                    rlSearch.visibility = View.GONE
                 }
-            } else {
-                tvNo.visibility = View.VISIBLE
-                swipeRefreshLayout.visibility = View.GONE
-                rlSearch.visibility = View.GONE
             }
-        }
+        })
     }
 
     fun getParam(): HashMap<String, String> {
         val parms = HashMap<String, String>()
-        parms[Consts.USER_ID] = userDTO.user_id
+        parms[Const.USER_ID] = userDTO.user_id
         return parms
     }
 
@@ -189,18 +191,20 @@ class MyBooking : Fragment(), OnRefreshListener {
         val has = HashMap<String, ArrayList<UserBooking>>()
         userBookingListSection = ArrayList()
         for (i in userBookingList.indices) {
-            if (has.containsKey(ProjectUtils.changeDateFormate1(userBookingList[i].booking_date))) {
+            if (has.containsKey(ProjectUtils.changeDateFormat(userBookingList[i].booking_date))) {
                 userBookingListSection1 = ArrayList()
                 userBookingListSection1 =
-                    has[ProjectUtils.changeDateFormate1(userBookingList[i].booking_date)]
+                    has[ProjectUtils.changeDateFormat(userBookingList[i].booking_date)]
                 userBookingListSection1?.add(userBookingList[i])
-                has[ProjectUtils.changeDateFormate1(userBookingList[i].booking_date)] =
-                    userBookingListSection1!!
+                ProjectUtils.changeDateFormat(userBookingList[i].booking_date)?.let {
+                    has[it] = userBookingListSection1!!
+                }
             } else {
                 userBookingListSection1 = ArrayList()
                 userBookingListSection1?.add(userBookingList[i])
-                has[ProjectUtils.changeDateFormate1(userBookingList[i].booking_date)] =
-                    userBookingListSection1!!
+                ProjectUtils.changeDateFormat(userBookingList[i].booking_date)?.let {
+                    has[it] = userBookingListSection1!!
+                }
             }
         }
         has.keys.forEach { key ->

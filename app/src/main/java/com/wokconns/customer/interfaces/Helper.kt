@@ -1,10 +1,7 @@
-package com.wokconns.customer.interfaces;
+package com.wokconns.customer.interfaces
 
-import org.json.JSONObject;
+import org.json.JSONObject
 
-/**
- * Created by VARUN on 01/01/19.
- */
-public interface Helper {
-    public void backResponse(boolean flag, String msg, JSONObject response);
+interface Helper {
+    fun backResponse(flag: Boolean, msg: String?, response: JSONObject?)
 }

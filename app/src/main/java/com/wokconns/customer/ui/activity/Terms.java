@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.wokconns.customer.R;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 
 public class Terms extends AppCompatActivity {
     private WebView mWebView;
@@ -26,7 +26,7 @@ public class Terms extends AppCompatActivity {
         mWebView.setWebViewClient(new MyBrowser());
         mWebView.getSettings().setLoadsImagesAutomatically(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl(Consts.TERMS_URL);
+        mWebView.loadUrl(Const.TERMS_URL);
 
     }
 

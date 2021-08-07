@@ -27,7 +27,7 @@ import com.wokconns.customer.databinding.DailogPaymentOptionBinding;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.interfaces.IPostPayment;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
@@ -61,8 +61,8 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_money);
         mContext = AddMoney.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        parmas.put(Consts.USER_ID, userDTO.getUser_id());
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        parmas.put(Const.USER_ID, userDTO.getUser_id());
         setUiAction();
     }
 
@@ -71,9 +71,9 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
 
         binding.ivBack.setOnClickListener(v -> finish());
 
-        if (getIntent().hasExtra(Consts.AMOUNT)) {
-            amt = getIntent().getStringExtra(Consts.AMOUNT);
-            currency = getIntent().getStringExtra(Consts.CURRENCY);
+        if (getIntent().hasExtra(Const.AMOUNT)) {
+            amt = getIntent().getStringExtra(Const.AMOUNT);
+            currency = getIntent().getStringExtra(Const.CURRENCY);
 
             binding.tvWallet.setText(currency + " " + amt);
         }
@@ -157,7 +157,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
             case R.id.cbAdd:
                 if (binding.etAddMoney.getText().toString().length() > 0 && Float.parseFloat(binding.etAddMoney.getText().toString().trim()) > 0) {
                     if (NetworkManager.isConnectToInternet(mContext)) {
-                        parmas.put(Consts.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
+                        parmas.put(Const.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
                         dialogPayment();
                     } else {
                         ProjectUtils.showLong(mContext, getResources().getString(R.string.internet_connection));
@@ -173,11 +173,11 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        if (prefrence.getValue(Consts.SURL).equalsIgnoreCase(Consts.PAYMENT_SUCCESS)) {
-            prefrence.clearPreferences(Consts.SURL);
+        if (prefrence.getValue(Const.SURL).equalsIgnoreCase(Const.PAYMENT_SUCCESS)) {
+            prefrence.clearPreferences(Const.SURL);
             addMoney();
-        } else if (prefrence.getValue(Consts.FURL).equalsIgnoreCase(Consts.PAYMENT_FAIL)) {
-            prefrence.clearPreferences(Consts.FURL);
+        } else if (prefrence.getValue(Const.FURL).equalsIgnoreCase(Const.PAYMENT_FAIL)) {
+            prefrence.clearPreferences(Const.FURL);
             finish();
         }
 
@@ -190,7 +190,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
 
 
     public void addMoney() {
-        new HttpsRequest(Consts.ADD_MONEY_API, parmas, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.ADD_MONEY_API, parmas, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showLong(mContext, msg);
                 AddMoney.this.finish();
@@ -216,17 +216,17 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
 
         binding1.paystackButton.setOnClickListener(v -> {
             Intent in2 = new Intent(mContext, PaymentWeb.class);
-            in2.putExtra(Consts.USER_DTO, userDTO);
-            in2.putExtra(Consts.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
-            in2.putExtra(Consts.CURRENCY, currencyCode);
+            in2.putExtra(Const.USER_DTO, userDTO);
+            in2.putExtra(Const.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
+            in2.putExtra(Const.CURRENCY, currencyCode);
             AddMoney.this.startActivity(in2);
             dialog.dismiss();
         });
         binding1.flutterwaveButton.setOnClickListener(v -> {
             Intent in2 = new Intent(mContext, PaymentWeb.class);
-            in2.putExtra(Consts.USER_DTO, userDTO);
-            in2.putExtra(Consts.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
-            in2.putExtra(Consts.CURRENCY, currencyCode);
+            in2.putExtra(Const.USER_DTO, userDTO);
+            in2.putExtra(Const.AMOUNT, ProjectUtils.getEditTextValue(binding.etAddMoney));
+            in2.putExtra(Const.CURRENCY, currencyCode);
             AddMoney.this.startActivity(in2);
             dialog.dismiss();
         });
@@ -235,7 +235,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
 
     public void getCurrencyValue() {
 
-        new HttpsRequest(Consts.GET_CURRENCY_API, mContext).stringGet(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_CURRENCY_API, mContext).stringGet(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     currencyDTOArrayList = new ArrayList<>();

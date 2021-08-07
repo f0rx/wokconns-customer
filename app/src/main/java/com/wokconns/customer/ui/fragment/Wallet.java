@@ -23,7 +23,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.dto.WalletCurrencyDTO;
 import com.wokconns.customer.dto.WalletHistory;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AddMoney;
@@ -65,12 +65,12 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wallet, container, false);
         view = binding.getRoot();
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.ic_wallet));
-        parmsGetWallet.put(Consts.USER_ID, userDTO.getUser_id());
+        parmsGetWallet.put(Const.USER_ID, userDTO.getUser_id());
 
         parms = new HashMap<>();
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
+        parms.put(Const.USER_ID, userDTO.getUser_id());
 
         setUiAction(view);
         return view;
@@ -108,8 +108,8 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
             case R.id.llAddMoney:
                 if (NetworkManager.isConnectToInternet(getActivity())) {
                     Intent in = new Intent(getActivity(), AddMoney.class);
-                    in.putExtra(Consts.AMOUNT, amt);
-                    in.putExtra(Consts.CURRENCY, currency);
+                    in.putExtra(Const.AMOUNT, amt);
+                    in.putExtra(Const.CURRENCY, currency);
                     startActivity(in);
                 } else {
                     ProjectUtils.showToast(getActivity(), getResources().getString(R.string.internet_connection));
@@ -158,7 +158,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
 
     public void getHistory() {
         ProjectUtils.showProgressDialog(requireActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_USER_WALLET_API, parms, requireActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_USER_WALLET_API, parms, requireActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             binding.swipeRefreshLayout.setRefreshing(false);
 
@@ -217,7 +217,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     }
 
     public void getWallet() {
-        new HttpsRequest(Consts.GET_WALLET_API, parmsGetWallet, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_WALLET_API, parmsGetWallet, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {

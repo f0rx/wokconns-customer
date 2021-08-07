@@ -18,7 +18,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketCommentDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AdapterViewCommentTicket;
@@ -60,16 +60,16 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_comment_one_by_one);
         mContext = CommentOneByOne.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        if (getIntent().hasExtra(Consts.TICKET_ID)) {
+        if (getIntent().hasExtra(Const.TICKET_ID)) {
 
-            ticket_id = getIntent().getStringExtra(Consts.TICKET_ID);
+            ticket_id = getIntent().getStringExtra(Const.TICKET_ID);
 
-            parmsGet.put(Consts.TICKET_ID, ticket_id);
-            parmsGet.put(Consts.USER_ID, userDTO.getUser_id());
+            parmsGet.put(Const.TICKET_ID, ticket_id);
+            parmsGet.put(Const.USER_ID, userDTO.getUser_id());
 
 
         }
@@ -178,7 +178,7 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
 
     public void getComment() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_TICKET_COMMENTS_API, parmsGet, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_TICKET_COMMENTS_API, parmsGet, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             swipeRefreshLayout.setRefreshing(false);
             if (flag) {
@@ -208,7 +208,7 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
 
     public void doComment() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.ADD_TICKET_COMMENTS_API, getParamDO(), mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.ADD_TICKET_COMMENTS_API, getParamDO(), mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 edittextMessage.setText("");
@@ -220,9 +220,9 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
 
     public HashMap<String, String> getParamDO() {
         HashMap<String, String> values = new HashMap<>();
-        values.put(Consts.TICKET_ID, ticket_id);
-        values.put(Consts.USER_ID, userDTO.getUser_id());
-        values.put(Consts.COMMENT, ProjectUtils.getEditTextValue(edittextMessage));
+        values.put(Const.TICKET_ID, ticket_id);
+        values.put(Const.USER_ID, userDTO.getUser_id());
+        values.put(Const.COMMENT, ProjectUtils.getEditTextValue(edittextMessage));
         Log.e("POST", values.toString());
         return values;
     }

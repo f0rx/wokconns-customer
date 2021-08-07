@@ -21,7 +21,7 @@ import com.wokconns.customer.databinding.ItemSectionBinding;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.EditJob;
@@ -90,7 +90,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.adapterJobsBinding.tvDescription.setText(objects.get(position).getDescription());
             holder.adapterJobsBinding.tvCategory.setText(objects.get(position).getCategory_name());
             holder.adapterJobsBinding.tvAddress.setText(objects.get(position).getAddress());
-            holder.adapterJobsBinding.tvDate.setText(String.format("%s %s %s", mContext.getResources().getString(R.string.date), ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()), objects.get(position).getTime()));
+            holder.adapterJobsBinding.tvDate.setText(String.format("%s %s %s", mContext.getResources().getString(R.string.date), ProjectUtils.changeDateFormat(objects.get(position).getJob_date()), objects.get(position).getTime()));
             holder.adapterJobsBinding.tvApplied.setText(String.format("%s %s", mContext.getResources().getString(R.string.applied1), objects.get(position).getApplied_job()));
             holder.adapterJobsBinding.tvPrice.setText(String.format("%s%s",
                     objects.get(position).getCurrency_symbol(), objects.get(position).getPrice()));
@@ -122,14 +122,14 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             holder.adapterJobsBinding.rlClick.setOnClickListener(v -> {
                 Intent in = new Intent(mContext, AppliedJob.class);
-                preferences.setValue(Consts.JOB_ID, objects.get(position).getJob_id());
+                preferences.setValue(Const.JOB_ID, objects.get(position).getJob_id());
                 mContext.startActivity(in);
             });
 
             holder.adapterJobsBinding.tvEdit.setOnClickListener(v -> {
                 if (objects.get(position).getIs_edit().equalsIgnoreCase("1")) {
                     Intent in = new Intent(mContext, EditJob.class);
-                    in.putExtra(Consts.POST_JOB_DTO, objects.get(position));
+                    in.putExtra(Const.POST_JOB_DTO, objects.get(position));
                     mContext.startActivity(in);
                 } else {
                     ProjectUtils.showLong(mContext, mContext.getResources().getString(R.string.not_edit_job));
@@ -146,8 +146,8 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //            });
             holder.adapterJobsBinding.tvComplete.setOnClickListener(v -> {
                 paramsComplete = new HashMap<>();
-                paramsComplete.put(Consts.JOB_ID, objects.get(position).getJob_id());
-                paramsComplete.put(Consts.USER_ID, objects.get(position).getUser_id());
+                paramsComplete.put(Const.JOB_ID, objects.get(position).getJob_id());
+                paramsComplete.put(Const.USER_ID, objects.get(position).getUser_id());
 
                 JobsAdapter.this.completeDialog(mContext.getResources().getString(R.string.complete), mContext.getResources().getString(R.string.complete_job));
             });
@@ -171,7 +171,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void reject() {
 
-        new HttpsRequest(Consts.DELETE_JOB_API, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.DELETE_JOB_API, params, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
                 dialog_book.dismiss();
@@ -186,7 +186,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void complete() {
 
-        new HttpsRequest(Consts.JOB_COMPLETE_API, paramsComplete, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.JOB_COMPLETE_API, paramsComplete, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
                 dialog_book.dismiss();

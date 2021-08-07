@@ -19,7 +19,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivitySignInBinding;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -44,7 +44,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         mContext = SignInActivity.this;
         prefrence = SharedPrefrence.getInstance(mContext);
         firebase = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        Log.e("tokensss", firebase.getString(Consts.DEVICE_TOKEN, ""));
+        Log.e("tokensss", firebase.getString(Const.DEVICE_TOKEN, ""));
         setUiAction();
     }
 
@@ -86,22 +86,22 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void login() {
-        if (prefrence.getValue(Consts.LANGUAGE_SELECTION).equalsIgnoreCase("")) {
-            prefrence.setValue(Consts.LANGUAGE_SELECTION, "en");
+        if (prefrence.getValue(Const.LANGUAGE_SELECTION).equalsIgnoreCase("")) {
+            prefrence.setValue(Const.LANGUAGE_SELECTION, "en");
         }
 
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.LOGIN_API, getparm(), mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.LOGIN_API, getparm(), mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
                     ProjectUtils.showToast(mContext, msg);
 
                     userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
-                    prefrence.setParentUser(userDTO, Consts.USER_DTO);
+                    prefrence.setParentUser(userDTO, Const.USER_DTO);
 
-                    prefrence.setBooleanValue(Consts.IS_REGISTERED, true);
+                    prefrence.setBooleanValue(Const.IS_REGISTERED, true);
 
                     ProjectUtils.showToast(mContext, msg);
 
@@ -141,12 +141,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.MOBILE, ProjectUtils.getEditTextValue(binding.CETMobileNumber));
-        parms.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(binding.CETenterpassword));
-        parms.put(Consts.DEVICE_TYPE, "ANDROID");
-        parms.put(Consts.DEVICE_TOKEN, firebase.getString(Consts.DEVICE_TOKEN, ""));
-        parms.put(Consts.DEVICE_ID, "12345");
-        parms.put(Consts.ROLE, "2");
+        parms.put(Const.MOBILE, ProjectUtils.getEditTextValue(binding.CETMobileNumber));
+        parms.put(Const.PASSWORD, ProjectUtils.getEditTextValue(binding.CETenterpassword));
+        parms.put(Const.DEVICE_TYPE, "ANDROID");
+        parms.put(Const.DEVICE_TOKEN, firebase.getString(Const.DEVICE_TOKEN, ""));
+        parms.put(Const.DEVICE_ID, "12345");
+        parms.put(Const.ROLE, "2");
         return parms;
     }
 
@@ -189,9 +189,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 "", "User_Ref341", "Male", "Lagos",
                 "Lagos", "Nigeria", "", "ANDROID", "",
                 "");
-        prefrence.setParentUser(userDTO, Consts.USER_DTO);
+        prefrence.setParentUser(userDTO, Const.USER_DTO);
 
-        prefrence.setBooleanValue(Consts.IS_REGISTERED, true);
+        prefrence.setBooleanValue(Const.IS_REGISTERED, true);
 
         ProjectUtils.showToast(mContext, "Login Success!!");
 

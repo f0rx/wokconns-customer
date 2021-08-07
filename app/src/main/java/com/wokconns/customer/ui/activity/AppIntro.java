@@ -17,7 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.ToxicBakery.viewpager.transforms.StackTransformer;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityAppIntro2Binding;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AppIntroPagerAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -153,7 +153,7 @@ public class AppIntro extends AppCompatActivity implements ViewPager.OnPageChang
                 break;
             case R.id.ll_language:
                 Intent intent = new Intent(mContext, LanguageSelection.class);
-                intent.putExtra(Consts.TYPE, "0");
+                intent.putExtra(Const.TYPE, "0");
                 startActivity(intent);
                 finish();
                 break;

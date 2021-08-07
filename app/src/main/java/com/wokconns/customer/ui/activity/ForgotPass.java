@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityForgotPassBinding;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -58,9 +58,9 @@ public class ForgotPass extends AppCompatActivity {
     }
 
     public void updatepass() {
-        parms.put(Consts.EMAIL_ID, ProjectUtils.getEditTextValue(binding.etEmail));
+        parms.put(Const.EMAIL_ID, ProjectUtils.getEditTextValue(binding.etEmail));
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.FORGET_PASSWORD_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.FORGET_PASSWORD_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);

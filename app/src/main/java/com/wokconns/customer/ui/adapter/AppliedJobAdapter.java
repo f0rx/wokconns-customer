@@ -24,7 +24,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.ArtistProfile;
@@ -71,7 +71,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
 
         holder.tvDate.setText(String.format("%s %s %s",
                 appliedJob.getResources().getString(R.string.date),
-                ProjectUtils.changeDateFormate1(objects.get(position).getJob_date()),
+                ProjectUtils.changeDateFormat(objects.get(position).getJob_date()),
                 objects.get(position).getTime()));
         holder.tvJobId.setText(objects.get(position).getJob_id());
         holder.tvName.setText(objects.get(position).getArtist_name());
@@ -128,36 +128,36 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
 
         holder.llDecline.setOnClickListener(v -> {
             params = new HashMap<>();
-            params.put(Consts.AJ_ID, objects.get(position).getAj_id());
-            params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-            params.put(Consts.STATUS, "3");
+            params.put(Const.AJ_ID, objects.get(position).getAj_id());
+            params.put(Const.JOB_ID, objects.get(position).getJob_id());
+            params.put(Const.STATUS, "3");
             AppliedJobAdapter.this.rejectDialog(appliedJob.getResources().getString(R.string.reject), appliedJob.getResources().getString(R.string.reject_msg));
         });
         holder.llAccept.setOnClickListener(v -> {
             params = new HashMap<>();
-            params.put(Consts.AJ_ID, objects.get(position).getAj_id());
-            params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-            params.put(Consts.STATUS, "1");
+            params.put(Const.AJ_ID, objects.get(position).getAj_id());
+            params.put(Const.JOB_ID, objects.get(position).getJob_id());
+            params.put(Const.STATUS, "1");
             AppliedJobAdapter.this.rejectDialog(appliedJob.getResources().getString(R.string.confirm), appliedJob.getResources().getString(R.string.confirm_msg));
         });
         holder.llComplete.setOnClickListener(v -> {
             params = new HashMap<>();
-            params.put(Consts.AJ_ID, objects.get(position).getAj_id());
-            params.put(Consts.JOB_ID, objects.get(position).getJob_id());
-            params.put(Consts.STATUS, "2");
+            params.put(Const.AJ_ID, objects.get(position).getAj_id());
+            params.put(Const.JOB_ID, objects.get(position).getJob_id());
+            params.put(Const.STATUS, "2");
             AppliedJobAdapter.this.rejectDialog(appliedJob.getResources().getString(R.string.complete), appliedJob.getResources().getString(R.string.complete_msg));
         });
         holder.rlPhoto.setOnClickListener(v -> {
             Intent in = new Intent(appliedJob, ArtistProfile.class);
-            in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
-            in.putExtra(Consts.FLAG, 1);
+            in.putExtra(Const.ARTIST_ID, objects.get(position).getArtist_id());
+            in.putExtra(Const.FLAG, 1);
             appliedJob.startActivity(in);
         });
 
         holder.icChat.setOnClickListener(v -> {
             Intent in = new Intent(appliedJob, OneTwoOneChat.class);
-            in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
-            in.putExtra(Consts.ARTIST_NAME, objects.get(position).getArtist_name());
+            in.putExtra(Const.ARTIST_ID, objects.get(position).getArtist_id());
+            in.putExtra(Const.ARTIST_NAME, objects.get(position).getArtist_name());
             appliedJob.startActivity(in);
         });
     }
@@ -170,7 +170,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
 
     public void reject() {
 
-        new HttpsRequest(Consts.JOB_STATUS_USER_API, params, appliedJob).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.JOB_STATUS_USER_API, params, appliedJob).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showToast(appliedJob, msg);
                 dialog_book.dismiss();

@@ -22,7 +22,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -61,7 +61,7 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         view = inflater.inflate(R.layout.fragment_jobs, container, false);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.jobs));
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         setUiAction(view);
         return view;
@@ -129,7 +129,7 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
 
     public void getjobs() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_ALL_JOB_USER_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_JOB_USER_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             swipeRefreshLayout.setRefreshing(false);
             if (flag) {
@@ -162,7 +162,7 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
+        parms.put(Const.USER_ID, userDTO.getUser_id());
         return parms;
     }
 
@@ -192,17 +192,17 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         for (int i = 0; i < postedJobDTOSList.size(); i++) {
 
 
-            if (has.containsKey(ProjectUtils.changeDateFormate1(postedJobDTOSList.get(i).getJob_date()))) {
+            if (has.containsKey(ProjectUtils.changeDateFormat(postedJobDTOSList.get(i).getJob_date()))) {
                 postedJobDTOSList2 = new ArrayList<>();
-                postedJobDTOSList2 = has.get(ProjectUtils.changeDateFormate1(postedJobDTOSList.get(i).getJob_date()));
+                postedJobDTOSList2 = has.get(ProjectUtils.changeDateFormat(postedJobDTOSList.get(i).getJob_date()));
                 postedJobDTOSList2.add(postedJobDTOSList.get(i));
-                has.put(ProjectUtils.changeDateFormate1(postedJobDTOSList.get(i).getJob_date()), postedJobDTOSList2);
+                has.put(ProjectUtils.changeDateFormat(postedJobDTOSList.get(i).getJob_date()), postedJobDTOSList2);
 
 
             } else {
                 postedJobDTOSList2 = new ArrayList<>();
                 postedJobDTOSList2.add(postedJobDTOSList.get(i));
-                has.put(ProjectUtils.changeDateFormate1(postedJobDTOSList.get(i).getJob_date()), postedJobDTOSList2);
+                has.put(ProjectUtils.changeDateFormat(postedJobDTOSList.get(i).getJob_date()), postedJobDTOSList2);
             }
         }
 

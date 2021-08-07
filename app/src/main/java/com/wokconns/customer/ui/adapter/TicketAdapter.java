@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.activity.CommentOneByOne;
 import com.wokconns.customer.ui.fragment.Tickets;
 import com.wokconns.customer.utils.CustomTextView;
@@ -81,7 +81,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.MyViewHold
 
         holder.rlClick.setOnClickListener(v -> {
             Intent in = new Intent(mContext, CommentOneByOne.class);
-            in.putExtra(Consts.TICKET_ID, ticketDTOSList.get(position).getId());
+            in.putExtra(Const.TICKET_ID, ticketDTOSList.get(position).getId());
             mContext.startActivity(in);
         });
 

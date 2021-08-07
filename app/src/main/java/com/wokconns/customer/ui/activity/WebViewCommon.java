@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityWebViewCommonBinding;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 
 public class WebViewCommon extends AppCompatActivity {
     ActivityWebViewCommonBinding binding;
@@ -24,9 +24,9 @@ public class WebViewCommon extends AppCompatActivity {
 
         binding.rlclose.setOnClickListener(v -> finish());
 
-        if (getIntent().hasExtra(Consts.URL)) {
-            url = getIntent().getStringExtra(Consts.URL);
-            header = getIntent().getStringExtra(Consts.HEADER);
+        if (getIntent().hasExtra(Const.URL)) {
+            url = getIntent().getStringExtra(Const.URL);
+            header = getIntent().getStringExtra(Const.HEADER);
             binding.tvTitle.setText(header);
         }
 

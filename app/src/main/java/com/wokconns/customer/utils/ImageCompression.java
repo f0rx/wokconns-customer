@@ -9,9 +9,8 @@ import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -181,7 +180,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
 //                + "/Android/data/"
 //                + context.getApplicationContext().getPackageName()
 //                + "/Files/Compressed");
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Consts.APP_NAME);
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory() + File.separator + Const.APP_NAME);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {

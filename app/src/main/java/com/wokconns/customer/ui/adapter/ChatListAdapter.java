@@ -16,7 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterChatListBinding;
 import com.wokconns.customer.dto.ChatListDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.interfaces.DisclaimerWarning;
 import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -67,8 +67,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
 
         holder.itemView.setOnClickListener(v -> {
             Intent in = new Intent(mContext, OneTwoOneChat.class);
-            in.putExtra(Consts.ARTIST_ID, chatList.get(position).getArtist_id());
-            in.putExtra(Consts.ARTIST_NAME, chatList.get(position).getArtistName());
+            in.putExtra(Const.ARTIST_ID, chatList.get(position).getArtist_id());
+            in.putExtra(Const.ARTIST_NAME, chatList.get(position).getArtistName());
 
             showDisclaimerDialog(mContext, in);
         });

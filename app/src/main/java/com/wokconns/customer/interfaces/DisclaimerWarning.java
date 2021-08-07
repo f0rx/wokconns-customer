@@ -41,9 +41,9 @@ public interface DisclaimerWarning {
 
             AtomicBoolean hasAcceptedTerms = new AtomicBoolean(binding1.termsCheck.isChecked());
 
-            binding1.tvTerms.setOnClickListener(v -> getURLForWebView(Consts.TERMS_URL, mContext));
+            binding1.tvTerms.setOnClickListener(v -> getURLForWebView(Const.TERMS_URL, mContext));
 
-            binding1.tvPrivacy.setOnClickListener(v -> getURLForWebView(Consts.PRIVACY_URL, mContext));
+            binding1.tvPrivacy.setOnClickListener(v -> getURLForWebView(Const.PRIVACY_URL, mContext));
 
             binding1.cancelButton.setOnClickListener(v -> dialog.dismiss());
 
@@ -74,15 +74,15 @@ public interface DisclaimerWarning {
                 .stringGet("DisclaimerWarningTag", (flag, msg, response) -> {
                     if (flag) {
                         try {
-                            if (baseURL.equalsIgnoreCase(Consts.PRIVACY_URL)) {
+                            if (baseURL.equalsIgnoreCase(Const.PRIVACY_URL)) {
                                 Intent intent1 = new Intent(mContext, WebViewCommon.class);
-                                intent1.putExtra(Consts.URL, msg);
-                                intent1.putExtra(Consts.HEADER, mContext.getResources().getString(R.string.privacy_policy));
+                                intent1.putExtra(Const.URL, msg);
+                                intent1.putExtra(Const.HEADER, mContext.getResources().getString(R.string.privacy_policy));
                                 mContext.startActivity(intent1);
-                            } else if (baseURL.equalsIgnoreCase(Consts.TERMS_URL)) {
+                            } else if (baseURL.equalsIgnoreCase(Const.TERMS_URL)) {
                                 Intent intent3 = new Intent(mContext, WebViewCommon.class);
-                                intent3.putExtra(Consts.URL, msg);
-                                intent3.putExtra(Consts.HEADER, mContext.getResources().getString(R.string.terms_of_use));
+                                intent3.putExtra(Const.URL, msg);
+                                intent3.putExtra(Const.HEADER, mContext.getResources().getString(R.string.terms_of_use));
                                 mContext.startActivity(intent3);
                             }
                         } catch (Exception e) {

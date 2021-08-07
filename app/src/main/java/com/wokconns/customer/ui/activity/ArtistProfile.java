@@ -24,7 +24,7 @@ import com.wokconns.customer.databinding.ActivityArtistProfileBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.ImageGallery;
@@ -75,21 +75,21 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
         binding = DataBindingUtil.setContentView(this, R.layout.activity_artist_profile);
         mContext = ArtistProfile.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        sdf1 = new SimpleDateFormat(Consts.DATE_FORMATE_SERVER, Locale.ENGLISH);
-        timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
+        sdf1 = new SimpleDateFormat(Const.DATE_FORMATE_SERVER, Locale.ENGLISH);
+        timeZone = new SimpleDateFormat(Const.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
         date = new Date();
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        if (getIntent().hasExtra(Consts.ARTIST_ID)) {
-            if (getIntent().hasExtra(Consts.FLAG)) {
-                flag = getIntent().getIntExtra(Consts.FLAG, 0);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        if (getIntent().hasExtra(Const.ARTIST_ID)) {
+            if (getIntent().hasExtra(Const.FLAG)) {
+                flag = getIntent().getIntExtra(Const.FLAG, 0);
             }
-            artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
+            artist_id = getIntent().getStringExtra(Const.ARTIST_ID);
 
         }
-        parms.put(Consts.ARTIST_ID, artist_id);
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
-        paramsFav.put(Consts.ARTIST_ID, artist_id);
-        paramsFav.put(Consts.USER_ID, userDTO.getUser_id());
+        parms.put(Const.ARTIST_ID, artist_id);
+        parms.put(Const.USER_ID, userDTO.getUser_id());
+        paramsFav.put(Const.ARTIST_ID, artist_id);
+        paramsFav.put(Const.USER_ID, userDTO.getUser_id());
         setUiAction();
     }
 
@@ -128,9 +128,9 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                 if (NetworkManager.isConnectToInternet(mContext)) {
                     if (artistDetailsDTO != null) {
                         Intent viewService = new Intent(mContext, Booking.class);
-                        viewService.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
-                        viewService.putExtra(Consts.ARTIST_ID, artist_id);
-                        viewService.putExtra(Consts.SCREEN_TAG, 1);
+                        viewService.putExtra(Const.ARTIST_DTO, artistDetailsDTO);
+                        viewService.putExtra(Const.ARTIST_ID, artist_id);
+                        viewService.putExtra(Const.SCREEN_TAG, 1);
                         mContext.startActivity(viewService);
                     } else {
                         ProjectUtils.showLong(mContext, getResources().getString(R.string.no_data_found));
@@ -142,8 +142,8 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.tvAppointment:
                 if (NetworkManager.isConnectToInternet(mContext)) {
-                    paramBookAppointment.put(Consts.USER_ID, userDTO.getUser_id());
-                    paramBookAppointment.put(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
+                    paramBookAppointment.put(Const.USER_ID, userDTO.getUser_id());
+                    paramBookAppointment.put(Const.ARTIST_ID, artistDetailsDTO.getUser_id());
                     clickScheduleDateTime();
                 } else {
                     ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
@@ -171,8 +171,8 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
             case R.id.tvChat:
                 if (NetworkManager.isConnectToInternet(mContext)) {
                     Intent in = new Intent(mContext, OneTwoOneChat.class);
-                    in.putExtra(Consts.ARTIST_ID, artistDetailsDTO.getUser_id());
-                    in.putExtra(Consts.ARTIST_NAME, artistDetailsDTO.getName());
+                    in.putExtra(Const.ARTIST_ID, artistDetailsDTO.getUser_id());
+                    in.putExtra(Const.ARTIST_NAME, artistDetailsDTO.getName());
                     mContext.startActivity(in);
                 } else {
                     ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));
@@ -183,8 +183,8 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                 if (NetworkManager.isConnectToInternet(mContext)) {
                     if (artistDetailsDTO != null) {
                         Intent viewService = new Intent(mContext, ViewServices.class);
-                        viewService.putExtra(Consts.ARTIST_DTO, artistDetailsDTO);
-                        viewService.putExtra(Consts.ARTIST_ID, artist_id);
+                        viewService.putExtra(Const.ARTIST_DTO, artistDetailsDTO);
+                        viewService.putExtra(Const.ARTIST_ID, artist_id);
                         mContext.startActivity(viewService);
                     } else {
                         ProjectUtils.showLong(mContext, getResources().getString(R.string.no_services_found));
@@ -200,7 +200,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
 
     public void getArtist() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_ARTIST_BY_ID_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ARTIST_BY_ID_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
@@ -218,7 +218,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
     @SuppressLint("UseCompatLoadingForDrawables")
     public void showData() {
         bundle = new Bundle();
-        bundle.putSerializable(Consts.ARTIST_DTO, artistDetailsDTO);
+        bundle.putSerializable(Const.ARTIST_DTO, artistDetailsDTO);
 
         binding.tvName.setText(artistDetailsDTO.getName());
         binding.tvWork.setText(artistDetailsDTO.getCategory_name());
@@ -251,7 +251,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
 
     public void addFav() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.ADD_FAVORITES_API, paramsFav, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.ADD_FAVORITES_API, paramsFav, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
@@ -264,7 +264,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
 
     public void removeFav() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.REMOVE_FAVORITES_API, paramsFav, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.REMOVE_FAVORITES_API, paramsFav, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
@@ -314,8 +314,8 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
                 .mustBeOnFuture()
                 .defaultDate(new Date())
                 .listener(date -> {
-                    paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                    paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    paramBookAppointment.put(Const.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    paramBookAppointment.put(Const.TIMEZONE, String.valueOf(timeZone.format(date)));
                     bookAppointment();
                 })
                 .display();
@@ -324,7 +324,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
     public void bookAppointment() {
 
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.BOOK_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.BOOK_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.pauseProgressDialog();
                 ProjectUtils.showToast(mContext, msg);

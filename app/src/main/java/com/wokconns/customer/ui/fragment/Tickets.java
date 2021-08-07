@@ -21,7 +21,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.TicketDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -60,7 +60,7 @@ public class Tickets extends Fragment {
         view = inflater.inflate(R.layout.fragment_ticket, container, false);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.support));
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         setUiAction(view);
         return view;
@@ -97,7 +97,7 @@ public class Tickets extends Fragment {
 
     public void getTicket() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_MY_TICKET_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_MY_TICKET_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 tvNo.setVisibility(View.GONE);
@@ -123,7 +123,7 @@ public class Tickets extends Fragment {
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
+        parms.put(Const.USER_ID, userDTO.getUser_id());
         return parms;
     }
 
@@ -194,11 +194,11 @@ public class Tickets extends Fragment {
     }
 
     public void addTicket() {
-        parmsadd.put(Consts.DESCRIPTION, ProjectUtils.getEditTextValue(etDescription));
-        parmsadd.put(Consts.REASON, ProjectUtils.getEditTextValue(etReason));
-        parmsadd.put(Consts.USER_ID, userDTO.getUser_id());
+        parmsadd.put(Const.DESCRIPTION, ProjectUtils.getEditTextValue(etDescription));
+        parmsadd.put(Const.REASON, ProjectUtils.getEditTextValue(etReason));
+        parmsadd.put(Const.USER_ID, userDTO.getUser_id());
         ProjectUtils.showProgressDialog(getActivity(), false, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GENERATE_TICKET_API, parmsadd, getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GENERATE_TICKET_API, parmsadd, getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 dialog.dismiss();

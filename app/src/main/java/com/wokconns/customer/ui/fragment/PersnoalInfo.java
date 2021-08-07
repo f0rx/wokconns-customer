@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.QualificationsDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.adapter.QualificationAdapter;
 import com.wokconns.customer.utils.CustomTextView;
 
@@ -36,7 +36,7 @@ public class PersnoalInfo extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_persnoal_info, container, false);
         bundle = this.getArguments();
-        artistDetailsDTO = (ArtistDetailsDTO) bundle.getSerializable(Consts.ARTIST_DTO);
+        artistDetailsDTO = (ArtistDetailsDTO) bundle.getSerializable(Const.ARTIST_DTO);
         showUiAction(view);
         return view;
     }

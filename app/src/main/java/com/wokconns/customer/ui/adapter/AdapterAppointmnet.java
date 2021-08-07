@@ -22,7 +22,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppointmentDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.fragment.AppointmentFrag;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
@@ -53,8 +53,8 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
         this.appointmentDTOSList = appointmentDTOSList;
         this.userDTO = userDTO;
 
-        sdf1 = new SimpleDateFormat(Consts.DATE_FORMATE_SERVER, Locale.ENGLISH);
-        timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
+        sdf1 = new SimpleDateFormat(Const.DATE_FORMATE_SERVER, Locale.ENGLISH);
+        timeZone = new SimpleDateFormat(Const.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
     }
 
     @Override
@@ -106,15 +106,15 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
 
 
         holder.tvEdit.setOnClickListener(v -> {
-            paramBookAppointment.put(Consts.USER_ID, userDTO.getUser_id());
-            paramBookAppointment.put(Consts.ARTIST_ID, appointmentDTOSList.get(position).getArtist_id());
-            paramBookAppointment.put(Consts.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
+            paramBookAppointment.put(Const.USER_ID, userDTO.getUser_id());
+            paramBookAppointment.put(Const.ARTIST_ID, appointmentDTOSList.get(position).getArtist_id());
+            paramBookAppointment.put(Const.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
             clickScheduleDateTime();
         });
         holder.tvDecline.setOnClickListener(v -> {
-            paramDeclineAppointment.put(Consts.USER_ID, userDTO.getUser_id());
-            paramDeclineAppointment.put(Consts.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
-            paramDeclineAppointment.put(Consts.REQUEST, "4");
+            paramDeclineAppointment.put(Const.USER_ID, userDTO.getUser_id());
+            paramDeclineAppointment.put(Const.APPOINTMENT_ID, appointmentDTOSList.get(position).getId());
+            paramDeclineAppointment.put(Const.REQUEST, "4");
             bookDailog();
         });
     }
@@ -132,15 +132,15 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
                 .curved()
                 .mustBeOnFuture()
                 .listener(date -> {
-                    paramBookAppointment.put(Consts.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
-                    paramBookAppointment.put(Consts.TIMEZONE, String.valueOf(timeZone.format(date)));
+                    paramBookAppointment.put(Const.DATE_STRING, String.valueOf(sdf1.format(date).toString().toUpperCase()));
+                    paramBookAppointment.put(Const.TIMEZONE, String.valueOf(timeZone.format(date)));
                     bookAppointment();
                 })
                 .display();
     }
 
     public void bookAppointment() {
-        new HttpsRequest(Consts.EDIT_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.EDIT_APPOINTMENT_API, paramBookAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
                 appointmentFrag.getHistroy();
@@ -154,7 +154,7 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
 
     public void declineAppointment() {
 
-        new HttpsRequest(Consts.APPOINTMENT_OPERATION_API, paramDeclineAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.APPOINTMENT_OPERATION_API, paramDeclineAppointment, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
                 dialog_book.dismiss();

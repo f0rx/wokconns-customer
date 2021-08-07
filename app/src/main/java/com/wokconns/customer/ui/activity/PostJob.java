@@ -36,7 +36,7 @@ import com.wokconns.customer.dto.CategoryDTO;
 import com.wokconns.customer.dto.CurrencyDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ImageCompression;
@@ -88,13 +88,13 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_job);
         mContext = PostJob.this;
-        sdf1 = new SimpleDateFormat(Consts.DATE_FORMATE_SERVER, Locale.ENGLISH);
-        timeZone = new SimpleDateFormat(Consts.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
+        sdf1 = new SimpleDateFormat(Const.DATE_FORMATE_SERVER, Locale.ENGLISH);
+        timeZone = new SimpleDateFormat(Const.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
 
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
-        parmsadd.put(Consts.USER_ID, userDTO.getUser_id());
-        parmsCategory.put(Consts.USER_ID, userDTO.getUser_id());
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+        parmsadd.put(Const.USER_ID, userDTO.getUser_id());
+        parmsCategory.put(Const.USER_ID, userDTO.getUser_id());
         setUiAction();
     }
 
@@ -134,7 +134,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                                 }
 
 
-                                prefrence.setValue(Consts.IMAGE_URI_CAMERA, picUri.toString());
+                                prefrence.setValue(Const.IMAGE_URI_CAMERA, picUri.toString());
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
                                 startActivityForResult(intent, PICK_FROM_CAMERA);
                             } catch (Exception e) {
@@ -200,7 +200,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
             Log.e(TAG, "onItemClick: " + currencyDTO.getCurrency_symbol());
 
             currencyId = currencyDTO.getId();
-            parmsadd.put(Consts.CURRENCY_ID, currencyId);
+            parmsadd.put(Const.CURRENCY_ID, currencyId);
         });
     }
 
@@ -265,7 +265,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                 .defaultDate(new Date())
                 .mustBeOnFuture()
                 .listener(date -> {
-                    parmsadd.put(Consts.JOB_DATE, sdf1.format(date).toUpperCase());
+                    parmsadd.put(Const.JOB_DATE, sdf1.format(date).toUpperCase());
 
 
                     binding.etDate.setText(sdf1.format(date).toUpperCase());
@@ -277,7 +277,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
     private File getOutputMediaFile(int type) {
         String root = Environment.getExternalStorageDirectory().toString();
 
-        File mediaStorageDir = new File(root, Consts.APP_NAME);
+        File mediaStorageDir = new File(root, Const.APP_NAME);
 
         /**Create the storage directory if it does not exist*/
         if (!mediaStorageDir.exists()) {
@@ -289,7 +289,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
         File mediaFile;
         if (type == 1) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    Consts.APP_NAME + timeStamp + ".png");
+                    Const.APP_NAME + timeStamp + ".png");
 
         } else {
             return null;
@@ -322,7 +322,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                         pathOfImage = imagePath;
                         binding.ivImg.setVisibility(View.VISIBLE);
                         image = new File(imagePath);
-                        parmsFile.put(Consts.AVTAR, image);
+                        parmsFile.put(Const.AVTAR, image);
                     });
 
 
@@ -353,7 +353,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
 
                         pathOfImage = imagePath;
                         binding.ivImg.setVisibility(View.VISIBLE);
-                        parmsFile.put(Consts.AVTAR, image);
+                        parmsFile.put(Const.AVTAR, image);
 
                     });
                 } catch (Exception e) {
@@ -366,11 +366,11 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
         if (requestCode == PICK_FROM_CAMERA && resultCode == RESULT_OK) {
             if (picUri != null) {
 
-                picUri = Uri.parse(prefrence.getValue(Consts.IMAGE_URI_CAMERA));
+                picUri = Uri.parse(prefrence.getValue(Const.IMAGE_URI_CAMERA));
                 // image = new File(ConvertUriToFilePath.getPathFromURI(PostJob.this, picUri));
                 startCropping(picUri, CROP_CAMERA_IMAGE);
             } else {
-                picUri = Uri.parse(prefrence.getValue(Consts.IMAGE_URI_CAMERA));
+                picUri = Uri.parse(prefrence.getValue(Const.IMAGE_URI_CAMERA));
                 // image = new File(ConvertUriToFilePath.getPathFromURI(PostJob.this, picUri));
 
                 startCropping(picUri, CROP_CAMERA_IMAGE);
@@ -491,13 +491,13 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void addPost() {
-        parmsadd.put(Consts.TITLE, ProjectUtils.getEditTextValue(binding.etTitle));
-        parmsadd.put(Consts.PRICE, ProjectUtils.getEditTextValue(binding.etPrice));
-        parmsadd.put(Consts.DESCRIPTION, ProjectUtils.getEditTextValue(binding.etCommet));
-        parmsadd.put(Consts.ADDRESS, ProjectUtils.getEditTextValue(binding.etAddress));
+        parmsadd.put(Const.TITLE, ProjectUtils.getEditTextValue(binding.etTitle));
+        parmsadd.put(Const.PRICE, ProjectUtils.getEditTextValue(binding.etPrice));
+        parmsadd.put(Const.DESCRIPTION, ProjectUtils.getEditTextValue(binding.etCommet));
+        parmsadd.put(Const.ADDRESS, ProjectUtils.getEditTextValue(binding.etAddress));
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.POST_JOB_API, parmsadd, parmsFile, mContext).imagePost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showLong(mContext, msg);
@@ -540,8 +540,8 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
             Log.e("IGA", "Address" + add);
             binding.etAddress.setText(obj.getAddressLine(0));
 
-            parmsadd.put(Consts.LATI, String.valueOf(lat));
-            parmsadd.put(Consts.LONGI, String.valueOf(lng));
+            parmsadd.put(Const.LATI, String.valueOf(lat));
+            parmsadd.put(Const.LONGI, String.valueOf(lng));
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -561,7 +561,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void getCategory() {
-        new HttpsRequest(Consts.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_ALL_CATEGORY_API, parmsCategory, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     categoryDTOS = new ArrayList<>();
@@ -572,7 +572,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     spinnerDialogCate = new SpinnerDialog((Activity) mContext, categoryDTOS, getResources().getString(R.string.select_category));// With 	Animation
                     spinnerDialogCate.bindOnSpinerListener((item, id, position) -> {
                         binding.tvCategory.setText(item);
-                        parmsadd.put(Consts.CATEGORY_ID, id);
+                        parmsadd.put(Const.CATEGORY_ID, id);
                     });
 
                 } catch (Exception e) {
@@ -589,7 +589,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
 
     public void getCurrencyValue() {
 
-        new HttpsRequest(Consts.GET_CURRENCY_API, mContext).stringGet(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_CURRENCY_API, mContext).stringGet(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     currencyDTOArrayList = new ArrayList<>();

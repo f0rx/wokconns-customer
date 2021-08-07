@@ -18,7 +18,7 @@ import com.wokconns.customer.databinding.ActivityAppliedJobBinding;
 import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AppliedJobAdapter;
@@ -45,7 +45,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
         binding = DataBindingUtil.setContentView(this, R.layout.activity_applied_job);
         mContext = AppliedJob.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
 
         setUiAction();
@@ -93,7 +93,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
 
     public void getjobs() {
         ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_APPLIED_JOB_BY_ID_API, getparm(), mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_APPLIED_JOB_BY_ID_API, getparm(), mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             binding.swipeRefreshLayout.setRefreshing(false);
             if (flag) {
@@ -123,7 +123,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.JOB_ID, prefrence.getValue(Consts.JOB_ID));
+        parms.put(Const.JOB_ID, prefrence.getValue(Const.JOB_ID));
         return parms;
     }
 

@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.wokconns.customer.R;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -46,9 +46,9 @@ public class OTPVerificationActivity extends AppCompatActivity implements TextWa
         final CustomTextView resendVerificationBtn = findViewById(R.id.resendVerificationBtn);
         final View root = findViewById(R.id.rootOTPScreen);
 
-        if (getIntent().hasExtra(Consts.MOBILE)) {
-            mobile = getIntent().getStringExtra(Consts.MOBILE);
-            emailAddress = getIntent().getStringExtra(Consts.EMAIL);
+        if (getIntent().hasExtra(Const.MOBILE)) {
+            mobile = getIntent().getStringExtra(Const.MOBILE);
+            emailAddress = getIntent().getStringExtra(Const.EMAIL);
             CTVPhoneNumber.setText(mobile);
         }
 
@@ -153,10 +153,10 @@ public class OTPVerificationActivity extends AppCompatActivity implements TextWa
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
         HashMap<String, String> params = new HashMap<>();
-        params.put(Consts.EMAIL, emailAddress);
-        params.put(Consts.OTP_CODE, otpCode);
+        params.put(Const.EMAIL, emailAddress);
+        params.put(Const.OTP_CODE, otpCode);
 
-        new HttpsRequest(Consts.VERIFY_PHONE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.VERIFY_PHONE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
 
             if (flag) {
@@ -176,9 +176,9 @@ public class OTPVerificationActivity extends AppCompatActivity implements TextWa
         ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
         HashMap<String, String> params = new HashMap<>();
-        params.put(Consts.EMAIL, emailAddress);
+        params.put(Const.EMAIL, emailAddress);
 
-        new HttpsRequest(Consts.RESEND_VERIFY_OTP_CODE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.RESEND_VERIFY_OTP_CODE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
 
             if (flag) {

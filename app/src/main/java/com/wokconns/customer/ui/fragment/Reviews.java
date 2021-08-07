@@ -12,7 +12,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentReviewsBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ReviewsDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.adapter.ReviewAdapter;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class Reviews extends AppCompatActivity {
         context = Reviews.this;
 
         bundle = getIntent().getExtras();
-        artistDetailsDTO = (ArtistDetailsDTO) bundle.getSerializable(Consts.ARTIST_DTO);
+        artistDetailsDTO = (ArtistDetailsDTO) bundle.getSerializable(Const.ARTIST_DTO);
         showUiAction();
     }
 

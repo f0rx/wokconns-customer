@@ -21,7 +21,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentSettingBinding;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -57,7 +57,7 @@ public class Setting extends Fragment implements View.OnClickListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_setting, container, false);
         view = binding.getRoot();
         preference = SharedPrefrence.getInstance(getActivity());
-        userDTO = preference.getParentUser(Consts.USER_DTO);
+        userDTO = preference.getParentUser(Const.USER_DTO);
 
         baseActivity.headerNameTV.setText(getResources().getString(R.string.settings));
         setUiAction();
@@ -83,15 +83,15 @@ public class Setting extends Fragment implements View.OnClickListener {
                 break;
             case R.id.ll_language:
                 Intent intent = new Intent(baseActivity, LanguageSelection.class);
-                intent.putExtra(Consts.TYPE, "1");
+                intent.putExtra(Const.TYPE, "1");
                 startActivity(intent);
                 break;
             case R.id.ll_privacy:
-                baseURL = Consts.PRIVACY_URL;
+                baseURL = Const.PRIVACY_URL;
                 getURLForWebView();
                 break;
             case R.id.ll_faq:
-                baseURL = Consts.FAQ_URL;
+                baseURL = Const.FAQ_URL;
                 getURLForWebView();
                 break;
 
@@ -103,15 +103,15 @@ public class Setting extends Fragment implements View.OnClickListener {
         new HttpsRequest(baseURL, baseActivity).stringGet(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
-                    if (baseURL.equalsIgnoreCase(Consts.PRIVACY_URL)) {
+                    if (baseURL.equalsIgnoreCase(Const.PRIVACY_URL)) {
                         Intent intent1 = new Intent(baseActivity, WebViewCommon.class);
-                        intent1.putExtra(Consts.URL, msg);
-                        intent1.putExtra(Consts.HEADER, getResources().getString(R.string.privacy_policy));
+                        intent1.putExtra(Const.URL, msg);
+                        intent1.putExtra(Const.HEADER, getResources().getString(R.string.privacy_policy));
                         startActivity(intent1);
-                    } else if (baseURL.equalsIgnoreCase(Consts.FAQ_URL)) {
+                    } else if (baseURL.equalsIgnoreCase(Const.FAQ_URL)) {
                         Intent intent3 = new Intent(getActivity(), WebViewCommon.class);
-                        intent3.putExtra(Consts.URL, msg);
-                        intent3.putExtra(Consts.HEADER, getResources().getString(R.string.faq));
+                        intent3.putExtra(Const.URL, msg);
+                        intent3.putExtra(Const.HEADER, getResources().getString(R.string.faq));
                         startActivity(intent3);
                     }
                 } catch (Exception e) {
@@ -146,9 +146,9 @@ public class Setting extends Fragment implements View.OnClickListener {
         tvYesPass.setOnClickListener(
                 v -> {
                     params = new HashMap<>();
-                    params.put(Consts.USER_ID, userDTO.getUser_id());
-                    params.put(Consts.PASSWORD, ProjectUtils.getEditTextValue(etOldPassD));
-                    params.put(Consts.NEW_PASSWORD, ProjectUtils.getEditTextValue(etNewPassD));
+                    params.put(Const.USER_ID, userDTO.getUser_id());
+                    params.put(Const.PASSWORD, ProjectUtils.getEditTextValue(etOldPassD));
+                    params.put(Const.NEW_PASSWORD, ProjectUtils.getEditTextValue(etNewPassD));
 
                     if (NetworkManager.isConnectToInternet(Setting.this.getActivity())) {
                         Setting.this.Submit();
@@ -164,14 +164,14 @@ public class Setting extends Fragment implements View.OnClickListener {
 
     public void updateProfile() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.UPDATE_PROFILE_API, params, paramsFile, getActivity()).imagePost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.UPDATE_PROFILE_API, params, paramsFile, getActivity()).imagePost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
                     ProjectUtils.showToast(Setting.this.getActivity(), msg);
 
                     userDTO = new Gson().fromJson(response.getJSONObject("data").toString(), UserDTO.class);
-                    preference.setParentUser(userDTO, Consts.USER_DTO);
+                    preference.setParentUser(userDTO, Const.USER_DTO);
                     baseActivity.showImage();
 
                 } catch (Exception e) {

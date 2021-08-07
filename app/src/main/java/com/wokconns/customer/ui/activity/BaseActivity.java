@@ -51,7 +51,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.AppointmentFrag;
 import com.wokconns.customer.ui.fragment.ChatList;
@@ -137,10 +137,10 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
-        if (getIntent().hasExtra(Consts.SCREEN_TAG)) {
-            type = getIntent().getStringExtra(Consts.SCREEN_TAG);
+        if (getIntent().hasExtra(Const.SCREEN_TAG)) {
+            type = getIntent().getStringExtra(Const.SCREEN_TAG);
         }
 
 
@@ -193,57 +193,57 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
         if (savedInstanceState == null) {
             if (type != null) {
-                if (type.equalsIgnoreCase(Consts.CHAT_NOTIFICATION)) {
+                if (type.equalsIgnoreCase(Const.CHAT_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 2;
                     CURRENT_TAG = TAG_CHAT;
                     loadHomeFragment(new ChatList(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.TICKET_COMMENT_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.TICKET_COMMENT_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 11;
                     CURRENT_TAG = TAG_TICKETS;
                     loadHomeFragment(new Tickets(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.TICKET_STATUS_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.TICKET_STATUS_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 11;
                     CURRENT_TAG = TAG_TICKETS;
                     loadHomeFragment(new Tickets(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.WALLET_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.WALLET_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 9;
                     CURRENT_TAG = TAG_WALLET;
                     loadHomeFragment(new Wallet(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.DECLINE_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.DECLINE_BOOKING_ARTIST_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 3;
                     CURRENT_TAG = TAG_BOOKING;
                     loadHomeFragment(new MyBooking(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.START_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.START_BOOKING_ARTIST_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 3;
                     CURRENT_TAG = TAG_BOOKING;
                     loadHomeFragment(new MyBooking(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.END_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.END_BOOKING_ARTIST_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 3;
                     CURRENT_TAG = TAG_BOOKING;
                     loadHomeFragment(new MyBooking(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.ACCEPT_BOOKING_ARTIST_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 3;
                     CURRENT_TAG = TAG_BOOKING;
                     loadHomeFragment(new MyBooking(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.JOB_APPLY_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.JOB_APPLY_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 4;
                     CURRENT_TAG = TAG_JOBS;
                     loadHomeFragment(new Jobs(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.BRODCAST_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.BRODCAST_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 6;
                     CURRENT_TAG = TAG_NOTIFICATION;
                     loadHomeFragment(new NotificationActivity(), CURRENT_TAG);
-                } else if (type.equalsIgnoreCase(Consts.ADMIN_NOTIFICATION)) {
+                } else if (type.equalsIgnoreCase(Const.ADMIN_NOTIFICATION)) {
                     header.setVisibility(View.VISIBLE);
                     navItemIndex = 6;
                     CURRENT_TAG = TAG_NOTIFICATION;
@@ -329,13 +329,15 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void showImage() {
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
+
         Glide.with(mContext).
                 load(userDTO.getImage())
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(img_profile);
+
         tvName.setText(userDTO.getName());
     }
 
@@ -637,13 +639,13 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         if (mylocation != null) {
             Double latitude = mylocation.getLatitude();
             Double longitude = mylocation.getLongitude();
-            prefrence.setValue(Consts.LATITUDE, latitude + "");
-            prefrence.setValue(Consts.LONGITUDE, longitude + "");
+            prefrence.setValue(Const.LATITUDE, latitude + "");
+            prefrence.setValue(Const.LONGITUDE, longitude + "");
 
-            parms.put(Consts.USER_ID, userDTO.getUser_id());
-            parms.put(Consts.ROLE, "2");
-            parms.put(Consts.LATITUDE, latitude + "");
-            parms.put(Consts.LONGITUDE, longitude + "");
+            parms.put(Const.USER_ID, userDTO.getUser_id());
+            parms.put(Const.ROLE, "2");
+            parms.put(Const.LATITUDE, latitude + "");
+            parms.put(Const.LONGITUDE, longitude + "");
             updateLocation();
         }
     }
@@ -688,7 +690,7 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void updateLocation() {
         // ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.UPDATE_LOCATION_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.UPDATE_LOCATION_API, parms, mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
 
             } else {

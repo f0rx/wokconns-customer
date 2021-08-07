@@ -11,7 +11,7 @@ import com.ToxicBakery.viewpager.transforms.StackTransformer;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.adapter.ServicePagerAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -33,11 +33,11 @@ public class ServiceSlider extends AppCompatActivity {
         ProjectUtils.Fullscreen(ServiceSlider.this);
         setContentView(R.layout.activity_service_slider);
         mContext = ServiceSlider.this;
-        if (getIntent().hasExtra(Consts.DTO)) {
-            productDTOList = (ArrayList<ProductDTO>) getIntent().getSerializableExtra(Consts.DTO);
-            pos = getIntent().getIntExtra(Consts.POSTION, 0);
-            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Consts.ARTIST_DTO);
-            artist_id = getIntent().getStringExtra(Consts.ARTIST_ID);
+        if (getIntent().hasExtra(Const.DTO)) {
+            productDTOList = (ArrayList<ProductDTO>) getIntent().getSerializableExtra(Const.DTO);
+            pos = getIntent().getIntExtra(Const.POSTION, 0);
+            artistDetailsDTO = (ArtistDetailsDTO) getIntent().getSerializableExtra(Const.ARTIST_DTO);
+            artist_id = getIntent().getStringExtra(Const.ARTIST_ID);
         }
         setUiAction();
     }

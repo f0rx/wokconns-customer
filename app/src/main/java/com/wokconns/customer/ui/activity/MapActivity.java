@@ -35,7 +35,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityMapBinding;
 import com.wokconns.customer.dto.LocationDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -99,8 +99,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         mContext = MapActivity.this;
         prefrence = SharedPrefrence.getInstance(mContext);
-        if (getIntent().hasExtra(Consts.ARTIST_ID)) {
-            ar_id = getIntent().getStringExtra(Consts.ARTIST_ID);
+        if (getIntent().hasExtra(Const.ARTIST_ID)) {
+            ar_id = getIntent().getStringExtra(Const.ARTIST_ID);
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -119,9 +119,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (mMap != null) {
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(prefrence.getValue(Consts.LATITUDE)), Double.parseDouble(prefrence.getValue(Consts.LONGITUDE))), 18);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(prefrence.getValue(Const.LATITUDE)), Double.parseDouble(prefrence.getValue(Const.LONGITUDE))), 18);
             mMap.animateCamera(cameraUpdate);
-            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(prefrence.getValue(Consts.LATITUDE)), Double.parseDouble(prefrence.getValue(Consts.LONGITUDE)))).title("My Location"));
+            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(prefrence.getValue(Const.LATITUDE)), Double.parseDouble(prefrence.getValue(Const.LONGITUDE)))).title("My Location"));
         }
         if (mMap != null) {
             handler.postDelayed(mTask, 4000);
@@ -129,7 +129,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void getLocation() {
-        new HttpsRequest(Consts.GET_LOCATION_ARTIST_API, getParmlocation(), mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_LOCATION_ARTIST_API, getParmlocation(), mContext).stringPost(TAG, (flag, msg, response) -> {
             if (flag) {
                 try {
                     locationDTO = new Gson().fromJson(response.getJSONObject("data").toString(), LocationDTO.class);
@@ -152,7 +152,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public Map<String, String> getParmlocation() {
 
         HashMap<String, String> params = new HashMap<>();
-        params.put(Consts.ARTIST_ID, ar_id);
+        params.put(Const.ARTIST_ID, ar_id);
         Log.e(TAG, params.toString());
 
         return params;

@@ -16,7 +16,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.NotificationDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
@@ -47,7 +47,7 @@ public class NotificationActivity extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.activity_notification, container, false);
         prefrence = SharedPrefrence.getInstance(getActivity());
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.notification));
         setUiAction(view);
         return view;
@@ -75,7 +75,7 @@ public class NotificationActivity extends Fragment {
 
     public void getNotification() {
         ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.GET_NOTIFICATION_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_NOTIFICATION_API, getparm(), getActivity()).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 tvNo.setVisibility(View.GONE);
@@ -101,7 +101,7 @@ public class NotificationActivity extends Fragment {
 
     public HashMap<String, String> getparm() {
         HashMap<String, String> parms = new HashMap<>();
-        parms.put(Consts.USER_ID, userDTO.getUser_id());
+        parms.put(Const.USER_ID, userDTO.getUser_id());
         return parms;
     }
 

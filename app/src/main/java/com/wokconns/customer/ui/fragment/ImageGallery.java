@@ -13,7 +13,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.FragmentImageGalleryBinding;
 import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.GalleryDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.adapter.AdapterGallery;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class ImageGallery extends AppCompatActivity implements View.OnClickListe
         context = ImageGallery.this;
         bundle = this.getIntent().getExtras();
         if (bundle != null) {
-            artistDetailsDTO = (ArtistDetailsDTO) bundle.getSerializable(Consts.ARTIST_DTO);
+            artistDetailsDTO = (ArtistDetailsDTO) bundle.getSerializable(Const.ARTIST_DTO);
         }
         showUiAction();
     }

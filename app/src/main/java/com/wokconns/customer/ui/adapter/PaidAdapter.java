@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
 import com.wokconns.customer.ui.activity.ViewInvoice;
@@ -102,13 +102,13 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.MyViewHolder> 
         }
         holder.llPay.setOnClickListener(v -> {
             Intent in = new Intent(mContext, PaymentProActivity.class);
-            in.putExtra(Consts.HISTORY_DTO, objects.get(position));
+            in.putExtra(Const.HISTORY_DTO, objects.get(position));
             mContext.startActivity(in);
 
         });
         holder.tvView.setOnClickListener(v -> {
             Intent in = new Intent(mContext, ViewInvoice.class);
-            in.putExtra(Consts.HISTORY_DTO, objects.get(position));
+            in.putExtra(Const.HISTORY_DTO, objects.get(position));
             mContext.startActivity(in);
 
         });

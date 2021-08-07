@@ -22,7 +22,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.interfaces.IPostPayment;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CustomEditText;
@@ -68,13 +68,13 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         mContext = PaymentProActivity.this;
 
         prefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = prefrence.getParentUser(Consts.USER_DTO);
+        userDTO = prefrence.getParentUser(Const.USER_DTO);
 
-        parmsGetWallet.put(Consts.USER_ID, userDTO.getUser_id());
-        params.put(Consts.USER_ID, userDTO.getUser_id());
+        parmsGetWallet.put(Const.USER_ID, userDTO.getUser_id());
+        params.put(Const.USER_ID, userDTO.getUser_id());
 
-        if (getIntent().hasExtra(Consts.HISTORY_DTO)) {
-            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Consts.HISTORY_DTO);
+        if (getIntent().hasExtra(Const.HISTORY_DTO)) {
+            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Const.HISTORY_DTO);
         }
         setUiAction();
     }
@@ -130,8 +130,8 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 //                }
 //                break;
             case R.id.tvApplyCode:
-                params.put(Consts.INVOICE_ID, historyDTO.getInvoice_id());
-                params.put(Consts.COUPON_CODE, ProjectUtils.getEditTextValue(etCode));
+                params.put(Const.INVOICE_ID, historyDTO.getInvoice_id());
+                params.put(Const.COUPON_CODE, ProjectUtils.getEditTextValue(etCode));
 
                 checkCoupon();
                 break;
@@ -153,7 +153,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
     public void checkCoupon() {
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.CHECK_COUPON_API, params, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.CHECK_COUPON_API, params, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {
@@ -184,13 +184,13 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
     public Map<String, String> getParms(String type) {
         HashMap<String, String> params = new HashMap<>();
-        params.put(Consts.INVOICE_ID, historyDTO.getInvoice_id());
-        params.put(Consts.USER_ID, userDTO.getUser_id());
-        params.put(Consts.COUPON_CODE, coupon_code);
-        params.put(Consts.FINAL_AMOUNT, final_amount);
-        params.put(Consts.PAYMENT_STATUS, "1");
-        params.put(Consts.PAYMENT_TYPE, type);
-        params.put(Consts.DISCOUNT_AMOUNT, discount_amount);
+        params.put(Const.INVOICE_ID, historyDTO.getInvoice_id());
+        params.put(Const.USER_ID, userDTO.getUser_id());
+        params.put(Const.COUPON_CODE, coupon_code);
+        params.put(Const.FINAL_AMOUNT, final_amount);
+        params.put(Const.PAYMENT_STATUS, "1");
+        params.put(Const.PAYMENT_TYPE, type);
+        params.put(Const.DISCOUNT_AMOUNT, discount_amount);
 
         Log.e("sendPaymentConfirm", params.toString());
         return params;
@@ -248,15 +248,15 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
 
         paystackPay.setOnClickListener(v -> {
             Intent in2 = new Intent(mContext, PaymentWeb.class);
-            in2.putExtra(Consts.HISTORY_DTO, historyDTO);
-            in2.putExtra(Consts.COUPON_CODE, coupon_code);
+            in2.putExtra(Const.HISTORY_DTO, historyDTO);
+            in2.putExtra(Const.COUPON_CODE, coupon_code);
             PaymentProActivity.this.startActivity(in2);
             dialog.dismiss();
         });
         flutterwavepay.setOnClickListener(v -> {
             Intent in3 = new Intent(mContext, PaymentWeb.class);
-            in3.putExtra(Consts.HISTORY_DTO, historyDTO);
-            in3.putExtra(Consts.COUPON_CODE, coupon_code);
+            in3.putExtra(Const.HISTORY_DTO, historyDTO);
+            in3.putExtra(Const.COUPON_CODE, coupon_code);
             PaymentProActivity.this.startActivity(in3);
             dialog.dismiss();
         });
@@ -264,7 +264,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void getWallet() {
-        new HttpsRequest(Consts.GET_WALLET_API, parmsGetWallet, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.GET_WALLET_API, parmsGetWallet, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 try {

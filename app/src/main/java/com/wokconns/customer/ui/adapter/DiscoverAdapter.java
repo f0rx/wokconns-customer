@@ -19,7 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterdiscoverBinding;
 import com.wokconns.customer.dto.AllAtristListDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.ArtistProfileNew;
 
@@ -99,7 +99,7 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.MyView
         holder.binding.ratingbar.setRating(Float.parseFloat(allAtristListDTOList.get(position).getAva_rating()));
         holder.binding.rlClick.setOnClickListener(v -> {
             Intent in = new Intent(mContext, ArtistProfileNew.class);
-            in.putExtra(Consts.ARTIST_ID, allAtristListDTOList.get(position).getUser_id());
+            in.putExtra(Const.ARTIST_ID, allAtristListDTOList.get(position).getUser_id());
             mContext.startActivity(in);
         });
     }

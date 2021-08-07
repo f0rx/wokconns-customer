@@ -24,7 +24,7 @@ import com.wokconns.customer.databinding.ItemSectionBinding;
 import com.wokconns.customer.dto.UserBooking;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.ui.activity.MapActivity;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
@@ -253,7 +253,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
             holder.adapterCustomerBookingBinding.tvDate.setText(String.format("%s %s %s",
                     mContext.getResources().getString(R.string.date),
-                    ProjectUtils.changeDateFormate1(objects.get(position).getBooking_date()),
+                    ProjectUtils.changeDateFormat(objects.get(position).getBooking_date()),
                     objects.get(position).getBooking_time()));
             holder.adapterCustomerBookingBinding.tvDescription.setText(objects.get(position).getDescription());
             holder.adapterCustomerBookingBinding.tvWork.setText(objects.get(position).getCategory_name());
@@ -275,7 +275,7 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
             holder.adapterCustomerBookingBinding.ivMap.setOnClickListener(v -> {
                 Intent in = new Intent(mContext, MapActivity.class);
-                in.putExtra(Consts.ARTIST_ID, objects.get(position).getArtist_id());
+                in.putExtra(Const.ARTIST_ID, objects.get(position).getArtist_id());
                 mContext.startActivity(in);
             });
 
@@ -288,14 +288,14 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
             });
             holder.adapterCustomerBookingBinding.llPay.setOnClickListener(v -> {
                 Intent in = new Intent(mContext, PaymentProActivity.class);
-                in.putExtra(Consts.HISTORY_DTO, objects.get(position).getInvoice());
+                in.putExtra(Const.HISTORY_DTO, objects.get(position).getInvoice());
                 mContext.startActivity(in);
 //                myBooking.requireActivity().getSupportFragmentManager()
 //                        .beginTransaction().remove(myBooking).commit();
             });
             holder.adapterCustomerBookingBinding.llViewInvoice.setOnClickListener(v -> {
                 Intent in = new Intent(mContext, ViewInvoice.class);
-                in.putExtra(Consts.HISTORY_DTO, objects.get(position).getInvoice());
+                in.putExtra(Const.HISTORY_DTO, objects.get(position).getInvoice());
                 mContext.startActivity(in);
 
             });
@@ -327,15 +327,15 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void decline(int pos) {
         paramsDecline = new HashMap<>();
-        paramsDecline.put(Consts.USER_ID, userDTO.getUser_id());
-        paramsDecline.put(Consts.JOB_PRICE, objects.get(pos).getPrice());
-        paramsDecline.put(Consts.BOOKING_ID, objects.get(pos).getId());
-        paramsDecline.put(Consts.DECLINE_BY, "2");
-        paramsDecline.put(Consts.DECLINE_REASON, "Busy");
+        paramsDecline.put(Const.USER_ID, userDTO.getUser_id());
+        paramsDecline.put(Const.JOB_PRICE, objects.get(pos).getPrice());
+        paramsDecline.put(Const.BOOKING_ID, objects.get(pos).getId());
+        paramsDecline.put(Const.DECLINE_BY, "2");
+        paramsDecline.put(Const.DECLINE_REASON, "Busy");
 
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.DECLINE_BOOKING_API, paramsDecline, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.DECLINE_BOOKING_API, paramsDecline, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             dialog_book.dismiss();
             if (flag) {
@@ -355,11 +355,11 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void booking(String req, int pos) {
         paramsBookingOp = new HashMap<>();
-        paramsBookingOp.put(Consts.BOOKING_ID, objects.get(pos).getId());
-        paramsBookingOp.put(Consts.REQUEST, req);
-        paramsBookingOp.put(Consts.USER_ID, objects.get(pos).getUser_id());
+        paramsBookingOp.put(Const.BOOKING_ID, objects.get(pos).getId());
+        paramsBookingOp.put(Const.REQUEST, req);
+        paramsBookingOp.put(Const.USER_ID, objects.get(pos).getUser_id());
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
-        new HttpsRequest(Consts.BOOKING_OPERATION_API, paramsBookingOp, mContext).stringPost(TAG, (flag, msg, response) -> {
+        new HttpsRequest(Const.BOOKING_OPERATION_API, paramsBookingOp, mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
             if (flag) {
                 ProjectUtils.showToast(mContext, msg);
@@ -410,12 +410,12 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void recordJobCancellation(NetworkRequestCallback callback, @NotNull UserBooking booking) {
         paramsDecline = new HashMap<>();
-        paramsDecline.put(Consts.USER_ID, userDTO.getUser_id());
-        paramsDecline.put(Consts.JOB_PRICE, booking.getPrice());
+        paramsDecline.put(Const.USER_ID, userDTO.getUser_id());
+        paramsDecline.put(Const.JOB_PRICE, booking.getPrice());
 
         ProjectUtils.showProgressDialog(mContext, true, mContext.getResources().getString(R.string.please_wait));
 
-        new HttpsRequest(Consts.RECORD_JOB_CANCELLATION, paramsDecline, mContext)
+        new HttpsRequest(Const.RECORD_JOB_CANCELLATION, paramsDecline, mContext)
                 .stringPost(TAG, (flag, msg, response) -> {
                     ProjectUtils.pauseProgressDialog();
 

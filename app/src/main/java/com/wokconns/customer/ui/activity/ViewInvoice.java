@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityViewInvoiceBinding;
 import com.wokconns.customer.dto.HistoryDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -27,8 +27,8 @@ public class ViewInvoice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_invoice);
         mContext = ViewInvoice.this;
-        if (getIntent().hasExtra(Consts.HISTORY_DTO)) {
-            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Consts.HISTORY_DTO);
+        if (getIntent().hasExtra(Const.HISTORY_DTO)) {
+            historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Const.HISTORY_DTO);
         }
         setUiAction();
     }
@@ -45,7 +45,7 @@ public class ViewInvoice extends AppCompatActivity {
         binding.btnPay.setOnClickListener(v -> {
             if (NetworkManager.isConnectToInternet(mContext)) {
                 Intent in = new Intent(mContext, PaymentProActivity.class);
-                in.putExtra(Consts.HISTORY_DTO, historyDTO);
+                in.putExtra(Const.HISTORY_DTO, historyDTO);
                 mContext.startActivity(in);
             } else {
                 ProjectUtils.showToast(mContext, getResources().getString(R.string.internet_connection));

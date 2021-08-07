@@ -14,7 +14,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.ActivityLanguageSelectionBinding;
 import com.wokconns.customer.dto.LanguageDTO;
 import com.wokconns.customer.dto.UserDTO;
-import com.wokconns.customer.interfaces.Consts;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AdapterLanguage;
 
@@ -39,13 +39,13 @@ public class LanguageSelection extends AppCompatActivity implements View.OnClick
         binding = DataBindingUtil.setContentView(this, R.layout.activity_language_selection);
         mContext = LanguageSelection.this;
         sharedPrefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = sharedPrefrence.getParentUser(Consts.USER_DTO);
+        userDTO = sharedPrefrence.getParentUser(Const.USER_DTO);
         init();
     }
 
     private void init() {
         binding.llBack.setOnClickListener(this);
-        type = getIntent().getStringExtra(Consts.TYPE);
+        type = getIntent().getStringExtra(Const.TYPE);
         showLanguage();
     }
 
