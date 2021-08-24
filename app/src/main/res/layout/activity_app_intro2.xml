@@ -18,46 +18,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <LinearLayout
-                android:id="@+id/ll_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/_10sdp"
-                android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/ll_language"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_margin="@dimen/_10sdp"-->
+<!--                android:orientation="horizontal">-->
 
 
-                <com.wokconns.customer.utils.CustomTextView
-                    android:id="@+id/tv_eng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/str_en"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp" />
+<!--                <com.wokconns.customer.utils.CustomTextView-->
+<!--                    android:id="@+id/tv_eng"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="@string/str_en"-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/_12sdp" />-->
 
-                <com.wokconns.customer.utils.CustomTextView
-                    android:id="@+id/tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text=" / "
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp" />
+<!--                <com.wokconns.customer.utils.CustomTextView-->
+<!--                    android:id="@+id/tv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text=" / "-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/_12sdp" />-->
 
-                <com.wokconns.customer.utils.CustomTextView
-                    android:id="@+id/tv_arb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/str_ar"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp" />
+<!--                <com.wokconns.customer.utils.CustomTextView-->
+<!--                    android:id="@+id/tv_arb"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="@string/str_ar"-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/_12sdp" />-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"

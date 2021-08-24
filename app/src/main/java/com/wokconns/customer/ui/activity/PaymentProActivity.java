@@ -182,7 +182,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    public Map<String, String> getParms(String type) {
+    public HashMap<String, String> getParms(String type) {
         HashMap<String, String> params = new HashMap<>();
         params.put(Const.INVOICE_ID, historyDTO.getInvoice_id());
         params.put(Const.USER_ID, userDTO.getUser_id());
@@ -204,7 +204,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                     .setMessage(msg)
                     .setCancelable(false)
                     .setPositiveButton(getResources().getString(R.string.yes), (dialog, which) -> {
-                        PaymentProActivity.this.sendPayment(PaymentProActivity.this, PaymentProActivity.this.getParms(type), historyDTO);
+                        sendPayment(PaymentProActivity.this, getParms(type), historyDTO);
                         dialog.dismiss();
                     })
                     .setNegativeButton(getResources().getString(R.string.no), (dialog, which) -> dialog.dismiss())

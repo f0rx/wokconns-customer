@@ -22,13 +22,13 @@ import java.io.File
  */
 class HttpsRequest {
     private var match: String
-    private var params: Map<String, String>? = null
-    private var fileparams: Map<String, File>? = null
+    private var params: HashMap<String, String>? = null
+    private var fileparams: HashMap<String, File>? = null
     private var ctx: Context
     private var jObject: JSONObject? = null
     private var sharedPreference: SharedPrefrence
 
-    constructor(match: String, params: Map<String, String>?, ctx: Context) {
+    constructor(match: String, params: HashMap<String, String>?, ctx: Context) {
         this.match = match
         this.params = params
         this.ctx = ctx
@@ -37,8 +37,8 @@ class HttpsRequest {
 
     constructor(
         match: String,
-        params: Map<String, String>?,
-        fileparams: Map<String, File>?,
+        params: HashMap<String, String>?,
+        fileparams: HashMap<String, File>?,
         ctx: Context
     ) {
         this.match = match
@@ -62,6 +62,10 @@ class HttpsRequest {
     }
 
     fun stringPostJson(TAG: String?, h: Helper) {
+        if (params != null)
+            if (!params?.containsKey(Const.ROLE)!!)
+                params!![Const.ROLE] = "2"
+
         AndroidNetworking.post(Const.BASE_URL + match)
             .addJSONObjectBody(jObject)
             .setTag("test")
@@ -92,27 +96,36 @@ class HttpsRequest {
                     }
                 }
 
-                override fun onError(anError: ANError) {
+                override fun onError(anError: ANError?) {
                     pauseProgressDialog()
                     try {
-                        val jsonObject = JSONObject(anError.errorBody)
-                        val status = jsonObject.opt("status")
-                        val message = jsonObject.optString("message")
-                        if ((status is String && status.contains("err"))
-                            || status == "error"
-                        ) h.backResponse(false, message.toString(), jsonObject)
+                        if (anError != null && anError.errorBody != null) {
+                            val jsonObject = JSONObject(anError.errorBody)
+                            val status = jsonObject.opt("status")
+                            val message = jsonObject.optString("message")
+                            if ((status is String && status.contains("err"))
+                                || status == "error"
+                            ) h.backResponse(false, message.toString(), jsonObject)
+                            return
+                        }
+
+                        h.backResponse(false, anError?.errorDetail
+                            ?: anError?.cause?.localizedMessage ?: anError.toString(), null)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                     log(
                         TAG,
-                        " error body --->" + anError.errorBody + " error msg --->" + anError.message
+                        " error body --->" + anError?.errorBody + " error msg --->" + anError?.message
                     )
                 }
             })
     }
 
     fun stringPost(TAG: String?, h: Helper) {
+        if (params != null)
+            if (!params?.containsKey(Const.ROLE)!!)
+                params!![Const.ROLE] = "2"
         AndroidNetworking.post(Const.BASE_URL + match)
             .addBodyParameter(params)
             .setTag("test")
@@ -143,27 +156,36 @@ class HttpsRequest {
                     }
                 }
 
-                override fun onError(anError: ANError) {
+                override fun onError(anError: ANError?) {
                     pauseProgressDialog()
                     try {
-                        val jsonObject = JSONObject(anError.errorBody)
-                        val status = jsonObject.opt("status")
-                        val message = jsonObject.optString("message")
-                        if ((status is String && status.contains("err"))
-                            || status == "error"
-                        ) h.backResponse(false, message.toString(), jsonObject)
+                        if (anError != null && anError.errorBody != null) {
+                            val jsonObject = JSONObject(anError.errorBody)
+                            val status = jsonObject.opt("status")
+                            val message = jsonObject.optString("message")
+                            if ((status is String && status.contains("err"))
+                                || status == "error"
+                            ) h.backResponse(false, message.toString(), jsonObject)
+                            return
+                        }
+
+                        h.backResponse(false, anError?.errorDetail
+                            ?: anError?.cause?.localizedMessage ?: anError.toString(), null)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                     log(
                         TAG,
-                        " error body --->" + anError.errorBody + " error msg --->" + anError.message
+                        " error body --->" + anError?.errorBody + " error msg --->" + anError?.message
                     )
                 }
             })
     }
 
     fun stringGet(TAG: String?, h: Helper) {
+        if (params != null)
+            if (!params?.containsKey(Const.ROLE)!!)
+                params!![Const.ROLE] = "2"
         AndroidNetworking.get(Const.BASE_URL + match)
             .setTag("test")
             .addHeaders(Const.LANGUAGE, sharedPreference.getValue(Const.LANGUAGE_SELECTION))
@@ -191,6 +213,10 @@ class HttpsRequest {
     }
 
     fun imagePost(TAG: String?, h: Helper) {
+        if (params != null)
+            if (!params?.containsKey(Const.ROLE)!!)
+                params!![Const.ROLE] = "2"
+
         AndroidNetworking.upload(Const.BASE_URL + match)
             .addMultipartFile(fileparams)
             .addMultipartParameter(params)
@@ -226,21 +252,27 @@ class HttpsRequest {
                     }
                 }
 
-                override fun onError(anError: ANError) {
+                override fun onError(anError: ANError?) {
                     pauseProgressDialog()
                     try {
-                        val jsonObject = JSONObject(anError.errorBody)
-                        val status = jsonObject.opt("status")
-                        val message = jsonObject.optString("message")
-                        if ((status is String && status.contains("err"))
-                            || status == "error"
-                        ) h.backResponse(false, message.toString(), jsonObject)
+                        if (anError != null && anError.errorBody != null) {
+                            val jsonObject = JSONObject(anError.errorBody)
+                            val status = jsonObject.opt("status")
+                            val message = jsonObject.optString("message")
+                            if ((status is String && status.contains("err"))
+                                || status == "error"
+                            ) h.backResponse(false, message.toString(), jsonObject)
+                            return
+                        }
+
+                        h.backResponse(false, anError?.errorDetail
+                            ?: anError?.cause?.localizedMessage ?: anError.toString(), null)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                     log(
                         TAG,
-                        " error body --->" + anError.errorBody + " error msg --->" + anError.message
+                        " error body --->" + anError?.errorBody + " error msg --->" + anError?.message
                     )
                 }
             })

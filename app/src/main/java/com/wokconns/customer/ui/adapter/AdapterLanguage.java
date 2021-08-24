@@ -29,7 +29,7 @@ import java.util.Locale;
 public class AdapterLanguage extends RecyclerView.Adapter<AdapterLanguage.LanguageHolder> {
     String language = "";
     String type = "";
-    private ArrayList<LanguageDTO> datas = new ArrayList<>();
+    private ArrayList<LanguageDTO> datas;
     private Context mContext;
     private SharedPrefrence prefrence;
     private String half, second_half;

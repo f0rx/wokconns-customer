@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -48,7 +49,7 @@ import java.util.TimerTask;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int REQUEST_LOCATION = 0;
+    private static final int REQUEST_LOCATION = 734;
     private static GoogleMap mMap;
     Marker marker;
     Timer timer = new Timer();
@@ -61,7 +62,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private int markerCount;
     private LocationDTO locationDTO;
     private GoogleApiClient mGoogleApiClient;
-    private Location mCurrentLocation = new Location("test");
+    private Location mCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
     Runnable mTask = new Runnable() {
         @Override
         public void run() {
@@ -104,7 +105,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -149,7 +152,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    public Map<String, String> getParmlocation() {
+    public HashMap<String, String> getParmlocation() {
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Const.ARTIST_ID, ar_id);

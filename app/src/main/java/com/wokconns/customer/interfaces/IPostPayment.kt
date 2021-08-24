@@ -1,45 +1,55 @@
-package com.wokconns.customer.interfaces;
+package com.wokconns.customer.interfaces
 
-import android.app.Activity;
-import android.content.Intent;
+import android.app.Activity
+import android.content.Intent
+import com.wokconns.customer.R
+import com.wokconns.customer.dto.HistoryDTO
+import com.wokconns.customer.https.HttpsRequest
+import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.ui.activity.WriteReview
+import com.wokconns.customer.utils.ProjectUtils.pauseProgressDialog
+import com.wokconns.customer.utils.ProjectUtils.showProgressDialog
+import com.wokconns.customer.utils.ProjectUtils.showToast
+import org.json.JSONObject
+import java.util.*
 
-import com.wokconns.customer.R;
-import com.wokconns.customer.dto.HistoryDTO;
-import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.preferences.SharedPrefrence;
-import com.wokconns.customer.ui.activity.WriteReview;
-import com.wokconns.customer.utils.ProjectUtils;
-
-import java.util.Map;
-
-public interface IPostPayment {
-    String _kTAG = IPostPayment.class.getName();
-
-    default void updatePaymentStatus(Activity activity,
-                                     SharedPrefrence prefrence, Map<String, String> params,
-                                     HistoryDTO history) {
-        if (prefrence.getValue(Const.SURL).equalsIgnoreCase(Const.PAYMENT_SUCCESS)) {
-            prefrence.clearPreferences(Const.SURL);
-            sendPayment(activity, params, history);
-        } else if (prefrence.getValue(Const.FURL).equalsIgnoreCase(Const.PAYMENT_FAIL)) {
-            prefrence.clearPreferences(Const.FURL);
-            activity.finish();
+interface IPostPayment {
+    fun updatePaymentStatus(
+        activity: Activity,
+        preference: SharedPrefrence,
+        params: HashMap<String, String>?,
+        history: HistoryDTO?
+    ) {
+        if (preference.getValue(Const.SURL).equals(Const.PAYMENT_SUCCESS, ignoreCase = true)) {
+            preference.clearPreferences(Const.SURL)
+            sendPayment(activity, params, history)
+        } else if (preference.getValue(Const.FURL).equals(Const.PAYMENT_FAIL, ignoreCase = true)) {
+            preference.clearPreferences(Const.FURL)
+            activity.finish()
         }
     }
 
-    default void sendPayment(Activity activity, Map<String, String> params, HistoryDTO history) {
-        ProjectUtils.showProgressDialog(activity, true, activity.getResources().getString(R.string.please_wait));
-        new HttpsRequest(Const.MAKE_PAYMENT_API, params, activity).stringPost(_kTAG, (flag, msg, response) -> {
-            ProjectUtils.pauseProgressDialog();
-            if (flag) {
-                ProjectUtils.showToast(activity, msg);
-                Intent in = new Intent(activity, WriteReview.class);
-                in.putExtra(Const.HISTORY_DTO, history);
-                activity.startActivity(in);
-                activity.finish();
-            } else {
-                ProjectUtils.showToast(activity, msg);
-            }
-        });
+    fun sendPayment(activity: Activity, params: HashMap<String, String>?, history: HistoryDTO?) {
+        showProgressDialog(activity, false, activity.resources.getString(R.string.please_wait))
+        HttpsRequest(Const.MAKE_PAYMENT_API, params, activity).stringPost(
+            kTAG,
+            object : Helper {
+                override fun backResponse(flag: Boolean, msg: String?, response: JSONObject?) {
+                    pauseProgressDialog()
+                    if (flag) {
+                        showToast(activity, msg)
+                        val `in` = Intent(activity, WriteReview::class.java)
+                        `in`.putExtra(Const.HISTORY_DTO, history)
+                        activity.startActivity(`in`)
+                        activity.finish()
+                    } else {
+                        showToast(activity, msg)
+                    }
+                }
+            })
+    }
+
+    companion object {
+        val kTAG: String = IPostPayment::class.java.name
     }
 }

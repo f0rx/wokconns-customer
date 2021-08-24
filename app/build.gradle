@@ -26,6 +26,7 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += '-Xjvm-default=all-compatibility'
     }
 
     secrets {
@@ -54,8 +55,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
     signingConfigs {
@@ -118,7 +119,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation("com.google.android.libraries.places:places-compat:2.4.0")
-    // implementation 'co.paystack.android.design.widget:pinpad:1.0.1'
+//    implementation 'co.paystack.android.design.widget:pinpad:1.0.4'
     implementation 'co.paystack.android:paystack:3.1.2'
     implementation("com.schibstedspain.android:leku:5.0.0") {
         exclude group: 'com.google.android.gms'

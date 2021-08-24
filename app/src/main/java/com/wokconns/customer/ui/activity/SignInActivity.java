@@ -27,7 +27,7 @@ import com.wokconns.customer.utils.ProjectUtils;
 import java.util.HashMap;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private static final String notVerifiedErrorMatcher = "does not have a verified phone number";
     private Context mContext;
     private String TAG = SignInActivity.class.getSimpleName();
     private SharedPrefrence prefrence;
@@ -90,10 +90,20 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             prefrence.setValue(Const.LANGUAGE_SELECTION, "en");
         }
 
-        ProjectUtils.showProgressDialog(mContext, true, getResources().getString(R.string.please_wait));
+        ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
 
         new HttpsRequest(Const.LOGIN_API, getparm(), mContext).stringPost(TAG, (flag, msg, response) -> {
             ProjectUtils.pauseProgressDialog();
+
+            if (msg != null && msg.contains(notVerifiedErrorMatcher)) {
+                Intent in = new Intent(mContext, OTPVerificationActivity.class);
+                in.putExtra(Const.MOBILE, binding.CETMobileNumber.getText().toString());
+
+                startActivity(in);
+                overridePendingTransition(R.anim.anim_slide_in_left,
+                        R.anim.anim_slide_out_left);
+            }
+
             if (flag) {
                 try {
                     ProjectUtils.showToast(mContext, msg);
