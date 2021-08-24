@@ -10,9 +10,12 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="hindi">Hindi</string>
-    <string name="intro_1">Select the best service providers for your Job.</string>
-    <string name="intro_2">Easy transaction between you and the technician.</string>
-    <string name="intro_3">Track the progress of the Job.</string>
+    <string name="intro_1">Hiring the best Painters for your next job is simply a click away.</string>
+    <string name="intro_1_bottom">Let’s connect you to paying clients.</string>
+    <string name="intro_2">We have assembled the finest tailors in town here.</string>
+    <string name="intro_2_bottom">Simply sign up to get your next dress sewn.</string>
+    <string name="intro_3">We have assembled here a good number of professional electricians for your next job.</string>
+    <string name="intro_3_bottom">Simply sign Up to contract one.</string>
     <string name="internet_connection">Please enable your internet connection.</string>
     <string name="server_error">Unable to connect to server.</string>
     <string name="closeMsg">Do you want to close Wokconns?</string>

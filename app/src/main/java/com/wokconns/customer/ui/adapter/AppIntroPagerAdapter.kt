@@ -27,7 +27,8 @@ class AppIntroPagerAdapter(
             false
         )
         binding.ivImage.setImageResource(mResources[position])
-        setDescText(position, binding.ctvTextdecrib)
+        setDescText(position, binding.ctvTextdecrib, binding.ctvText)
+
         container.addView(binding.root)
         binding.ctvText.setOnClickListener {
             val pos = position + 1
@@ -48,11 +49,20 @@ class AppIntroPagerAdapter(
         return view === `object`
     }
 
-    fun setDescText(pos: Int, ctvDescription: TextView) {
+    fun setDescText(pos: Int, ctvDescription: TextView, tvBottom: TextView) {
         when (pos) {
-            0 -> ctvDescription.text = mContext.getString(R.string.intro_1)
-            1 -> ctvDescription.text = mContext.getString(R.string.intro_2)
-            2 -> ctvDescription.text = mContext.getString(R.string.intro_3)
+            0 -> {
+                ctvDescription.text = mContext.getString(R.string.intro_1)
+                tvBottom.text = mContext.getString(R.string.intro_1_bottom)
+            }
+            1 -> {
+                ctvDescription.text = mContext.getString(R.string.intro_2)
+                tvBottom.text = mContext.getString(R.string.intro_2_bottom)
+            }
+            2 -> {
+                ctvDescription.text = mContext.getString(R.string.intro_3)
+                tvBottom.text = mContext.getString(R.string.intro_3_bottom)
+            }
         }
     }
 

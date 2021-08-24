@@ -9,9 +9,9 @@
     <string name="ok">حسنا</string>
     <string name="cancel">إلغاء</string>
     <string name="hindi">لا.</string>
-    <string name="intro_1">ابحث عن \nفنان الماكياج \nو Hair Stylish.</string>
-    <string name="intro_2">اجعل نفسك أكثر جمالا مما تعتقد.</string>
-    <string name="intro_3">وظف أفضل مصور</string>
+    <string name="intro_1">إن توظيف أفضل الرسامين لعملك القادم هو ببساطة نقرة واحدة.</string>
+    <string name="intro_2">لقد قمنا بتجميع أفضل الخياطين في المدينة هنا.</string>
+    <string name="intro_3">لقد قمنا هنا بتجميع عدد لا بأس به من الكهربائيين المحترفين لعملك القادم.</string>
     <string name="internet_connection">الرجاء تمكين اتصال الإنترنت الخاص بك.</string>
     <string name="server_error">غير قادر على الاتصال الخادم.</string>
     <string name="closeMsg">هل أنت متأكد أنك تريد إغلاق Wokconns؟</string>
@@ -368,4 +368,7 @@
     <string name="resend_otp_txt_1">لم تستلم رمز OTP؟</string>
     <string name="forgot_pass_success_msg">تم إرسال كلمة مرور جديدة إلى</string>
     <string name="welcome_text">أهلا بك</string>
+    <string name="intro_1_bottom">دعنا نوصلك بالعملاء الذين يدفعون.</string>
+    <string name="intro_2_bottom">ببساطة قم بالتسجيل للحصول على فستانك القادم مخيط.</string>
+    <string name="intro_3_bottom">ببساطة قم بالتسجيل للتعاقد مع واحد.</string>
 </resources>

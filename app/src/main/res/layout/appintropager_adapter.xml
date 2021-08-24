@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="25dp"
-                android:text="@string/get_your_best_service_from_us"
+                android:text="@string/intro_1_bottom"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
