@@ -99,14 +99,14 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
     private lateinit var etAddressD: CustomEditText
     private lateinit var etCityD: CustomEditText
     private lateinit var etCountryD: CustomEditText
-    private var params: HashMap<String, String>? = null
+    private var params: HashMap<String, String?>? = null
     private lateinit var RRsncbar: RelativeLayout
     private var preference: SharedPrefrence? = null
     private var userDTO: UserDTO? = null
     private val paramsFile = HashMap<String, File>()
     private lateinit var mView: View
     private lateinit var baseActivity: BaseActivity
-    private val paramsDeleteImg = HashMap<String, String>()
+    private val paramsDeleteImg = HashMap<String, String?>()
     private var lats = 0.0
     private var longs = 0.0
 
@@ -515,7 +515,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun updateProfile(params: HashMap<String, String>?) {
+    private fun updateProfile(params: HashMap<String, String?>?) {
         showProgressDialog(requireActivity(), true, resources.getString(R.string.please_wait))
 
         HttpsRequest(Const.UPDATE_PROFILE_IMAGE, params, paramsFile, requireActivity()).imagePost(

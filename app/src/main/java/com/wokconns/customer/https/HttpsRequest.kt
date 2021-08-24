@@ -22,13 +22,13 @@ import java.io.File
  */
 class HttpsRequest {
     private var match: String
-    private var params: HashMap<String, String>? = null
+    private var params: HashMap<String, String?>? = null
     private var fileparams: HashMap<String, File>? = null
     private var ctx: Context
     private var jObject: JSONObject? = null
     private var sharedPreference: SharedPrefrence
 
-    constructor(match: String, params: HashMap<String, String>?, ctx: Context) {
+    constructor(match: String, params: HashMap<String, String?>?, ctx: Context) {
         this.match = match
         this.params = params
         this.ctx = ctx
@@ -37,7 +37,7 @@ class HttpsRequest {
 
     constructor(
         match: String,
-        params: HashMap<String, String>?,
+        params: HashMap<String, String?>?,
         fileparams: HashMap<String, File>?,
         ctx: Context
     ) {

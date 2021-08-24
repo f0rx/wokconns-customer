@@ -21,7 +21,7 @@ import java.util.*
 
 class ForgotPass : AppCompatActivity() {
     private lateinit var mContext: Context
-    private val parms = HashMap<String, String>()
+    private val parms = HashMap<String, String?>()
     private val TAG = ForgotPass::class.java.simpleName
     private lateinit var binding: ActivityForgotPassBinding
 

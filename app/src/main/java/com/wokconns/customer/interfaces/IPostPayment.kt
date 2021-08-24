@@ -17,7 +17,7 @@ interface IPostPayment {
     fun updatePaymentStatus(
         activity: Activity,
         preference: SharedPrefrence,
-        params: HashMap<String, String>?,
+        params: HashMap<String, String?>?,
         history: HistoryDTO?
     ) {
         if (preference.getValue(Const.SURL).equals(Const.PAYMENT_SUCCESS, ignoreCase = true)) {
@@ -29,7 +29,7 @@ interface IPostPayment {
         }
     }
 
-    fun sendPayment(activity: Activity, params: HashMap<String, String>?, history: HistoryDTO?) {
+    fun sendPayment(activity: Activity, params: HashMap<String, String?>?, history: HistoryDTO?) {
         showProgressDialog(activity, false, activity.resources.getString(R.string.please_wait))
         HttpsRequest(Const.MAKE_PAYMENT_API, params, activity).stringPost(
             kTAG,

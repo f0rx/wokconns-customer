@@ -133,7 +133,7 @@ class MyBooking : Fragment(), OnRefreshListener {
         // ProjectUtils.showProgressDialog(getActivity(), true, getResources().getString(R.string.please_wait));
         HttpsRequest(
             Const.CURRENT_BOOKING_API,
-            getParam(),
+            getParams(),
             requireContext()
         ).stringPost(TAG, object : Helper {
             override fun backResponse(flag: Boolean, msg: String?, response: JSONObject?) {
@@ -163,8 +163,8 @@ class MyBooking : Fragment(), OnRefreshListener {
         })
     }
 
-    fun getParam(): HashMap<String, String> {
-        val parms = HashMap<String, String>()
+    fun getParams(): HashMap<String, String?> {
+        val parms = HashMap<String, String?>()
         parms[Const.USER_ID] = userDTO.user_id
         return parms
     }

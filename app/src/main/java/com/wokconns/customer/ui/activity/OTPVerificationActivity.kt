@@ -1,189 +1,179 @@
-package com.wokconns.customer.ui.activity;
+package com.wokconns.customer.ui.activity
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import com.wokconns.customer.R
+import com.wokconns.customer.https.HttpsRequest
+import com.wokconns.customer.interfaces.Const
+import com.wokconns.customer.interfaces.Helper
+import com.wokconns.customer.utils.CustomEditText
+import com.wokconns.customer.utils.CustomTextView
+import com.wokconns.customer.utils.ProjectUtils.Fullscreen
+import com.wokconns.customer.utils.ProjectUtils.pauseProgressDialog
+import com.wokconns.customer.utils.ProjectUtils.showLong
+import com.wokconns.customer.utils.ProjectUtils.showProgressDialog
+import com.wokconns.customer.utils.ProjectUtils.showToast
+import org.json.JSONObject
+import java.util.*
 
-import androidx.appcompat.app.AppCompatActivity;
+class OTPVerificationActivity : AppCompatActivity(), TextWatcher {
+    private val cetArrayList = ArrayList<CustomEditText>(NUMBER_OF_DIGITS)
+    private lateinit var tempNum: String
+    private lateinit var otpCode: String
+    private var mobile: String? = null
+    private val mContext: Context = this@OTPVerificationActivity
 
-import com.google.android.material.snackbar.Snackbar;
-import com.wokconns.customer.R;
-import com.wokconns.customer.https.HttpsRequest;
-import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.utils.CustomEditText;
-import com.wokconns.customer.utils.CustomTextView;
-import com.wokconns.customer.utils.ProjectUtils;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class OTPVerificationActivity extends AppCompatActivity implements TextWatcher {
-    private static final String TAG = OTPVerificationActivity.class.getSimpleName();
-    private static final int NUMBER_OF_DIGITS = 4;
-    private final ArrayList<CustomEditText> CETArrayList = new ArrayList<>(NUMBER_OF_DIGITS);
-    private String tempNum, otpCode, mobile;
-    private final Context mContext = OTPVerificationActivity.this;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ProjectUtils.Fullscreen(OTPVerificationActivity.this);
-        setContentView(R.layout.activity_otp_verification);
-
-        final CustomTextView CTVPhoneNumber = findViewById(R.id.CTVMobileNumber);
-        final LinearLayout codeLayout = findViewById(R.id.codeLayout);
-        final Button verifyBtn = findViewById(R.id.CBVerifyMobile);
-        final CustomTextView resendVerificationBtn = findViewById(R.id.resendVerificationBtn);
-        final View root = findViewById(R.id.rootOTPScreen);
-
-        if (getIntent().hasExtra(Const.MOBILE)) {
-            mobile = getIntent().getStringExtra(Const.MOBILE);
-            CTVPhoneNumber.setText(mobile);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Fullscreen(this@OTPVerificationActivity)
+        setContentView(R.layout.activity_otp_verification)
+        val ctvPhoneNumber = findViewById<CustomTextView>(R.id.CTVMobileNumber)
+        val codeLayout = findViewById<LinearLayout>(R.id.codeLayout)
+        val verifyBtn = findViewById<Button>(R.id.CBVerifyMobile)
+        val resendVerificationBtn = findViewById<CustomTextView>(R.id.resendVerificationBtn)
+        val root = findViewById<View>(R.id.rootOTPScreen)
+        if (intent.hasExtra(Const.MOBILE)) {
+            mobile = intent.getStringExtra(Const.MOBILE)
+            ctvPhoneNumber.text = mobile
         }
-
-        for (int i = 0; i < codeLayout.getChildCount(); i++) {
-            final View v = codeLayout.getChildAt(i);
-            if (v instanceof CustomEditText) {
-                CETArrayList.add(i, (CustomEditText) v);
-                CETArrayList.get(i).addTextChangedListener(this);
-
-                int finalI = i;
-
-                CETArrayList.get(i).setOnKeyListener((_1, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+        for (i in 0 until codeLayout.childCount) {
+            val v = codeLayout.getChildAt(i)
+            if (v is CustomEditText) {
+                cetArrayList.add(i, v)
+                cetArrayList[i].addTextChangedListener(this)
+                cetArrayList[i].setOnKeyListener { _: View?, keyCode: Int, event: KeyEvent ->
+                    if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
                         // user hit backspace
-                        if (finalI != 0) { // Don't implement for first digit
-                            CETArrayList.get(finalI - 1).requestFocus();
-                            CETArrayList.get(finalI - 1)
-                                    .setSelection(CETArrayList.get(finalI - 1).length());
+                        if (i != 0) { // Don't implement for first digit
+                            cetArrayList[i - 1].requestFocus()
+                            cetArrayList[i - 1]
+                                .setSelection(cetArrayList[i - 1].length())
                         }
                     }
-                    return false;
-                });
+                    false
+                }
             }
         }
-
-        CETArrayList.get(0).requestFocus();
-
-        resendVerificationBtn.setOnClickListener(v -> resendOTP());
-
-        verifyBtn.setOnClickListener(v -> {
-            if (!isValidPinFields()) {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.invalid_otp_str));
-
-                Snackbar snackbar = Snackbar.make(root, getResources().getString(R.string.invalid_otp_str), Snackbar.LENGTH_LONG);
-                View snackbarView = snackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                snackbar.show();
-                return;
+        cetArrayList[0].requestFocus()
+        resendVerificationBtn.setOnClickListener { v: View? -> resendOTP() }
+        verifyBtn.setOnClickListener { v: View? ->
+            if (!isValidPinFields) {
+                showToast(mContext, resources.getString(R.string.invalid_otp_str))
+                val snackbar = Snackbar.make(
+                    root,
+                    resources.getString(R.string.invalid_otp_str),
+                    Snackbar.LENGTH_LONG
+                )
+                val snackbarView = snackbar.view
+                snackbarView.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                snackbar.show()
+                return@setOnClickListener
             }
-
-            verifyOTP();
-        });
+            verifyOTP()
+        }
     }
 
-    @Override
-    public void beforeTextChanged(@NotNull CharSequence s, int start, int count, int after) {
-        tempNum = s.toString();
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        tempNum = s.toString()
     }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         //
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        for (int i = 0; i < CETArrayList.size(); i++) {
-            CustomEditText i1 = CETArrayList.get(i);
-
-            if (s.equals(i1.getEditableText())) {
-                if (s.length() == 0) return;
-
-                if (s.length() >= 2) { // if more than 1 char
-                    String newTemp = s.toString().substring(s.length() - 1, s.length()); //get 2nd digit
-                    if (!newTemp.equals(tempNum)) {
-                        CETArrayList.get(i).setText(newTemp);
+    override fun afterTextChanged(s: Editable) {
+        for (i in cetArrayList.indices) {
+            val i1 = cetArrayList[i]
+            if (s == i1.editableText) {
+                if (s.isEmpty()) return
+                if (s.length >= 2) { // if more than 1 char
+                    val newTemp = s.toString().substring(s.length - 1, s.length) //get 2nd digit
+                    if (newTemp != tempNum) {
+                        cetArrayList[i].setText(newTemp)
                     } else {
-                        CETArrayList.get(i).setText(s.toString().substring(0, s.length() - 1));
+                        cetArrayList[i].setText(s.toString().substring(0, s.length - 1))
                     }
-                } else if (i != CETArrayList.size() - 1) { // not last char
-                    CETArrayList.get(i + 1).requestFocus();
-                    CETArrayList.get(i + 1).setSelection(CETArrayList.get(i + 1).length());
-                    return;
+                } else if (i != cetArrayList.size - 1) { // not last char
+                    cetArrayList[i + 1].requestFocus()
+                    cetArrayList[i + 1].setSelection(cetArrayList[i + 1].length())
+                    return
                 } else {
                     // Hide keyboard
-                    InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    manager.hideSoftInputFromWindow(i1.getWindowToken(), 0);
+                    val manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    manager.hideSoftInputFromWindow(i1.windowToken, 0)
                 }
             }
         }
     }
 
-    private Boolean isValidPinFields() {
-        ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < CETArrayList.size(); i++) {
-            CustomEditText editText = CETArrayList.get(i);
-
-            sb.append(editText.getText().toString());
+    private val isValidPinFields: Boolean
+        get() {
+            showProgressDialog(mContext, false, resources.getString(R.string.please_wait))
+            val sb = StringBuilder()
+            for (i in cetArrayList.indices) {
+                val editText = cetArrayList[i]
+                sb.append(editText.text.toString())
+            }
+            otpCode = sb.toString()
+            pauseProgressDialog()
+            return sb.length == NUMBER_OF_DIGITS
         }
 
-        otpCode = sb.toString();
-
-        ProjectUtils.pauseProgressDialog();
-
-        return sb.length() == NUMBER_OF_DIGITS;
+    private fun verifyOTP() {
+        showProgressDialog(mContext, false, resources.getString(R.string.please_wait))
+        val params = HashMap<String, String?>()
+        params[Const.MOBILE] = mobile
+        params[Const.OTP_CODE] = otpCode
+        HttpsRequest(Const.VERIFY_PHONE, params, mContext).stringPost(
+            TAG,
+            object : Helper {
+                override fun backResponse(flag: Boolean, msg: String?, response: JSONObject?) {
+                    pauseProgressDialog()
+                    if (flag) {
+                        showToast(mContext, resources.getString(R.string.verification_done))
+                        startActivity(Intent(mContext, SignInActivity::class.java))
+                        finish()
+                        overridePendingTransition(
+                            R.anim.anim_slide_in_left,
+                            R.anim.anim_slide_out_left
+                        )
+                    } else {
+                        showToast(mContext, msg)
+                    }
+                }
+            })
     }
 
-    private void verifyOTP() {
-        ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put(Const.MOBILE, mobile);
-        params.put(Const.OTP_CODE, otpCode);
-
-        new HttpsRequest(Const.VERIFY_PHONE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
-            ProjectUtils.pauseProgressDialog();
-
-            if (flag) {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.verification_done));
-
-                startActivity(new Intent(mContext, SignInActivity.class));
-                finish();
-                overridePendingTransition(R.anim.anim_slide_in_left,
-                        R.anim.anim_slide_out_left);
-            } else {
-                ProjectUtils.showToast(mContext, msg);
-            }
-        });
+    private fun resendOTP() {
+        showProgressDialog(mContext, false, resources.getString(R.string.please_wait))
+        val params = HashMap<String, String?>()
+        params[Const.MOBILE] = mobile
+        HttpsRequest(Const.RESEND_VERIFY_OTP_CODE, params, mContext).stringPost(
+            TAG,
+            object : Helper {
+                override fun backResponse(flag: Boolean, msg: String?, response: JSONObject?) {
+                    pauseProgressDialog()
+                    if (flag) {
+                        showLong(mContext, msg ?: resources.getString(R.string.verification_resent))
+                    } else {
+                        showLong(mContext, msg)
+                    }
+                }
+            })
     }
 
-    private void resendOTP() {
-        ProjectUtils.showProgressDialog(mContext, false, getResources().getString(R.string.please_wait));
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put(Const.MOBILE, mobile);
-
-        new HttpsRequest(Const.RESEND_VERIFY_OTP_CODE, params, mContext).stringPost(TAG, (flag, msg, response) -> {
-            ProjectUtils.pauseProgressDialog();
-
-            if (flag) {
-                ProjectUtils.showToast(mContext, getResources().getString(R.string.verification_resent));
-            } else {
-                ProjectUtils.showToast(mContext, msg);
-            }
-        });
+    companion object {
+        private val TAG = OTPVerificationActivity::class.java.simpleName
+        private const val NUMBER_OF_DIGITS = 4
     }
 }
