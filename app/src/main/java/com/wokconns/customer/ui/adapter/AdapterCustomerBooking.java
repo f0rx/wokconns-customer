@@ -30,6 +30,7 @@ import com.wokconns.customer.ui.activity.MapActivity;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
 import com.wokconns.customer.ui.activity.ViewInvoice;
 import com.wokconns.customer.ui.fragment.MyBooking;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +88,8 @@ public class AdapterCustomerBooking extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderMain, final int position) {
         if (holderMain instanceof MyViewHolder) {
             MyViewHolder holder = (MyViewHolder) holderMain;
-            Glide.with(mContext).
-                    load(objects.get(position).getArtistImage())
+            GlideApp.with(mContext).
+                    load(ProjectUtils.formatImageUri(objects.get(position).getArtistImage()))
                     .placeholder(R.drawable.dummyuser_image)
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

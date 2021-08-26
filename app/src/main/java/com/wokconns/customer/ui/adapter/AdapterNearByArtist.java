@@ -17,6 +17,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterNearByArtistBinding;
 import com.wokconns.customer.dto.HomeNearByArtistsDTO;
+import com.wokconns.customer.utils.GlideApp;
+import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
 
@@ -46,8 +48,8 @@ public class AdapterNearByArtist extends RecyclerView.Adapter<AdapterNearByArtis
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.binding.setHomeNearByArtistsDTO(recomendedDTOArrayList.get(position));
 
-        Glide.with(mContext).
-                load(recomendedDTOArrayList.get(position).getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(recomendedDTOArrayList.get(position).getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

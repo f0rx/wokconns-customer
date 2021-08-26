@@ -37,7 +37,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -71,6 +70,7 @@ import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.CustomTypeFaceSpan;
 import com.wokconns.customer.utils.FontCache;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -184,15 +184,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
         tvEnglish.setOnClickListener(v -> BaseActivity.this.language("en"));
         tvOther.setOnClickListener(v -> BaseActivity.this.language("ar"));
 
-        final Uri uri = Uri.parse(userDTO.getImage().contains(Const.DOMAIN_URL + Const.DOMAIN_URL)
-                ? userDTO.getImage().replace(Const.DOMAIN_URL, "")
-                : !userDTO.getImage().contains(Const.DOMAIN_URL)
-                    ? Const.DOMAIN_URL + userDTO.getImage() : userDTO.getImage());
+        Uri uri = ProjectUtils.formatImageUri(userDTO.getImage());
 
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(uri)
                 .placeholder(R.drawable.dummyuser_image)
-                .useAnimationPool(true)
+//                .useAnimationPool(true)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(img_profile);
         tvEmail.setText(userDTO.getEmail_id());
@@ -338,15 +335,12 @@ public class BaseActivity extends AppCompatActivity implements GoogleApiClient.C
     public void showImage() {
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
-        final Uri uri = Uri.parse(userDTO.getImage().contains(Const.DOMAIN_URL + Const.DOMAIN_URL)
-                ? userDTO.getImage().replace(Const.DOMAIN_URL, "")
-                : !userDTO.getImage().contains(Const.DOMAIN_URL)
-                    ? Const.DOMAIN_URL + userDTO.getImage() : userDTO.getImage());
+        Uri uri = ProjectUtils.formatImageUri(userDTO.getImage());
 
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(uri)
                 .placeholder(R.drawable.dummyuser_image)
-                .useAnimationPool(true)
+//                .useAnimationPool(true)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(img_profile);
 

@@ -21,6 +21,8 @@ import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.fragment.DiscoverNearBy;
+import com.wokconns.customer.utils.GlideApp;
+import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
 
@@ -52,8 +54,8 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.MyView
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.binding.setHomeCategoryDTO(categoryDTOArrayList.get(position));
 
-        Glide.with(mContext).
-                load(categoryDTOArrayList.get(position).getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(categoryDTOArrayList.get(position).getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

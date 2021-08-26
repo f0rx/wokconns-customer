@@ -43,6 +43,7 @@ import com.wokconns.customer.network.NetworkManager
 import com.wokconns.customer.preferences.SharedPrefrence
 import com.wokconns.customer.ui.activity.BaseActivity
 import com.wokconns.customer.utils.*
+import com.wokconns.customer.utils.ProjectUtils.formatImageUri
 import com.wokconns.customer.utils.ProjectUtils.getEditTextValue
 import com.wokconns.customer.utils.ProjectUtils.hasPermissionInManifest
 import com.wokconns.customer.utils.ProjectUtils.isPasswordValid
@@ -254,7 +255,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
                     imageCompression.execute(pathOfImage)
                     imageCompression.setOnTaskFinishedEvent { imagePath: String ->
 
-                        Glide.with(requireActivity()).load("file://$imagePath")
+                        GlideApp.with(requireActivity()).load("file://$imagePath")
                             .thumbnail(0.5f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.ivProfile)
@@ -297,7 +298,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
                     imageCompression = ImageCompression(activity)
                     imageCompression.execute(pathOfImage)
                     imageCompression.setOnTaskFinishedEvent { imagePath: String ->
-                        Glide.with(requireActivity()).load(imagePath)
+                        GlideApp.with(requireActivity()).load(imagePath)
                             .thumbnail(0.5f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.ivProfile)
@@ -377,9 +378,10 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
     fun showData() {
         userDTO = preference?.getParentUser(Const.USER_DTO)
 
-        Glide.with(requireActivity()).load(userDTO?.image)
+        GlideApp.with(requireActivity())
+            .load(formatImageUri(userDTO?.image))
             .placeholder(R.drawable.dummyuser_image)
-            .useAnimationPool(true)
+//            .useAnimationPool(true)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(binding.ivProfile)
 

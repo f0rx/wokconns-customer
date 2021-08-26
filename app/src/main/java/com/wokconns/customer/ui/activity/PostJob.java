@@ -39,6 +39,7 @@ import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -314,7 +315,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     imageCompression = new ImageCompression(PostJob.this);
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
-                        Glide.with(mContext).load("file://" + imagePath)
+                        GlideApp.with(mContext).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivImg);
@@ -345,7 +346,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
 
-                        Glide.with(mContext).load("file://" + imagePath)
+                        GlideApp.with(mContext).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivImg);

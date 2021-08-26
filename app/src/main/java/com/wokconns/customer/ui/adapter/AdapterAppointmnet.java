@@ -26,6 +26,7 @@ import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.ui.fragment.AppointmentFrag;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.text.SimpleDateFormat;
@@ -68,8 +69,8 @@ public class AdapterAppointmnet extends RecyclerView.Adapter<AdapterAppointmnet.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 //0. Pending 1. Accepted 2. Rejected 3. Completed 4. Decline
-        Glide.with(mContext).
-                load(appointmentDTOSList.get(position).getArtistImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(appointmentDTOSList.get(position).getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

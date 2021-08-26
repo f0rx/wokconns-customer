@@ -24,6 +24,7 @@ import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
 import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONArray;
@@ -100,8 +101,8 @@ public class Booking extends AppCompatActivity {
 
     public void setUiAction() {
         binding.llBack.setOnClickListener(v -> onBackPressed());
-        Glide.with(mContext).
-                load(artistDetailsDTO.getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(artistDetailsDTO.getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

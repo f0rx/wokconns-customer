@@ -17,6 +17,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.fragment.Home;
+import com.wokconns.customer.utils.GlideApp;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +54,7 @@ public class HomeBannerPagerAdapter extends PagerAdapter {
                 mContext.getResources().getString(R.string.welcome_text), userDTO.getName()));
         binding.tvDescription.setText(bannerDTOArrayList.get(position).getDescription());
 
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 .load(R.drawable.home_banner)
 //                .load(bannerDTOArrayList.get(position).getImage())
                 .apply(new RequestOptions())

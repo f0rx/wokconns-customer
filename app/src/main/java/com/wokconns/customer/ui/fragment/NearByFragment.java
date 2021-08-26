@@ -46,6 +46,7 @@ import com.wokconns.customer.ui.activity.ArtistProfileNew;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
 
@@ -319,7 +320,7 @@ public class NearByFragment extends Fragment {
 
             if (url != null && !url.equalsIgnoreCase("null")
                     && !url.equalsIgnoreCase("")) {
-                Glide.with(getActivity()).
+                GlideApp.with(requireActivity()).
                         load(url)
                         .placeholder(R.drawable.dummyuser_image)
                         .dontAnimate()

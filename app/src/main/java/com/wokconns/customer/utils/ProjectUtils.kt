@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.text.format.DateUtils
 import android.text.format.Time
@@ -27,6 +28,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.wokconns.customer.R
+import com.wokconns.customer.interfaces.Const
 import java.net.URL
 import java.sql.Timestamp
 import java.text.ParseException
@@ -111,10 +113,22 @@ object ProjectUtils {
     }
 
     @JvmStatic
+    fun formatImageUri(url: String?): Uri {
+        return Uri.parse(if (url == null)
+            url
+        else if (url.contains(Const.DOMAIN_URL + Const.DOMAIN_URL))
+            Const.DOMAIN_URL + url.replace(Const.DOMAIN_URL, "")
+        else if (!url.contains(Const.DOMAIN_URL))
+            Const.DOMAIN_URL + url
+        else
+            url)
+    }
+
+    @JvmStatic
     fun hasPermissionInManifest(
         activity: Activity?,
         requestCode: Int,
-        permissionName: String
+        permissionName: String,
     ): Boolean {
         if (activity == null) return false
 
@@ -174,7 +188,7 @@ object ProjectUtils {
     fun createDialog(
         context: Context?, titleId: Int, messageId: Int,
         positiveButtonListener: DialogInterface.OnClickListener?,
-        negativeButtonListener: DialogInterface.OnClickListener?
+        negativeButtonListener: DialogInterface.OnClickListener?,
     ): Dialog {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(titleId)
@@ -189,7 +203,7 @@ object ProjectUtils {
     fun createDialog(
         context: Context?, titleId: Int, messageId: Int, view: View?,
         positiveClickListener: DialogInterface.OnClickListener?,
-        negativeClickListener: DialogInterface.OnClickListener?
+        negativeClickListener: DialogInterface.OnClickListener?,
     ): Dialog {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(titleId)
@@ -203,7 +217,7 @@ object ProjectUtils {
     @JvmStatic
     fun showDialog(
         context: Context, title: String?, msg: String?,
-        OK: DialogInterface.OnClickListener?, isCancelable: Boolean
+        OK: DialogInterface.OnClickListener?, isCancelable: Boolean,
     ) {
         var title1 = title
         var OK1 = OK
@@ -239,7 +253,7 @@ object ProjectUtils {
     fun showDialog(
         context: Context, title: String?, msg: String?,
         OK: DialogInterface.OnClickListener?,
-        cancel: DialogInterface.OnClickListener?, isCancelable: Boolean
+        cancel: DialogInterface.OnClickListener?, isCancelable: Boolean,
     ) {
         var title1 = title
         var OK1 = OK
@@ -276,7 +290,7 @@ object ProjectUtils {
     @JvmStatic
     fun showProgressDialog(
         context: Context?,
-        isCancelable: Boolean, message: String?
+        isCancelable: Boolean, message: String?,
     ): Dialog? {
         mProgressDialog = ProgressDialog(context)
         mProgressDialog?.setProgressStyle(ProgressDialog.STYLE_SPINNER)

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.wokconns.customer.ui.activity.ViewInvoice;
 import com.wokconns.customer.ui.fragment.UnPaidFrag;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.text.SimpleDateFormat;
@@ -38,12 +40,11 @@ import java.util.Locale;
 public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHolder> {
 
     ArrayList<HistoryDTO> historyDTOList;
-    private Context mContext;
-    private UnPaidFrag unPaidFrag;
+    private final Context mContext;
+    private final UnPaidFrag unPaidFrag;
     private ArrayList<HistoryDTO> objects = null;
-    private UserDTO userDTO;
-    private SharedPrefrence prefrence;
-    private LayoutInflater inflater;
+    private final UserDTO userDTO;
+    private final LayoutInflater inflater;
 
     public UnPaidAdapter(UnPaidFrag unPaidFrag, ArrayList<HistoryDTO> objects, UserDTO userDTO, LayoutInflater inflater) {
         this.unPaidFrag = unPaidFrag;
@@ -53,11 +54,12 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
         this.historyDTOList = new ArrayList<>();
         this.historyDTOList.addAll(objects);
         this.inflater = inflater;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        SharedPrefrence preference = SharedPrefrence.getInstance(mContext);
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = inflater
                 .inflate(R.layout.adapter_unpaid, parent, false);
 
@@ -79,13 +81,13 @@ public class UnPaidAdapter extends RecyclerView.Adapter<UnPaidAdapter.MyViewHold
         }
 
 
-        holder.CTVprice.setText(objects.get(position).getCurrency_type() + objects.get(position).getFinal_amount());
+        holder.CTVprice.setText(String.format("%s%s", objects.get(position).getCurrency_type(), objects.get(position).getFinal_amount()));
         holder.CTVServicetype.setText(objects.get(position).getCategoryName());
         holder.CTVwork.setText(objects.get(position).getCategoryName());
         holder.CTVname.setText(ProjectUtils.getFirstLetterCapital(objects.get(position).getArtistName()));
 
-        Glide.with(mContext).
-                load(objects.get(position).getArtistImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(objects.get(position).getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

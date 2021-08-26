@@ -15,6 +15,7 @@ import com.wokconns.customer.databinding.ActivityViewInvoiceBinding;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 public class ViewInvoice extends AppCompatActivity {
@@ -53,8 +54,8 @@ public class ViewInvoice extends AppCompatActivity {
 
         });
 
-        Glide.with(mContext).
-                load(historyDTO.getArtistImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(historyDTO.getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

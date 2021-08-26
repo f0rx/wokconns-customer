@@ -39,6 +39,7 @@ import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.ui.adapter.AdapterViewComment;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -307,7 +308,7 @@ public class OneTwoOneChat extends AppCompatActivity implements View.OnClickList
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
                         showImageContainer();
-                        Glide.with(OneTwoOneChat.this).load("file://" + imagePath)
+                        GlideApp.with(OneTwoOneChat.this).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(mPreviewImg);
@@ -336,7 +337,7 @@ public class OneTwoOneChat extends AppCompatActivity implements View.OnClickList
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
                         showImageContainer();
-                        Glide.with(OneTwoOneChat.this).load("file://" + imagePath)
+                        GlideApp.with(OneTwoOneChat.this).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(mPreviewImg);

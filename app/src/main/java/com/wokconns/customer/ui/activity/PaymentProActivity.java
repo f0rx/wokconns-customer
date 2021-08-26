@@ -28,6 +28,7 @@ import com.wokconns.customer.preferences.SharedPrefrence;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONException;
@@ -98,8 +99,8 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         tvCancelCode.setOnClickListener(this);
 //        llWallet.setOnClickListener(this);
 
-        Glide.with(mContext).
-                load(historyDTO.getArtistImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(historyDTO.getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

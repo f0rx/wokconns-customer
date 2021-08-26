@@ -5,6 +5,7 @@ package com.wokconns.customer.ui.adapter;
  */
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,13 @@ import android.view.ViewGroup;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterInvoiceBinding;
 import com.wokconns.customer.dto.HistoryDTO;
+import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -61,8 +63,8 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
         holder.binding.CTVwork.setText(objects.get(position).getCategoryName());
         holder.binding.CTVname.setText(ProjectUtils.getFirstLetterCapital(objects.get(position).getUserName()));
 
-        Glide.with(mContext).
-                load(objects.get(position).getUserImage())
+        GlideApp.with(mContext)
+                .load(ProjectUtils.formatImageUri(objects.get(position).getUserImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

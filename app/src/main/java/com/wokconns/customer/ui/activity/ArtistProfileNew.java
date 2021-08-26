@@ -1,5 +1,7 @@
 package com.wokconns.customer.ui.activity;
 
+import static com.wokconns.customer.utils.ProjectUtils.formatImageUri;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.google.android.material.appbar.AppBarLayout;
@@ -31,6 +32,7 @@ import com.wokconns.customer.ui.fragment.ImageGallery;
 import com.wokconns.customer.ui.fragment.PersnoalInfo;
 import com.wokconns.customer.ui.fragment.PreviousWork;
 import com.wokconns.customer.ui.fragment.Reviews;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.text.SimpleDateFormat;
@@ -240,15 +242,15 @@ public class ArtistProfileNew extends AppCompatActivity implements View.OnClickL
             binding.ivFav.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_fav_blank));
         }
 
-        Glide.with(mContext).
-                load(artistDetailsDTO.getImage())
+        GlideApp.with(mContext).
+                load(formatImageUri(artistDetailsDTO.getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.ivArtist);
 
-        Glide.with(mContext).
-                load(artistDetailsDTO.getBanner_image())
+        GlideApp.with(mContext).
+                load(formatImageUri(artistDetailsDTO.getBanner_image()))
                 .placeholder(R.drawable.banner_img)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

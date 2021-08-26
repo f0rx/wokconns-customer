@@ -31,6 +31,7 @@ import com.wokconns.customer.ui.activity.ArtistProfile;
 import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -86,8 +87,8 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
         holder.tvRating.setText(String.format("(%s/5)", objects.get(position).getAva_rating()));
         holder.ratingbar.setRating(Float.parseFloat(objects.get(position).getAva_rating()));
 
-        Glide.with(appliedJob).
-                load(objects.get(position).getArtist_image())
+        GlideApp.with(appliedJob).
+                load(ProjectUtils.formatImageUri(objects.get(position).getArtist_image()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
