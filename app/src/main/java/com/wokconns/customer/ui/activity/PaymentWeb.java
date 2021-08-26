@@ -25,7 +25,7 @@ import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.CardValidatorInterface;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.utils.NumberMaskInputFormatter;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -52,7 +52,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
     private static String currencyCode;
     private double amount;
     private ActivityPaymetWebBinding binding;
-    private SharedPrefrence preference;
+    private SharedPrefs preference;
     private UserDTO userDTO;
     private HistoryDTO historyDTO;
     private ArtistDetailsDTO artistDetailsDTO;
@@ -61,7 +61,7 @@ public class PaymentWeb extends AppCompatActivity implements CardValidatorInterf
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_paymet_web);
-        preference = SharedPrefrence.getInstance(this);
+        preference = SharedPrefs.getInstance(this);
         userDTO = preference.getParentUser(Const.USER_DTO);
         if (getIntent().getExtras() != null) {
             historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Const.HISTORY_DTO);

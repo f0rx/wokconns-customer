@@ -30,7 +30,7 @@ import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.interfaces.IPostPayment;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.utils.DecimalDigitsInputFilter;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -47,7 +47,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
     private final String TAG = AddMoney.class.getSimpleName();
     private Context mContext;
     private final HashMap<String, String> parmas = new HashMap<>();
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private String amt = "";
     private String currency = "";
@@ -60,7 +60,7 @@ public class AddMoney extends AppCompatActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_money);
         mContext = AddMoney.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         parmas.put(Const.USER_ID, userDTO.getUser_id());
         setUiAction();

@@ -19,7 +19,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.utils.CustomButton;
 import com.wokconns.customer.utils.CustomTextView;
@@ -38,7 +38,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
     private String code = "";
     private ClipboardManager myClipboard;
     private ClipData myClip;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private View view;
     private BaseActivity baseActivity;
@@ -49,7 +49,7 @@ public class GetDiscountActivity extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.activity_get_discount, container, false);
 
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
 
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);

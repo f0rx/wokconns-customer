@@ -20,7 +20,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,11 +40,12 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.ArtistProfileNew;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 import com.wokconns.customer.utils.SpinnerDialog;
 
@@ -65,7 +65,7 @@ public class NearByFragment extends Fragment {
     private GoogleMap googleMap;
     private ArrayList<MarkerOptions> optionsList = new ArrayList<>();
     private UserDTO userDTO;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private ArrayList<AllAtristListDTO> allAtristListDTOList;
     private Hashtable<String, AllAtristListDTO> markers;
     private Marker marker;
@@ -79,7 +79,7 @@ public class NearByFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_near_by, container, false);
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         parms.put(Const.USER_ID, userDTO.getUser_id());
         parmsCategory.put(Const.USER_ID, userDTO.getUser_id());
@@ -319,7 +319,7 @@ public class NearByFragment extends Fragment {
 
             if (url != null && !url.equalsIgnoreCase("null")
                     && !url.equalsIgnoreCase("")) {
-                Glide.with(getActivity()).
+                GlideApp.with(requireActivity()).
                         load(url)
                         .placeholder(R.drawable.dummyuser_image)
                         .dontAnimate()

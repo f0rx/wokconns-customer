@@ -18,6 +18,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ReviewsDTO;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
 
 
         holder.ratingbar.setRating(Float.parseFloat(reviewsDTOList.get(position).getRating()));
-        Glide.with(mContext).
+        GlideApp.with(mContext).
                 load(reviewsDTOList.get(position).getImage())
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()

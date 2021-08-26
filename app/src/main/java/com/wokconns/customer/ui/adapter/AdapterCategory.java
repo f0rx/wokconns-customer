@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterCategoryBinding;
 import com.wokconns.customer.dto.HomeCategoryDTO;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.fragment.DiscoverNearBy;
+import com.wokconns.customer.utils.GlideApp;
+import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
 
@@ -30,12 +31,12 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.MyView
     ArrayList<HomeCategoryDTO> categoryDTOArrayList;
     AdapterCategoryBinding binding;
     LayoutInflater layoutInflater;
-    private SharedPrefrence sharedPrefrence;
+    private SharedPrefs sharedPrefs;
 
     public AdapterCategory(Context mContext, ArrayList<HomeCategoryDTO> categoryDTOArrayList) {
         this.mContext = mContext;
         this.categoryDTOArrayList = categoryDTOArrayList;
-        sharedPrefrence = SharedPrefrence.getInstance(mContext);
+        sharedPrefs = SharedPrefs.getInstance(mContext);
     }
 
     @Override
@@ -52,8 +53,8 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.MyView
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.binding.setHomeCategoryDTO(categoryDTOArrayList.get(position));
 
-        Glide.with(mContext).
-                load(categoryDTOArrayList.get(position).getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(categoryDTOArrayList.get(position).getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -67,7 +68,7 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.MyView
                 BaseActivity.CURRENT_TAG = BaseActivity.TAG_MAIN;
                 ((BaseActivity) mContext).loadHomeFragment(new DiscoverNearBy(), BaseActivity.CURRENT_TAG);
 
-                sharedPrefrence.setValue(Const.VALUE, categoryDTOArrayList.get(position).getId());
+                sharedPrefs.setValue(Const.VALUE, categoryDTOArrayList.get(position).getId());
             } catch (Exception e) {
                 e.printStackTrace();
             }

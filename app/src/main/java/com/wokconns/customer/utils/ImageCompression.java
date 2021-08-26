@@ -62,7 +62,7 @@ public class ImageCompression extends AsyncTask<String, Void, String> {
         if (strings.length == 0 || strings[0] == null)
             return null;
 
-//        Log.i("Compressor", "Image path --->>> " + strings[0]);
+//        ProjectUtils.log("Compressor", "Image path --->>> " + strings[0]);
         return compressImage(strings[0]);
     }
 

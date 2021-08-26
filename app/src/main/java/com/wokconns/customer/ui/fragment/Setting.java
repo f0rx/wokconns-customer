@@ -23,7 +23,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.activity.LanguageSelection;
 import com.wokconns.customer.ui.activity.WebViewCommon;
@@ -45,7 +45,7 @@ public class Setting extends Fragment implements View.OnClickListener {
     private CustomEditText etOldPassD, etNewPassD, etConfrimPassD;
     private ImageView ivClose;
     private HashMap<String, String> params;
-    private SharedPrefrence preference;
+    private SharedPrefs preference;
     private UserDTO userDTO;
     private View view;
     private BaseActivity baseActivity;
@@ -56,7 +56,7 @@ public class Setting extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_setting, container, false);
         view = binding.getRoot();
-        preference = SharedPrefrence.getInstance(getActivity());
+        preference = SharedPrefs.getInstance(getActivity());
         userDTO = preference.getParentUser(Const.USER_DTO);
 
         baseActivity.headerNameTV.setText(getResources().getString(R.string.settings));

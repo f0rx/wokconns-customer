@@ -9,7 +9,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.wokconns.customer.interfaces.Const
 import com.wokconns.customer.interfaces.Helper
 import com.wokconns.customer.jsonparser.JSONParser
-import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.preferences.SharedPrefs
 import com.wokconns.customer.utils.ProjectUtils.log
 import com.wokconns.customer.utils.ProjectUtils.pauseProgressDialog
 import com.wokconns.customer.utils.ProjectUtils.showLong
@@ -17,22 +17,19 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 
-/**
- * Created by VARUN on 01/01/19.
- */
 class HttpsRequest {
     private var match: String
     private var params: HashMap<String, String?>? = null
     private var fileparams: HashMap<String, File>? = null
     private var ctx: Context
     private var jObject: JSONObject? = null
-    private var sharedPreference: SharedPrefrence
+    private var sharedPreference: SharedPrefs? = null
 
     constructor(match: String, params: HashMap<String, String?>?, ctx: Context) {
         this.match = match
         this.params = params
         this.ctx = ctx
-        sharedPreference = SharedPrefrence.getInstance(ctx)
+        sharedPreference = SharedPrefs.getInstance(ctx)
     }
 
     constructor(
@@ -45,20 +42,20 @@ class HttpsRequest {
         this.params = params
         this.fileparams = fileparams
         this.ctx = ctx
-        sharedPreference = SharedPrefrence.getInstance(ctx)
+        sharedPreference = SharedPrefs.getInstance(ctx)
     }
 
     constructor(match: String, ctx: Context) {
         this.match = match
         this.ctx = ctx
-        sharedPreference = SharedPrefrence.getInstance(ctx)
+        sharedPreference = SharedPrefs.getInstance(ctx)
     }
 
     constructor(match: String, jObject: JSONObject?, ctx: Context) {
         this.match = match
         this.jObject = jObject
         this.ctx = ctx
-        sharedPreference = SharedPrefrence.getInstance(ctx)
+        sharedPreference = SharedPrefs.getInstance(ctx)
     }
 
     fun stringPostJson(TAG: String?, h: Helper) {
@@ -69,7 +66,7 @@ class HttpsRequest {
         AndroidNetworking.post(Const.BASE_URL + match)
             .addJSONObjectBody(jObject)
             .setTag("test")
-            .addHeaders(Const.LANGUAGE, sharedPreference.getValue(Const.LANGUAGE_SELECTION))
+            .addHeaders(Const.LANGUAGE, sharedPreference?.getValue(Const.LANGUAGE_SELECTION))
             .setPriority(Priority.HIGH)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -129,7 +126,7 @@ class HttpsRequest {
         AndroidNetworking.post(Const.BASE_URL + match)
             .addBodyParameter(params)
             .setTag("test")
-            .addHeaders(Const.LANGUAGE, sharedPreference.getValue(Const.LANGUAGE_SELECTION))
+            .addHeaders(Const.LANGUAGE, sharedPreference?.getValue(Const.LANGUAGE_SELECTION))
             .setPriority(Priority.HIGH)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -188,7 +185,7 @@ class HttpsRequest {
                 params!![Const.ROLE] = "2"
         AndroidNetworking.get(Const.BASE_URL + match)
             .setTag("test")
-            .addHeaders(Const.LANGUAGE, sharedPreference.getValue(Const.LANGUAGE_SELECTION))
+            .addHeaders(Const.LANGUAGE, sharedPreference?.getValue(Const.LANGUAGE_SELECTION))
             .setPriority(Priority.HIGH)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -221,7 +218,7 @@ class HttpsRequest {
             .addMultipartFile(fileparams)
             .addMultipartParameter(params)
             .setTag("uploadTest")
-            .addHeaders(Const.LANGUAGE, sharedPreference.getValue(Const.LANGUAGE_SELECTION))
+            .addHeaders(Const.LANGUAGE, sharedPreference?.getValue(Const.LANGUAGE_SELECTION))
             .setPriority(Priority.IMMEDIATE)
             .build()
             .setUploadProgressListener { bytesUploaded: Long, totalBytes: Long ->

@@ -26,7 +26,6 @@ import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cocosw.bottomsheet.BottomSheet
 import com.google.gson.Gson
@@ -40,9 +39,10 @@ import com.wokconns.customer.https.HttpsRequest
 import com.wokconns.customer.interfaces.Const
 import com.wokconns.customer.interfaces.Helper
 import com.wokconns.customer.network.NetworkManager
-import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.preferences.SharedPrefs
 import com.wokconns.customer.ui.activity.BaseActivity
 import com.wokconns.customer.utils.*
+import com.wokconns.customer.utils.ProjectUtils.formatImageUri
 import com.wokconns.customer.utils.ProjectUtils.getEditTextValue
 import com.wokconns.customer.utils.ProjectUtils.hasPermissionInManifest
 import com.wokconns.customer.utils.ProjectUtils.isPasswordValid
@@ -101,7 +101,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
     private lateinit var etCountryD: CustomEditText
     private var params: HashMap<String, String?>? = null
     private lateinit var RRsncbar: RelativeLayout
-    private var preference: SharedPrefrence? = null
+    private var preference: SharedPrefs? = null
     private var userDTO: UserDTO? = null
     private val paramsFile = HashMap<String, File>()
     private lateinit var mView: View
@@ -117,7 +117,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         binding =
             DataBindingUtil.inflate(inflater, R.layout.activity_profile_setting, container, false)
-        preference = SharedPrefrence.getInstance(activity)
+        preference = SharedPrefs.getInstance(activity)
         baseActivity.headerNameTV.text = resources.getString(R.string.profile_settings)
 
         setUiAction()
@@ -254,7 +254,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
                     imageCompression.execute(pathOfImage)
                     imageCompression.setOnTaskFinishedEvent { imagePath: String ->
 
-                        Glide.with(requireActivity()).load("file://$imagePath")
+                        GlideApp.with(requireActivity()).load("file://$imagePath")
                             .thumbnail(0.5f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.ivProfile)
@@ -297,7 +297,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
                     imageCompression = ImageCompression(activity)
                     imageCompression.execute(pathOfImage)
                     imageCompression.setOnTaskFinishedEvent { imagePath: String ->
-                        Glide.with(requireActivity()).load(imagePath)
+                        GlideApp.with(requireActivity()).load(imagePath)
                             .thumbnail(0.5f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(binding.ivProfile)
@@ -367,7 +367,7 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
         }
     }
 
-    fun startCropping(uri: Uri?, requestCode: Int) {
+    private fun startCropping(uri: Uri?, requestCode: Int) {
         val intent = Intent(activity, MainFragment::class.java)
         intent.putExtra("imageUri", uri.toString())
         intent.putExtra("requestCode", requestCode)
@@ -377,9 +377,10 @@ class ProfileSettingActivity : Fragment(), View.OnClickListener {
     fun showData() {
         userDTO = preference?.getParentUser(Const.USER_DTO)
 
-        Glide.with(requireActivity()).load(userDTO?.image)
+        GlideApp.with(requireActivity())
+            .load(formatImageUri(userDTO?.image))
             .placeholder(R.drawable.dummyuser_image)
-            .useAnimationPool(true)
+//            .useAnimationPool(true)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(binding.ivProfile)
 

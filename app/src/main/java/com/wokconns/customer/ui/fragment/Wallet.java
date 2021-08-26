@@ -25,7 +25,7 @@ import com.wokconns.customer.dto.WalletHistory;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.AddMoney;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.adapter.AdapterWalletHistory;
@@ -49,7 +49,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
     private ArrayList<WalletCurrencyDTO> walletCurrencyList;
     private final String TAG = Wallet.class.getSimpleName();
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private String status = "";
     private HashMap<String, String> parms;
@@ -64,7 +64,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wallet, container, false);
         view = binding.getRoot();
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.ic_wallet));
         parmsGetWallet.put(Const.USER_ID, userDTO.getUser_id());
@@ -163,7 +163,7 @@ public class Wallet extends Fragment implements View.OnClickListener, SwipeRefre
             binding.swipeRefreshLayout.setRefreshing(false);
 
             if (flag) {
-                Log.i(TAG, Objects.requireNonNull(response).toString());
+                ProjectUtils.log(TAG, Objects.requireNonNull(response).toString());
 
                 binding.tvNo.setVisibility(View.GONE);
                 binding.RVhistorylist.setVisibility(View.VISIBLE);

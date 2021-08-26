@@ -38,11 +38,10 @@ import com.wokconns.customer.dto.LocationDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -91,7 +90,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     };
     private Handler handler = new Handler();
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private ActivityMapBinding binding;
 
     @Override
@@ -99,7 +98,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map);
         mContext = MapActivity.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         if (getIntent().hasExtra(Const.ARTIST_ID)) {
             ar_id = getIntent().getStringExtra(Const.ARTIST_ID);
         }

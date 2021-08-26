@@ -20,7 +20,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.adapter.AdapterAppointmnet;
 import com.wokconns.customer.utils.CustomTextViewBold;
@@ -39,7 +39,7 @@ public class AppointmentFrag extends Fragment implements SwipeRefreshLayout.OnRe
     private AdapterAppointmnet adapterAppointmnet;
     private ArrayList<AppointmentDTO> appointmentDTOSList = new ArrayList<>();
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private CustomTextViewBold tvNo;
     private BaseActivity baseActivity;
@@ -51,7 +51,7 @@ public class AppointmentFrag extends Fragment implements SwipeRefreshLayout.OnRe
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_appointment, container, false);
         baseActivity.headerNameTV.setText(R.string.future_bookings);
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         setUiAction(view);

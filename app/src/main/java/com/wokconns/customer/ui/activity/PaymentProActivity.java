@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
@@ -24,16 +23,16 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.interfaces.IPostPayment;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.json.JSONException;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,7 +43,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
     private final HashMap<String, String> params = new HashMap<>();
     private final HashMap<String, String> parmsGetWallet = new HashMap<>();
     private Context mContext;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private HistoryDTO historyDTO;
     private CircleImageView ivArtist;
@@ -67,7 +66,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_payment);
         mContext = PaymentProActivity.this;
 
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         parmsGetWallet.put(Const.USER_ID, userDTO.getUser_id());
@@ -98,8 +97,8 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
         tvCancelCode.setOnClickListener(this);
 //        llWallet.setOnClickListener(this);
 
-        Glide.with(mContext).
-                load(historyDTO.getArtistImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(historyDTO.getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -121,7 +120,7 @@ public class PaymentProActivity extends AppCompatActivity implements View.OnClic
                 dialogPayment();
                 break;
 //            case R.id.llWallet:
-//                Log.i(TAG, "Wallet BALANCE ===> " + amt1);
+//                ProjectUtils.log(TAG, "Wallet BALANCE ===> " + amt1);
 //
 //                if (Float.parseFloat(amt1) >= Float.parseFloat(final_amount)) {
 //                    cashDialog(getResources().getString(R.string.wallet_payment), getResources().getString(R.string.wallet_msg), "2");

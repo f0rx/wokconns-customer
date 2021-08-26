@@ -53,7 +53,7 @@ class UserDTO : Serializable {
         updated_at: String,
         device_type: String,
         device_id: String,
-        device_token: String
+        device_token: String,
     ) {
         this.user_id = user_id
         this.name = name
@@ -79,4 +79,8 @@ class UserDTO : Serializable {
         this.device_id = device_id
         this.device_token = device_token
     }
+
+    override fun toString(): String =
+        String.format("User(ID: %s,\nName: %s,\nEmail address: %s,\nMobile: %s,\nLat: %s,\nLng: %s,\nStatus: %s,\nToken: %s,\nCreated At: %s)",
+            user_id, name, email_id, mobile, address, live_lat, live_long, status, device_token, created_at)
 }

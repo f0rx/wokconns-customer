@@ -23,7 +23,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.adapter.TicketAdapter;
 import com.wokconns.customer.utils.CustomEditText;
@@ -42,7 +42,7 @@ public class Tickets extends Fragment {
     private TicketAdapter ticketAdapter;
     private ArrayList<TicketDTO> ticketDTOSList;
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private CustomTextViewBold tvNo;
     private View view;
@@ -59,7 +59,7 @@ public class Tickets extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_ticket, container, false);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.support));
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         setUiAction(view);

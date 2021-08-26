@@ -1,5 +1,8 @@
 package com.wokconns.customer.ui.activity;
 
+import static com.schibstedspain.leku.LocationPickerActivityKt.LATITUDE;
+import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -22,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
@@ -38,7 +40,8 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -55,9 +58,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.schibstedspain.leku.LocationPickerActivityKt.LATITUDE;
-import static com.schibstedspain.leku.LocationPickerActivityKt.LONGITUDE;
-
 public class PostJob extends AppCompatActivity implements View.OnClickListener {
     public static final int MEDIA_TYPE_VIDEO = 6;
     Uri picUri;
@@ -73,7 +73,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
     String currencyId = "";
     private final String TAG = PostJob.class.getSimpleName();
     private Context mContext;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private ArrayList<CategoryDTO> categoryDTOS = new ArrayList<>();
     private final HashMap<String, String> parmsadd = new HashMap<>();
@@ -91,7 +91,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
         sdf1 = new SimpleDateFormat(Const.DATE_FORMATE_SERVER, Locale.ENGLISH);
         timeZone = new SimpleDateFormat(Const.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
 
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         parmsadd.put(Const.USER_ID, userDTO.getUser_id());
         parmsCategory.put(Const.USER_ID, userDTO.getUser_id());
@@ -285,7 +285,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         File mediaFile;
         if (type == 1) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
@@ -314,7 +314,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     imageCompression = new ImageCompression(PostJob.this);
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
-                        Glide.with(mContext).load("file://" + imagePath)
+                        GlideApp.with(mContext).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivImg);
@@ -345,7 +345,7 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
 
-                        Glide.with(mContext).load("file://" + imagePath)
+                        GlideApp.with(mContext).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivImg);
@@ -600,16 +600,23 @@ public class PostJob extends AppCompatActivity implements View.OnClickListener {
                     try {
                         ArrayAdapter<CurrencyDTO> currencyAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, currencyDTOArrayList);
                         binding.etCurrency.setAdapter(currencyAdapter);
-                        binding.etCurrency.postDelayed(() -> {
-                            // Initalize value with a default
-                            CurrencyDTO naira = null;
-                            // Loop thru then find Naira (NGN)
-                            for (CurrencyDTO el : currencyDTOArrayList)
-                                if (Objects.equals(el.getCode(), "NGN")) naira = el;
-                            if (naira != null)
-                                binding.etCurrency.setText(naira.toString(), false);
-                        }, 200);
                         binding.etCurrency.setCursorVisible(false);
+
+                        // Initialize value with a default
+                        CurrencyDTO naira = null;
+                        // Loop thru then find Naira (NGN)
+                        for (CurrencyDTO el : currencyDTOArrayList)
+                            if (Objects.equals(el.getCode(), "NGN")) naira = el;
+
+                        CurrencyDTO finalNaira = naira;
+                        binding.etCurrency.postDelayed(() -> {
+                            binding.etCurrency.showDropDown();
+                            binding.etCurrency.setText(String.format("%s", finalNaira), false);
+                            binding.etCurrency.setSelection(binding.etCurrency.getText().length());
+
+                            currencyId = finalNaira.getId();
+                            parmsadd.put(Const.CURRENCY_ID, currencyId);
+                        }, 500);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

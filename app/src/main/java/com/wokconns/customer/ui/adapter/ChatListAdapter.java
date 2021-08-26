@@ -19,6 +19,7 @@ import com.wokconns.customer.dto.ChatListDTO;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.interfaces.DisclaimerWarning;
 import com.wokconns.customer.ui.activity.OneTwoOneChat;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -58,8 +59,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
             e.printStackTrace();
         }
 
-        Glide.with(mContext)
-                .load(chatList.get(position).getArtistImage())
+        GlideApp.with(mContext)
+                .load(ProjectUtils.formatImageUri(chatList.get(position).getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

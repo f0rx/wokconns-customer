@@ -44,7 +44,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.activity.OTPVerificationActivity"></activity>
+
+        <activity
+            android:name=".ui.activity.OTPVerificationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -72,16 +76,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="/data/data/${applicationId}"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -194,21 +189,15 @@
         <activity
             android:name=".ui.activity.AddMoney"
             android:screenOrientation="portrait" /> <!-- [START firebase_service] -->
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".MyFirebaseMessagingService"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service> <!-- [END firebase_service] -->
-        <!-- [START firebase_iid_service] -->
-        <service android:name=".MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service> <!-- [END firebase_iid_service] -->
-        <!-- <meta-data -->
-        <!-- android:name="io.fabric.ApiKey" -->
-        <!-- android:value="6956ee260d8a46359094304995f81a6c154130cd" /> -->
+
         <activity android:name=".ui.activity.ViewServices" />
+
         <activity
             android:name="com.schibstedspain.leku.LocationPickerActivity"
             android:label="@string/leku_title_activity_location_picker"

@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterJobsBinding;
@@ -22,10 +21,11 @@ import com.wokconns.customer.dto.PostedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.EditJob;
 import com.wokconns.customer.ui.fragment.Jobs;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,19 +36,18 @@ import java.util.Locale;
 
 public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
-    private final int VIEW_SECTION = 0;
     ItemSectionBinding itemSectionBinding;
     AdapterJobsBinding adapterJobsBinding;
-    private String TAG = AppliedJobAdapter.class.getSimpleName();
+    private final String TAG = AppliedJobAdapter.class.getSimpleName();
     private HashMap<String, String> params;
     private HashMap<String, String> paramsComplete;
     private DialogInterface dialog_book;
-    private Context mContext;
-    private Jobs jobs;
+    private final Context mContext;
+    private final Jobs jobs;
     private ArrayList<PostedJobDTO> objects = null;
-    private ArrayList<PostedJobDTO> postedJobDTOSList;
-    private UserDTO userDTO;
-    private SharedPrefrence preferences;
+    private final ArrayList<PostedJobDTO> postedJobDTOSList;
+    private final UserDTO userDTO;
+    private final SharedPrefs preferences;
 
     public JobsAdapter(Jobs jobs, ArrayList<PostedJobDTO> objects, UserDTO userDTO) {
         this.jobs = jobs;
@@ -57,7 +56,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.postedJobDTOSList = new ArrayList<PostedJobDTO>();
         this.postedJobDTOSList.addAll(objects);
         this.userDTO = userDTO;
-        preferences = SharedPrefrence.getInstance(mContext);
+        preferences = SharedPrefs.getInstance(mContext);
 
     }
 
@@ -113,8 +112,8 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.adapterJobsBinding.llStatus.setBackground(mContext.getResources().getDrawable(R.drawable.rectangle_dark_red));
             }
 
-            Glide.with(mContext).
-                    load(objects.get(position).getAvtar())
+            GlideApp.with(mContext).
+                    load(ProjectUtils.formatImageUri(objects.get(position).getAvtar()))
                     .placeholder(R.drawable.dummyuser_image)
                     .dontAnimate()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -160,6 +159,7 @@ public class JobsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
+        int VIEW_SECTION = 0;
         return this.objects.get(position).isSection() ? VIEW_SECTION : VIEW_ITEM;
     }
 

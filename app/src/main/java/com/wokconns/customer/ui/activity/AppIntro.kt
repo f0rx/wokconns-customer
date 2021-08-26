@@ -17,12 +17,12 @@ import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.ToxicBakery.viewpager.transforms.StackTransformer
 import com.wokconns.customer.R
 import com.wokconns.customer.databinding.ActivityAppIntro2Binding
-import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.preferences.SharedPrefs
 import com.wokconns.customer.ui.adapter.AppIntroPagerAdapter
 import com.wokconns.customer.utils.ProjectUtils.Fullscreen
 
 class AppIntro : AppCompatActivity(), OnPageChangeListener, View.OnClickListener {
-    lateinit var preference: SharedPrefrence
+    private var preference: SharedPrefs? = null
     private var mResources = intArrayOf(R.drawable.intro_1, R.drawable.intro_2, R.drawable.intro_3)
     private lateinit var mAdapter: AppIntroPagerAdapter
     private var dotsCount = 0
@@ -34,7 +34,7 @@ class AppIntro : AppCompatActivity(), OnPageChangeListener, View.OnClickListener
         super.onCreate(savedInstanceState)
         Fullscreen(this@AppIntro)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_app_intro2)
-        preference = SharedPrefrence.getInstance(mContext)
+        preference = SharedPrefs.getInstance(mContext)
         binding.llSignin.setOnClickListener(this)
         binding.llSignup.setOnClickListener(this)
         //        binding.llLanguage.setOnClickListener(this);

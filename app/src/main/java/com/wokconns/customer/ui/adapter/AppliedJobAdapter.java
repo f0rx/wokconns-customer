@@ -18,19 +18,19 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.AppliedJobDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.AppliedJob;
 import com.wokconns.customer.ui.activity.ArtistProfile;
 import com.wokconns.customer.ui.activity.OneTwoOneChat;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
     private ArrayList<AppliedJobDTO> objects = null;
     private ArrayList<AppliedJobDTO> appliedJobDTOSList;
     private UserDTO userDTO;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
 
     public AppliedJobAdapter(AppliedJob appliedJob, ArrayList<AppliedJobDTO> objects, UserDTO userDTO) {
         this.appliedJob = appliedJob;
@@ -54,7 +54,7 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
         this.appliedJobDTOSList = new ArrayList<>();
         this.appliedJobDTOSList.addAll(objects);
         this.userDTO = userDTO;
-        prefrence = SharedPrefrence.getInstance(appliedJob);
+        prefrence = SharedPrefs.getInstance(appliedJob);
     }
 
     @Override
@@ -86,8 +86,8 @@ public class AppliedJobAdapter extends RecyclerView.Adapter<AppliedJobAdapter.My
         holder.tvRating.setText(String.format("(%s/5)", objects.get(position).getAva_rating()));
         holder.ratingbar.setRating(Float.parseFloat(objects.get(position).getAva_rating()));
 
-        Glide.with(appliedJob).
-                load(objects.get(position).getArtist_image())
+        GlideApp.with(appliedJob).
+                load(ProjectUtils.formatImageUri(objects.get(position).getArtist_image()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

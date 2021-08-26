@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.databinding.AdapterInvoiceBinding;
 import com.wokconns.customer.dto.HistoryDTO;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
     ArrayList<HistoryDTO> objects = null;
     ArrayList<HistoryDTO> historyDTOList;
     AdapterInvoiceBinding binding;
-    private SharedPrefrence preference;
+    private SharedPrefs preference;
     private LayoutInflater inflater;
 
     public AdapterInvoice(Context mContext, ArrayList<HistoryDTO> objects, LayoutInflater inflater) {
@@ -38,7 +38,7 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
         this.historyDTOList = new ArrayList<HistoryDTO>();
         this.historyDTOList.addAll(objects);
         this.inflater = inflater;
-        preference = SharedPrefrence.getInstance(mContext);
+        preference = SharedPrefs.getInstance(mContext);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class AdapterInvoice extends RecyclerView.Adapter<AdapterInvoice.MyViewHo
         holder.binding.CTVwork.setText(objects.get(position).getCategoryName());
         holder.binding.CTVname.setText(ProjectUtils.getFirstLetterCapital(objects.get(position).getUserName()));
 
-        Glide.with(mContext).
-                load(objects.get(position).getUserImage())
+        GlideApp.with(mContext)
+                .load(ProjectUtils.formatImageUri(objects.get(position).getUserImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

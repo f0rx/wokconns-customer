@@ -29,7 +29,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.adapter.AdapterCategory;
 import com.wokconns.customer.ui.adapter.AdapterCustomerBooking;
@@ -66,7 +66,7 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
     ArrayList<HomeCategoryDTO> categoryDTOArrayList = new ArrayList<>();
     private View view;
     private String TAG = Home.class.getSimpleName();
-    private SharedPrefrence preference;
+    private SharedPrefs preference;
     private UserDTO userDTO;
     private BaseActivity baseActivity;
 
@@ -77,7 +77,7 @@ public class Home extends Fragment implements View.OnClickListener, SwipeRefresh
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         view = binding.getRoot();
         baseActivity.headerNameTV.setText(getResources().getString(R.string.app_name));
-        preference = SharedPrefrence.getInstance(getActivity());
+        preference = SharedPrefs.getInstance(requireContext());
         userDTO = preference.getParentUser(Const.USER_DTO);
 
         setUiAction();

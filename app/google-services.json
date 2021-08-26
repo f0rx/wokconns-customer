@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "183785658389-4qlu2i9hhmm5sg9fqkq9ggm8gjc564rm.apps.googleusercontent.com",
+          "client_id": "183785658389-18s3bcrjb3o8tt9kg9jegbjped1uh0a7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wokconns.customer",
@@ -22,11 +22,19 @@
           }
         },
         {
-          "client_id": "183785658389-uh3aeeb1hfg8rge44i0al731jll6gtnp.apps.googleusercontent.com",
+          "client_id": "183785658389-gnga8i0s26i8ba2v26jbo78n3lfnsjve.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wokconns.customer",
             "certificate_hash": "d668f14c0f907fb0596d7bb3eca256a4b36477d0"
+          }
+        },
+        {
+          "client_id": "183785658389-o5jpi0eqt3jutoefk6hlq2cnretlj2gu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wokconns.customer",
+            "certificate_hash": "b41b12383db6e848eb08555bfad44d1144460a9a"
           }
         },
         {
@@ -59,7 +67,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "183785658389-oktrg35umh2tg3m2u729843clfrqh2om.apps.googleusercontent.com",
+          "client_id": "183785658389-44lnl5lbrv2fh2tonjegkvnckdh7r27b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wokconns.wokconns",
+            "certificate_hash": "273aee2e7367424be9690117213170b1bdb3e74f"
+          }
+        },
+        {
+          "client_id": "183785658389-cgamv315n50i7ekub8kb02toa4i65nbk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wokconns.wokconns",
@@ -67,7 +83,7 @@
           }
         },
         {
-          "client_id": "183785658389-piq7ela42jr3da6o1gkulmga5tvnj1nh.apps.googleusercontent.com",
+          "client_id": "183785658389-nj8u2henlqb7hi5foqelbr94eebsvohn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wokconns.wokconns",

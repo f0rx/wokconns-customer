@@ -21,7 +21,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.adapter.UnPaidAdapter;
 import com.wokconns.customer.utils.CustomTextViewBold;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -39,7 +39,7 @@ public class UnPaidFrag extends Fragment implements SwipeRefreshLayout.OnRefresh
     private ArrayList<HistoryDTO> historyDTOList;
     private ArrayList<HistoryDTO> historyDTOListUnPaid;
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private CustomTextViewBold tvNo;
     private LayoutInflater myInflater;
@@ -51,7 +51,7 @@ public class UnPaidFrag extends Fragment implements SwipeRefreshLayout.OnRefresh
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_unpaid, container, false);
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         myInflater = LayoutInflater.from(getActivity());
         setUiAction(view);

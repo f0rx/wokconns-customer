@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.google.android.material.appbar.AppBarLayout;
@@ -26,11 +25,12 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.fragment.ImageGallery;
 import com.wokconns.customer.ui.fragment.PersnoalInfo;
 import com.wokconns.customer.ui.fragment.PreviousWork;
 import com.wokconns.customer.ui.fragment.Reviews;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +50,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
     private String artist_id = "";
     private ArtistDetailsDTO artistDetailsDTO;
     private HashMap<String, String> parms = new HashMap<>();
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private HashMap<String, String> paramsFav = new HashMap<>();
     private ArrayList<String> list;
@@ -74,7 +74,7 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
         ProjectUtils.Fullscreen(ArtistProfile.this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_artist_profile);
         mContext = ArtistProfile.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         sdf1 = new SimpleDateFormat(Const.DATE_FORMATE_SERVER, Locale.ENGLISH);
         timeZone = new SimpleDateFormat(Const.DATE_FORMATE_TIMEZONE, Locale.ENGLISH);
         date = new Date();
@@ -230,15 +230,15 @@ public class ArtistProfile extends AppCompatActivity implements View.OnClickList
             binding.ivFav.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_fav_blank));
         }
 
-        Glide.with(mContext).
-                load(artistDetailsDTO.getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(artistDetailsDTO.getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.ivArtist);
 
-        Glide.with(mContext).
-                load(artistDetailsDTO.getBanner_image())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(artistDetailsDTO.getBanner_image()))
                 .placeholder(R.drawable.banner_img)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

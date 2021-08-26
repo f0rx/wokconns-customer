@@ -233,7 +233,7 @@ interface Const {
         const val TICKET_STATUS_NOTIFICATION = "10015" //both
         const val ADMIN_NOTIFICATION = "10016"
         const val TYPE = "type"
-        const val TOPIC_CUSTOMER = "Wokconns Customer"
+        const val TOPIC_CUSTOMER = "Wokconns"
         const val LANGUAGE_SELECTION = "language_selection"
         const val VOICE_PREFERENCE = "voice_preference"
         const val VOICE_PREFERENCE_ENGLISH = "en"

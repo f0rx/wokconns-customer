@@ -1,9 +1,5 @@
 package com.wokconns.customer.ui.adapter;
 
-/**
- * Created by VARUN on 01/01/19.
- */
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -13,20 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.HistoryDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.PaymentProActivity;
 import com.wokconns.customer.ui.activity.ViewInvoice;
 import com.wokconns.customer.ui.fragment.PaidFrag;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.text.SimpleDateFormat;
@@ -34,16 +31,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-
 public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.MyViewHolder> {
 
     ArrayList<HistoryDTO> historyDTOList;
-    private Context mContext;
-    private PaidFrag paidFrag;
+    private final Context mContext;
+    private final PaidFrag paidFrag;
     private ArrayList<HistoryDTO> objects = null;
-    private UserDTO userDTO;
-    private SharedPrefrence prefrence;
-    private LayoutInflater inflater;
+    private final UserDTO userDTO;
+    private final SharedPrefs prefrence;
+    private final LayoutInflater inflater;
 
     public PaidAdapter(PaidFrag paidFrag, ArrayList<HistoryDTO> objects, UserDTO userDTO, LayoutInflater inflater) {
         this.paidFrag = paidFrag;
@@ -53,11 +49,12 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.MyViewHolder> 
         this.historyDTOList = new ArrayList<HistoryDTO>();
         this.historyDTOList.addAll(objects);
         this.inflater = inflater;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = inflater
                 .inflate(R.layout.adapter_paid, parent, false);
 
@@ -69,7 +66,7 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
-        holder.CTVBservice.setText(mContext.getResources().getString(R.string.service) + " " + objects.get(position).getInvoice_id());
+        holder.CTVBservice.setText(String.format("%s %s", mContext.getResources().getString(R.string.service), objects.get(position).getInvoice_id()));
 
         try {
             holder.CTVdate.setText(ProjectUtils.convertTimestampDateToTime(ProjectUtils.correctTimestamp(Long.parseLong(objects.get(position).getCreated_at()))));
@@ -79,13 +76,13 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.MyViewHolder> 
         }
 
 
-        holder.CTVprice.setText(objects.get(position).getCurrency_type() + objects.get(position).getFinal_amount());
+        holder.CTVprice.setText(String.format("%s%s", objects.get(position).getCurrency_type(), objects.get(position).getFinal_amount()));
         holder.CTVServicetype.setText(objects.get(position).getCategoryName());
         holder.CTVwork.setText(objects.get(position).getCategoryName());
         holder.CTVname.setText(ProjectUtils.getFirstLetterCapital(objects.get(position).getArtistName()));
 
-        Glide.with(mContext).
-                load(objects.get(position).getArtistImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(objects.get(position).getArtistImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -114,13 +111,13 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.MyViewHolder> 
         });
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("mm.ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("mm.ss", Locale.getDefault());
 
         try {
             Date dt = sdf.parse(objects.get(position).getWorking_min());
-            sdf = new SimpleDateFormat("HH:mm:ss");
+            sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
-            holder.CTVTime.setText(mContext.getResources().getString(R.string.duration) + " " + sdf.format(dt));
+            holder.CTVTime.setText(String.format("%s %s", mContext.getResources().getString(R.string.duration), sdf.format(dt)));
 
         } catch (Exception e) {
             e.printStackTrace();

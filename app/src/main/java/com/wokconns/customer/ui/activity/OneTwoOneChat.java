@@ -24,7 +24,6 @@ import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.google.gson.Gson;
@@ -35,10 +34,11 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.adapter.AdapterViewComment;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextViewBold;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -85,7 +85,7 @@ public class OneTwoOneChat extends AppCompatActivity implements View.OnClickList
     private Context mContext;
     private HashMap<String, String> parmsGet = new HashMap<>();
     private CustomTextViewBold tvNameHedar;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -107,7 +107,7 @@ public class OneTwoOneChat extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_two_one_chat);
         mContext = OneTwoOneChat.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -307,7 +307,7 @@ public class OneTwoOneChat extends AppCompatActivity implements View.OnClickList
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
                         showImageContainer();
-                        Glide.with(OneTwoOneChat.this).load("file://" + imagePath)
+                        GlideApp.with(OneTwoOneChat.this).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(mPreviewImg);
@@ -336,7 +336,7 @@ public class OneTwoOneChat extends AppCompatActivity implements View.OnClickList
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
                         showImageContainer();
-                        Glide.with(OneTwoOneChat.this).load("file://" + imagePath)
+                        GlideApp.with(OneTwoOneChat.this).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(mPreviewImg);

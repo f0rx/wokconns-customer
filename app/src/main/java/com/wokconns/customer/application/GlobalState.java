@@ -3,14 +3,13 @@ package com.wokconns.customer.application;
 import androidx.multidex.MultiDexApplication;
 
 import com.wokconns.customer.dto.HomeDataDTO;
-import com.wokconns.customer.preferences.SharedPrefrence;
-
+import com.wokconns.customer.preferences.SharedPrefs;
 
 public class GlobalState extends MultiDexApplication {
 
     private static GlobalState mInstance;
     HomeDataDTO homeData;
-    SharedPrefrence sharedPrefrence;
+    SharedPrefs sharedPrefs;
 
     public static synchronized GlobalState getInstance() {
         return mInstance;
@@ -20,7 +19,7 @@ public class GlobalState extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        sharedPrefrence = SharedPrefrence.getInstance(this);
+        sharedPrefs = SharedPrefs.getInstance(this);
     }
 
     public HomeDataDTO getHomeData() {

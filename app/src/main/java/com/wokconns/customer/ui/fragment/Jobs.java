@@ -24,7 +24,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.activity.PostJob;
 import com.wokconns.customer.ui.adapter.JobsAdapter;
@@ -44,7 +44,7 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
     private ArrayList<PostedJobDTO> postedJobDTOSList1;
     private ArrayList<PostedJobDTO> postedJobDTOSList2;
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private CustomTextViewBold tvNo;
     private View view;
@@ -60,7 +60,7 @@ public class Jobs extends Fragment implements SwipeRefreshLayout.OnRefreshListen
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_jobs, container, false);
         baseActivity.headerNameTV.setText(getResources().getString(R.string.jobs));
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         setUiAction(view);

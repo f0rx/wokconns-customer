@@ -193,7 +193,7 @@ public class SpinnerDialogService {
                 temp.checkBox1.setChecked(!temp.checkBox1.isChecked());
 
                 arrayList.get(position).setSelected(!arrayList.get(position).isSelected());
-                Log.i("TAG", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
+                ProjectUtils.log("SpinnerDialogService", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
                 notifyDataSetChanged();
             });
             holder.checkBox1.setOnClickListener(v -> {
@@ -211,7 +211,7 @@ public class SpinnerDialogService {
                 temp.checkBox1.setChecked(!temp.checkBox1.isChecked());
 
                 arrayList.get(position).setSelected(!arrayList.get(position).isSelected());
-                Log.i("TAG", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
+                ProjectUtils.log("SpinnerDialogService", "On Click Selected Item : " + arrayList.get(position).getProduct_name() + " : " + arrayList.get(position).isSelected());
                 notifyDataSetChanged();
             });
 

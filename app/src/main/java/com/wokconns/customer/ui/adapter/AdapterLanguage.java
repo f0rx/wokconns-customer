@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.LanguageDTO;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.AppIntro;
 import com.wokconns.customer.ui.activity.BaseActivity;
 
@@ -31,13 +31,13 @@ public class AdapterLanguage extends RecyclerView.Adapter<AdapterLanguage.Langua
     String type = "";
     private ArrayList<LanguageDTO> datas;
     private Context mContext;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private String half, second_half;
 
     public AdapterLanguage(ArrayList<LanguageDTO> datas, Context mContext, String type) {
         this.datas = datas;
         this.mContext = mContext;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         this.type = type;
     }
 

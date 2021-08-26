@@ -15,7 +15,7 @@ import com.wokconns.customer.databinding.ActivityLanguageSelectionBinding;
 import com.wokconns.customer.dto.LanguageDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.adapter.AdapterLanguage;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class LanguageSelection extends AppCompatActivity implements View.OnClick
     public static int flag = 0;
     String type = "";
     private ActivityLanguageSelectionBinding binding;
-    private SharedPrefrence sharedPrefrence;
+    private SharedPrefs sharedPrefs;
     private Context mContext;
     private AdapterLanguage adapterLanguage;
     private ArrayList<LanguageDTO> languageDTOList;
@@ -38,8 +38,8 @@ public class LanguageSelection extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_language_selection);
         mContext = LanguageSelection.this;
-        sharedPrefrence = SharedPrefrence.getInstance(mContext);
-        userDTO = sharedPrefrence.getParentUser(Const.USER_DTO);
+        sharedPrefs = SharedPrefs.getInstance(mContext);
+        userDTO = sharedPrefs.getParentUser(Const.USER_DTO);
         init();
     }
 

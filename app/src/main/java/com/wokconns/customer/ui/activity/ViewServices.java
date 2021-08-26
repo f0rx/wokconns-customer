@@ -17,7 +17,7 @@ import com.wokconns.customer.dto.ArtistDetailsDTO;
 import com.wokconns.customer.dto.ProductDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.interfaces.Const;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.adapter.AdapterServices;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -33,7 +33,7 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
     private GridLayoutManager gridLayoutManager;
     private JsonArray array;
     private DialogInterface dialog_book;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private String artist_id = "";
 
@@ -42,7 +42,7 @@ public class ViewServices extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_services);
         mContext = ViewServices.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
 
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         if (getIntent().hasExtra(Const.ARTIST_DTO)) {

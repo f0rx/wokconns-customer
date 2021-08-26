@@ -20,7 +20,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.adapter.AdapterViewCommentTicket;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextViewBold;
@@ -50,7 +50,7 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
     private Context mContext;
     private HashMap<String, String> parmsGet = new HashMap<>();
     private CustomTextViewBold tvNameHedar;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private String ticket_id;
 
@@ -59,7 +59,7 @@ public class CommentOneByOne extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_one_by_one);
         mContext = CommentOneByOne.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

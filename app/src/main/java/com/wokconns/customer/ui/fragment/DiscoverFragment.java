@@ -31,7 +31,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.activity.BaseActivity;
 import com.wokconns.customer.ui.adapter.DiscoverAdapter;
 import com.wokconns.customer.utils.CustomTextViewBold;
@@ -59,7 +59,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     private DiscoverAdapter discoverAdapter;
     private LinearLayoutManager mLayoutManager;
     private ArrayList<AllAtristListDTO> allAtristListDTOList = new ArrayList<>();
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private LayoutInflater myInflater;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -77,7 +77,7 @@ public class DiscoverFragment extends Fragment implements View.OnClickListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_discover, container, false);
-        prefrence = SharedPrefrence.getInstance(getActivity());
+        prefrence = SharedPrefs.getInstance(getActivity());
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         parms.put(Const.USER_ID, userDTO.getUser_id());
         parmsCategory.put(Const.USER_ID, userDTO.getUser_id());

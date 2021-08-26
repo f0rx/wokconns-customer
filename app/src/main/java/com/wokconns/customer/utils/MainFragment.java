@@ -367,7 +367,7 @@ public class MainFragment extends FragmentActivity {
 //                BuildConfig.APPLICATION_ID + ".provider", file);
 
         Uri from = Uri.fromFile(file);
-        Log.i(TAG, "From URI = " + from);
+        ProjectUtils.log("From URI = " + from);
         return from;
     }
 

@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.google.android.gms.location.places.Place;
@@ -35,7 +34,8 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ImageCompression;
 import com.wokconns.customer.utils.MainFragment;
 import com.wokconns.customer.utils.ProjectUtils;
@@ -68,7 +68,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
     ImageCompression imageCompression;
     HashMap<String, File> parmsFile = new HashMap<>();
     private Context mContext;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private ArrayList<CategoryDTO> categoryDTOS;
     private File image;
@@ -82,7 +82,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_job);
         mContext = EditJob.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         parmsadd.put(Const.USER_ID, userDTO.getUser_id());
 
@@ -261,7 +261,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                     imageCompression = new ImageCompression(EditJob.this);
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
-                        Glide.with(mContext).load("file://" + imagePath)
+                        GlideApp.with(mContext).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivImg);
@@ -291,7 +291,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
                     imageCompression.execute(pathOfImage);
                     imageCompression.setOnTaskFinishedEvent(imagePath -> {
 
-                        Glide.with(mContext).load("file://" + imagePath)
+                        GlideApp.with(mContext).load("file://" + imagePath)
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(binding.ivImg);
@@ -500,7 +500,7 @@ public class EditJob extends AppCompatActivity implements View.OnClickListener {
             parmsadd.put(Const.CATEGORY_ID, id);
         });
 
-        Glide.with(mContext).load(postedJobDTO.getAvtar())
+        GlideApp.with(mContext).load(ProjectUtils.formatImageUri(postedJobDTO.getAvtar()))
                 .thumbnail(0.5f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.ivImg);

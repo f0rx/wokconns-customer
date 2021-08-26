@@ -32,7 +32,7 @@ public class SmsReceiver extends BroadcastReceiver {
             SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
             String senderNum = currentMessage.getDisplayOriginatingAddress();
             String message = currentMessage.getDisplayMessageBody();
-            Log.i("RECEIVER", "senderNum: " + senderNum + " message: " + message);
+            ProjectUtils.log("RECEIVER", "senderNum: " + senderNum + " message: " + message);
 
             if (!TextUtils.isEmpty(receiverString) && message.contains(receiverString)) { //If message received is from required number.
                 //If bound a listener interface, callback the overriden method.

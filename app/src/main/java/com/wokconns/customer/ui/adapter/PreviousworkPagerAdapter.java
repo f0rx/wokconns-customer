@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wokconns.customer.R;
 import com.wokconns.customer.dto.ArtistBookingDTO;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.utils.CustomTextView;
 import com.wokconns.customer.utils.CustomTextViewBold;
 
@@ -29,14 +29,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PreviousworkPagerAdapter extends RecyclerView.Adapter<PreviousworkPagerAdapter.MyViewHolder> {
     Context context;
     LayoutInflater layoutInflater;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private ArrayList<ArtistBookingDTO> artistBookingDTOList;
 
     public PreviousworkPagerAdapter(Context context, ArrayList<ArtistBookingDTO> artistBookingDTOList) {
         this.context = context;
         this.artistBookingDTOList = artistBookingDTOList;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        prefrence = SharedPrefrence.getInstance(context);
+        prefrence = SharedPrefs.getInstance(context);
     }
 
 

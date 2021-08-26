@@ -20,7 +20,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.ui.adapter.AppliedJobAdapter;
 import com.wokconns.customer.utils.ProjectUtils;
 
@@ -35,7 +35,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
     private AppliedJobAdapter appliedJobAdapter;
     private ArrayList<AppliedJobDTO> appliedJobDTOSList;
     private LinearLayoutManager mLayoutManager;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private ActivityAppliedJobBinding binding;
 
@@ -44,7 +44,7 @@ public class AppliedJob extends AppCompatActivity implements SwipeRefreshLayout.
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_applied_job);
         mContext = AppliedJob.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
 
 

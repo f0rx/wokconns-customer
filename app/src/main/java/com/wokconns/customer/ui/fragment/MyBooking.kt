@@ -26,7 +26,7 @@ import com.wokconns.customer.https.HttpsRequest
 import com.wokconns.customer.interfaces.Const
 import com.wokconns.customer.interfaces.Helper
 import com.wokconns.customer.network.NetworkManager
-import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.preferences.SharedPrefs
 import com.wokconns.customer.ui.activity.BaseActivity
 import com.wokconns.customer.ui.adapter.AdapterCustomerBooking
 import com.wokconns.customer.utils.CustomTextViewBold
@@ -43,7 +43,7 @@ class MyBooking : Fragment(), OnRefreshListener {
     private lateinit var userBookingListSection: ArrayList<UserBooking>
     private var userBookingListSection1: ArrayList<UserBooking>? = null
     private lateinit var mLayoutManager: LinearLayoutManager
-    private lateinit var userDTO: UserDTO
+    private var userDTO: UserDTO? = null
     private lateinit var tvNo: CustomTextViewBold
     private lateinit var mLayout: View
     private lateinit var baseActivity: BaseActivity
@@ -68,13 +68,13 @@ class MyBooking : Fragment(), OnRefreshListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
         mLayout = inflater.inflate(R.layout.activity_my_booking, container, false)
-        val preference = SharedPrefrence.getInstance(activity)
+        val preference = SharedPrefs.getInstance(activity)
         baseActivity.headerNameTV.text = resources.getString(R.string.my_bookings)
-        userDTO = preference.getParentUser(Const.USER_DTO)
+        userDTO = preference?.getParentUser(Const.USER_DTO)
         setUiAction(mLayout)
         return mLayout
     }
@@ -165,7 +165,7 @@ class MyBooking : Fragment(), OnRefreshListener {
 
     fun getParams(): HashMap<String, String?> {
         val parms = HashMap<String, String?>()
-        parms[Const.USER_ID] = userDTO.user_id
+        parms[Const.USER_ID] = userDTO?.user_id
         return parms
     }
 

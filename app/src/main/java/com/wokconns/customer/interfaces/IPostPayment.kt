@@ -5,7 +5,7 @@ import android.content.Intent
 import com.wokconns.customer.R
 import com.wokconns.customer.dto.HistoryDTO
 import com.wokconns.customer.https.HttpsRequest
-import com.wokconns.customer.preferences.SharedPrefrence
+import com.wokconns.customer.preferences.SharedPrefs
 import com.wokconns.customer.ui.activity.WriteReview
 import com.wokconns.customer.utils.ProjectUtils.pauseProgressDialog
 import com.wokconns.customer.utils.ProjectUtils.showProgressDialog
@@ -16,7 +16,7 @@ import java.util.*
 interface IPostPayment {
     fun updatePaymentStatus(
         activity: Activity,
-        preference: SharedPrefrence,
+        preference: SharedPrefs,
         params: HashMap<String, String?>?,
         history: HistoryDTO?
     ) {

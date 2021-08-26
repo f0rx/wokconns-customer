@@ -16,7 +16,7 @@ import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.https.HttpsRequest;
 import com.wokconns.customer.interfaces.Const;
 import com.wokconns.customer.network.NetworkManager;
-import com.wokconns.customer.preferences.SharedPrefrence;
+import com.wokconns.customer.preferences.SharedPrefs;
 import com.wokconns.customer.utils.CustomButton;
 import com.wokconns.customer.utils.CustomEditText;
 import com.wokconns.customer.utils.CustomTextView;
@@ -35,7 +35,7 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
     private String id = "";
     private HashMap<String, String> parms = new HashMap<>();
     private ImageView ivBack;
-    private SharedPrefrence prefrence;
+    private SharedPrefs prefrence;
     private UserDTO userDTO;
     private HistoryDTO historyDTO;
 
@@ -44,7 +44,7 @@ public class WriteReview extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
         mContext = WriteReview.this;
-        prefrence = SharedPrefrence.getInstance(mContext);
+        prefrence = SharedPrefs.getInstance(mContext);
         userDTO = prefrence.getParentUser(Const.USER_DTO);
         if (getIntent().hasExtra(Const.HISTORY_DTO)) {
             historyDTO = (HistoryDTO) getIntent().getSerializableExtra(Const.HISTORY_DTO);

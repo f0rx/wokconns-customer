@@ -17,6 +17,7 @@ import com.wokconns.customer.R;
 import com.wokconns.customer.dto.GetCommentDTO;
 import com.wokconns.customer.dto.UserDTO;
 import com.wokconns.customer.utils.CustomTextView;
+import com.wokconns.customer.utils.GlideApp;
 import com.wokconns.customer.utils.ProjectUtils;
 
 import java.util.ArrayList;
@@ -80,8 +81,8 @@ public class AdapterViewComment extends BaseAdapter {
             ivView.setVisibility(View.GONE);
         }
 
-        Glide.with(mContext).
-                load(getCommentDTOList.get(position).getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(getCommentDTOList.get(position).getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -114,8 +115,8 @@ public class AdapterViewComment extends BaseAdapter {
         dialogImg.show();
         dialogImg.setCancelable(false);
 
-        Glide.with(mContext).
-                load(getCommentDTOList.get(pos).getImage())
+        GlideApp.with(mContext).
+                load(ProjectUtils.formatImageUri(getCommentDTOList.get(pos).getImage()))
                 .placeholder(R.drawable.dummyuser_image)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
